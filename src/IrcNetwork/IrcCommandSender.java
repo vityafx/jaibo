@@ -1,7 +1,9 @@
-package NetworkConnection;
+package IrcNetwork;
+
+import NetworkConnection.NetworkConnection;
 
 /**
- * Network listeners
+ * Realization of simple command sender to irc network
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +20,22 @@ package NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface NetworkConnectionListener {
-    public void dataReceived(String data);
+public class IrcCommandSender {
+    private NetworkConnection connection;
+
+
+    public IrcCommandSender() {
+
+    }
+
+    public IrcCommandSender(NetworkConnection connection) {
+        this.connection = connection;
+    }
+
+
+    public void sendIrcCommand(String command, String arguments) {
+        if (this.connection != null) {
+            connection.send(String.format("%s %s", command, arguments));
+        }
+    }
 }

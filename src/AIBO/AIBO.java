@@ -1,7 +1,7 @@
-package NetworkConnection;
+package AIBO;
 
 /**
- * Network listeners
+ * AIBO bot realization
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,11 @@ package NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface NetworkConnectionListener {
-    public void dataReceived(String data);
+public class AIBO {
+    private ExtensionManager extensionManager = new ExtensionManager(new String[]{ "core" });
+
+
+    public AIBO(String[] extensionNames) {
+        extensionManager.addExtensionsByNames(extensionNames);
+    }
 }

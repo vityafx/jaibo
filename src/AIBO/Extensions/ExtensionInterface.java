@@ -1,7 +1,7 @@
-package NetworkConnection;
+package AIBO.Extensions;
 
 /**
- * Network listeners
+ * Extension Interface
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,8 @@ package NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface NetworkConnectionListener {
-    public void dataReceived(String data);
+public interface ExtensionInterface {
+    public String getExtensionName();
+
+    public void processTask();
 }

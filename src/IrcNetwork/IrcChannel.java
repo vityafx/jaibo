@@ -1,7 +1,7 @@
-package NetworkConnection;
+package IrcNetwork;
 
 /**
- * Network listeners
+ * Irc Channel realization
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,37 @@ package NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface NetworkConnectionListener {
-    public void dataReceived(String data);
+public class IrcChannel {
+    private String topic;
+    private String name;
+
+
+    public IrcChannel(String name) {
+        this.name = name;
+    }
+
+
+    public String getTopic() {
+        return this.topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+
+        if (this.name.charAt(0) != '#') {
+            this.name = String.format("#%s", this.name);
+        }
+    }
+
+    public String toString() {
+        return this.name;
+    }
 }

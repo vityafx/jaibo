@@ -1,7 +1,7 @@
-package NetworkConnection;
+package IrcNetwork;
 
 /**
- * Network listeners
+ * Debug version of IrcCommandSender
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,8 @@ package NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface NetworkConnectionListener {
-    public void dataReceived(String data);
+public class DebugIrcCommandSender extends IrcCommandSender {
+    public void sendIrcCommand(String command, String arguments) {
+        System.out.println(String.format("Sending %s: %s", command, arguments));
+    }
 }

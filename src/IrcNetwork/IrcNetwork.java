@@ -1,7 +1,9 @@
-package NetworkConnection;
+package IrcNetwork;
+
+import java.util.ArrayList;
 
 /**
- * Network listeners
+ * Class that introduces an Irc Network
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +20,9 @@ package NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface NetworkConnectionListener {
-    public void dataReceived(String data);
+public class IrcNetwork {
+    private ArrayList<ChannelListener> channelListeners = new ArrayList<ChannelListener>();
+    private ArrayList<ServerListener> serverListeners = new ArrayList<ServerListener>();
+
+    private ArrayList<IrcChannel> channels = new ArrayList<IrcChannel>();
 }

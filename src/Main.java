@@ -1,7 +1,8 @@
-package NetworkConnection;
+import IrcNetwork.IrcChannelMessage;
+
 
 /**
- * Network listeners
+ * Main class of AIBO java-port
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +19,11 @@ package NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface NetworkConnectionListener {
-    public void dataReceived(String data);
+public class Main {
+
+    public static void main(String[] args) {
+        IrcChannelMessage message = IrcChannelMessage.tryParse("Makie!~mrkss@93-141-145-86.adsl.net.t-com.hr PRIVMSG #pain-suckers :!add");
+
+        System.out.println(message);
+    }
 }
