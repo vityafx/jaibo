@@ -1,5 +1,8 @@
 package AIBO;
 
+import AIBO.Extensions.Extension;
+import IrcNetwork.MessageListener;
+
 import java.util.ArrayList;
 
 /**
@@ -20,8 +23,8 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class ExtensionManager {
-    private ArrayList<Runnable> extensions = new ArrayList<Runnable>();
+public final class ExtensionManager {
+    private ArrayList<Extension> extensions = new ArrayList<Extension>();
 
 
     public ExtensionManager() {
@@ -40,7 +43,7 @@ public class ExtensionManager {
     }
 
     public void addExtensionByName(String extensionName) {
-        Runnable extension = this.findExtensionByName(extensionName);
+        Extension extension = this.findExtensionByName(extensionName);
 
         if (extension != null) {
             this.extensions.add(extension);
@@ -48,10 +51,26 @@ public class ExtensionManager {
     }
 
     public void removeExtensionByName(String extensionName) {
-        //for
+        for(Extension extension : this.extensions) {
+            if (extension.getExtensionName().equals(extensionName)) {
+                this.extensions.remove(extension);
+
+                break;
+            }
+        }
     }
 
-    private Runnable findExtensionByName(String extensionName) {
+    public ArrayList<MessageListener> getMessageListeners() {
+        ArrayList<MessageListener> messageListeners = null;
+
+        for(int i = 0; i < this.extensions.size()) {
+            //this.messageListeners.addAll(this.extensions.get(0).getMessageListeners());
+        }
+
+        return messageListeners;
+    }
+
+    private Extension findExtensionByName(String extensionName) {
         return null;
     }
 }

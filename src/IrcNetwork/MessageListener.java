@@ -1,7 +1,7 @@
-package AIBO.Extensions;
+package IrcNetwork;
 
 /**
- * Extension Interface
+ * Channel listener interface
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,6 @@ package AIBO.Extensions;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface ExtensionInterface {
-    public String getExtensionName();
-
-    public void processTask();
+public interface MessageListener {
+    public void messageReceived(IrcMessage message);
 }

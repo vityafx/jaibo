@@ -21,31 +21,30 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class IrcChannelMessage {
+public final class IrcMessage {
+    private IrcMessageType messageType;
     private String user;
     private String host;
-    private String command;
-    private String channel;
+    private String receiver;
     private String message;
 
 
-    public static IrcChannelMessage tryParse(String message) {
-        IrcChannelMessage channelMessage = null;
+    public static IrcMessage tryParse(String message) {
+        IrcMessage channelMessage = null;
 
         if(message != null) {
-            Pattern p = Pattern.compile("^(.*)!(.*) (.*) (.*) :(.*)$");
+            Pattern p = Pattern.compile("^(.*)!(.*) PRIVMSG (.*) :(.*)$");
 
             CharSequence sequence = message.subSequence(0, message.length());
             Matcher matcher = p.matcher(sequence);
 
             if (matcher.matches()) {
-                channelMessage = new IrcChannelMessage();
+                channelMessage = new IrcMessage();
 
                 channelMessage.setUser(matcher.group(1));
                 channelMessage.setHost(matcher.group(2));
-                channelMessage.setCommand(matcher.group(3));
-                channelMessage.setChannel(matcher.group(4));
-                channelMessage.setMessage(matcher.group(5));
+                channelMessage.setReceiver(matcher.group(3));
+                channelMessage.setMessage(matcher.group(4));
             }
         }
 
@@ -69,20 +68,18 @@ public class IrcChannelMessage {
         return this.host;
     }
 
-    public void setCommand(String command) {
-        this.command = command;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+
+        if (receiver.charAt(0) == '#') {
+            this.messageType = IrcMessageType.ChannelMessage;
+        } else {
+            this.messageType = IrcMessageType.PrivateMessage;
+        }
     }
 
-    public String getCommand() {
-        return this.command;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    public String getChannel() {
-        return this.channel;
+    public String getReceiver() {
+        return this.receiver;
     }
 
     public void setMessage(String message) {
@@ -97,8 +94,7 @@ public class IrcChannelMessage {
         return String.format("User: %s\nHost: %s\nCommand: %s\nChannel: %s\nMessage: %s\n",
                 this.getUser(),
                 this.getHost(),
-                this.getCommand(),
-                this.getChannel(),
+                this.getReceiver(),
                 this.getMessage());
     }
 }

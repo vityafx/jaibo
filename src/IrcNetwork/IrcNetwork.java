@@ -1,9 +1,12 @@
 package IrcNetwork;
 
+import NetworkConnection.NetworkConnection;
+import NetworkConnection.NetworkConnectionListener;
+
 import java.util.ArrayList;
 
 /**
- * Class that introduces an Irc Network
+ * Class introduces an Irc Network
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,9 +23,27 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class IrcNetwork {
-    private ArrayList<ChannelListener> channelListeners = new ArrayList<ChannelListener>();
-    private ArrayList<ServerListener> serverListeners = new ArrayList<ServerListener>();
-
+public final class IrcNetwork implements NetworkConnectionListener {
     private ArrayList<IrcChannel> channels = new ArrayList<IrcChannel>();
+
+    private IrcNetworkListener ircNetworkListener;
+
+    private IrcMessageSender sender;
+    private NetworkConnection connection = NetworkConnection.sharedInstance;
+
+
+    public IrcNetwork(String server, int port, IrcNetworkListener ircNetworkListener) {
+        this.sender = new IrcMessageSender(this.connection);
+
+        this.ircNetworkListener = ircNetworkListener;
+
+        this.connection.addListener(this);
+
+        this.connection.connect(server, port);
+    }
+
+    @Override
+    public void dataReceived(String data) {
+        this.ircNetworkListener.ircMessageReceived(data);
+    }
 }

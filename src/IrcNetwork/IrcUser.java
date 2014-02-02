@@ -20,7 +20,7 @@ import java.util.Map;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class IrcUser {
+public final class IrcUser {
     private String name;
     private String host;
     private String rights;

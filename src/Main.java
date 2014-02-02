@@ -1,5 +1,4 @@
-import IrcNetwork.IrcChannelMessage;
-
+import IrcNetwork.IrcMessage;
 
 /**
  * Main class of AIBO java-port
@@ -22,8 +21,8 @@ import IrcNetwork.IrcChannelMessage;
 public class Main {
 
     public static void main(String[] args) {
-        IrcChannelMessage message = IrcChannelMessage.tryParse("Makie!~mrkss@93-141-145-86.adsl.net.t-com.hr PRIVMSG #pain-suckers :!add");
+        IrcMessage m = new IrcMessage();
 
-        System.out.println(message);
+        System.out.println("Hello world!");
     }
 }

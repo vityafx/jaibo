@@ -1,5 +1,7 @@
 package AIBO.Extensions.Core;
 
+import AIBO.Extensions.Extension;
+
 /**
  * Core extension object
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
@@ -18,9 +20,20 @@ package AIBO.Extensions.Core;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Object implements Runnable {
+public class Object extends Extension {
 
+    @Override
     public void run() {
+
+    }
+
+    @Override
+    public String getExtensionName() {
+        return "core";
+    }
+
+    @Override
+    public void processTask() {
 
     }
 }

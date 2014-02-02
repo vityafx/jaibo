@@ -18,7 +18,7 @@ package IrcNetwork;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class IrcChannel {
+public final class IrcChannel {
     private String topic;
     private String name;
 
