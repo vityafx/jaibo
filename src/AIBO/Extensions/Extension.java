@@ -1,6 +1,8 @@
 package AIBO.Extensions;
 
 import IrcNetwork.EventListener;
+import IrcNetwork.IrcMessage;
+import IrcNetwork.IrcEvent;
 import IrcNetwork.MessageListener;
 import IrcNetwork.ServerListener;
 
@@ -24,12 +26,15 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public abstract class Extension implements Runnable {
-    private String topic;
+public abstract class Extension extends Thread {
 
     private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
     private ArrayList<EventListener> eventListeners = new ArrayList<EventListener>();
     private ArrayList<ServerListener> serverListeners = new ArrayList<ServerListener>();
+
+    private ExtensionMessenger messenger;
+
+    private String topic;
 
 
     public void setTopic(String topic) {
@@ -38,8 +43,26 @@ public abstract class Extension implements Runnable {
 
     public abstract String getExtensionName();
 
-    public void processTask() {
+    public void processTask(IrcMessage ircMessage) {
+        for(MessageListener listener : messageListeners) {
+            listener.messageReceived(ircMessage);
+        }
+    }
 
+    public void processTask(IrcEvent ircEvent) {
+        for(EventListener listener : eventListeners) {
+            listener.eventReceived(ircEvent);
+        }
+    }
+
+    public void processTask(String serverMessage) {
+        for(ServerListener listener : serverListeners) {
+            listener.serverMessageReceived(serverMessage);
+        }
+    }
+
+    public void processTask(ExtensionMessage extensionMessage) {
+        // currently a placeholder
     }
 
     public void addMessageListener(MessageListener listener) {
@@ -72,10 +95,16 @@ public abstract class Extension implements Runnable {
         this.serverListeners.remove(listener);
     }
 
+    public ExtensionMessenger getExtensionMessenger() {
+        return this.messenger;
+    }
+
+    public void setExtensionMessenger(ExtensionMessenger messenger) {
+        this.messenger = messenger;
+    }
+
     @Override
     public void run() {
 
     }
-
-
 }

@@ -1,12 +1,9 @@
 package NetworkConnection;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.io.OutputStreamWriter;
 
 /**
  * Network connection realization
@@ -98,9 +95,11 @@ public class NetworkConnection {
 
     public void send(String data) {
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(this.socket.getOutputStream());
+            PrintWriter writer = new PrintWriter(this.socket.getOutputStream(), true);
 
-            writer.write(data);
+            writer.write(data + "\r\n");
+            writer.flush();
+            System.out.println(" >> " + data);
 
         } catch (IOException e) {
             System.out.println(String.format("Got an exception: %s", e.getMessage()));

@@ -1,9 +1,12 @@
-package IrcNetwork;
+package AIBO.Extensions;
 
-import NetworkConnection.NetworkConnection;
+
+import AIBO.ExtensionManager;
+import IrcNetwork.IrcCommandSender;
+import IrcNetwork.IrcMessageSender;
 
 /**
- * Message sender realization
+ * Extension message sender
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,43 +23,54 @@ import NetworkConnection.NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class IrcMessageSender implements IrcMessageSenderInterface {
-    private IrcCommandSender sender;
+public final class ExtensionMessenger implements ExtensionMessengerInterface {
+    private ExtensionMessage message;
+    private IrcMessageSender sender;
+    private ExtensionManager manager;
 
 
-    public IrcMessageSender(NetworkConnection connection) {
-        this.sender = new IrcCommandSender(connection);
+    public ExtensionMessenger(IrcMessageSender sender, ExtensionManager manager) {
+        this.sender = sender;
+        this.manager = manager;
     }
-
 
     @Override
     public void sendNotice(String username, String message) {
-        this.sender.sendIrcCommand("NOTICE", String.format("%s :%s", username, message));
+        this.sender.sendNotice(username, message);
     }
 
     @Override
     public void sendPrivateMessage(String username, String message) {
-        this.sender.sendIrcCommand("PRIVMSG", String.format("%s :%s", username, message));
+        this.sender.sendPrivateMessage(username, message);
     }
 
     @Override
     public void sendChannelMessage(String channel, String message) {
-        this.sender.sendIrcCommand("PRIVMSG", String.format("%s :%s", channel, message));
+        this.sender.sendChannelMessage(channel, message);
     }
 
     @Override
     public void sendBroadcastMessage(String[] channels, String message) {
         for(String channel : channels) {
-            this.sender.sendIrcCommand("PRIVMSG", String.format("%s :%s", channel, message));
+            this.sender.sendChannelMessage(channel, message);
         }
     }
 
     @Override
     public void setTopic(String channel, String topicContent) {
-        this.sender.sendIrcCommand("TOPIC", String.format("%s :%s", channel, topicContent));
+        this.sender.setTopic(channel, topicContent);
+    }
+
+    @Override
+    public void sendExtensionMessage(String extensionName, ExtensionMessage message) {
+        Extension extension = this.manager.getCurrentlyRunningExtensionByName(extensionName);
+
+        if (extension != null) {
+            extension.processTask(message);
+        }
     }
 
     public IrcCommandSender getCommandSender() {
-        return this.sender;
+        return this.sender.getCommandSender();
     }
 }

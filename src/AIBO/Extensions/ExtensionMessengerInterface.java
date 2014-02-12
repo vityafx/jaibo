@@ -1,7 +1,9 @@
-import AIBO.AIBO;
+package AIBO.Extensions;
+
+import IrcNetwork.IrcMessageSenderInterface;
 
 /**
- * Main class of AIBO java-port
+ * Extension messenger interface
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,11 +20,6 @@ import AIBO.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
-
-    public static void main(String[] args) {
-        AIBO bot = new AIBO(null);
-
-        System.out.println("Hello world!");
-    }
+public interface ExtensionMessengerInterface extends IrcMessageSenderInterface {
+    public void sendExtensionMessage(String extensionName, ExtensionMessage message);
 }

@@ -1,6 +1,7 @@
 package AIBO.Extensions;
 
 import AIBO.ExtensionManager;
+import IrcNetwork.*;
 
 /**
  * Extension process task manager
@@ -23,12 +24,33 @@ import AIBO.ExtensionManager;
 public final class TaskManager {
     private ExtensionManager extensionManager;
 
-
-    public TaskManager(ExtensionManager extensionManager) {
-        this.extensionManager = extensionManager;
+    public TaskManager(IrcMessageSender messageSender) {
+        this.extensionManager = new ExtensionManager(
+                new String[]{ "Core" },
+                messageSender
+        );
     }
 
-    public void processEvent(IrcEvent ircEvent) {
 
+    public ExtensionManager getExtensionManager() {
+        return this.extensionManager;
+    }
+
+    public void notifyMessageListeners(IrcMessage ircMessage) {
+        for (Extension extension : extensionManager.getExtensions()) {
+            extension.processTask(ircMessage);
+        }
+    }
+
+    public void notifyEventListeners(IrcEvent ircEvent) {
+        for (Extension extension : extensionManager.getExtensions()) {
+            extension.processTask(ircEvent);
+        }
+    }
+
+    public void notifyServerListeners(String serverMessage) {
+        for (Extension extension : extensionManager.getExtensions()) {
+            extension.processTask(serverMessage);
+        }
     }
 }

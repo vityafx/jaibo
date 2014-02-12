@@ -1,7 +1,7 @@
-package AIBO.Extensions;
+package AIBO.Extensions.Core.Commands;
 
 /**
- * Universal hanndler class for all extensions handlers
+ * Command to join a channel in irc network
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  * <p/>
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,6 @@ package AIBO.Extensions;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public abstract class ExtensionHandler<T extends Extension> {
-    public T object;
+public final class JoinChannel {
 
-    public abstract String[]
 }

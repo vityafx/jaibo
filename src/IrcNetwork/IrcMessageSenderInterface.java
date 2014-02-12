@@ -1,38 +1,31 @@
-package AIBO.Extensions.Core;
-
-import AIBO.Extensions.ExtensionHandler;
-import IrcNetwork.MessageListener;
-import IrcNetwork.ServerListener;
-
-import java.util.ArrayList;
+package IrcNetwork;
 
 /**
- * Core extension handler
+ * Message sender interface
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Handler extends ExtensionHandler<Object> {
-    private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
-    private ArrayList<EventListener> eventListeners = new ArrayList<EventListener>();
-    private ArrayList<ServerListener> serverListeners = new ArrayList<ServerListener>();
+public interface IrcMessageSenderInterface {
+    public void sendNotice(String username, String message);
 
+    public void sendPrivateMessage(String username, String message);
 
-    public Handler() {
-        this.object = new Object();
-    }
+    public void sendChannelMessage(String channel, String message);
 
+    public void sendBroadcastMessage(String[] channels, String message);
 
+    public void setTopic(String channel, String topicContent);
 }

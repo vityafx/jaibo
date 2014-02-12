@@ -39,7 +39,16 @@ public final class IrcNetwork implements NetworkConnectionListener {
 
         this.connection.addListener(this);
 
-        this.connection.connect(server, port);
+        this.connection.setAddress(server);
+        this.connection.setPort(port);
+    }
+
+    public void connect() {
+        this.connection.connect();
+    }
+
+    public IrcMessageSender getMessageSender() {
+        return this.sender;
     }
 
     @Override

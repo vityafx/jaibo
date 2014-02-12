@@ -24,6 +24,5 @@ public enum ExtensionMessageType {
     Notice,
     PrivateMessage,
     ChannelMessage,
-    BroadcastMessage,
-    ExtensionMessage
+    BroadcastMessage
 }

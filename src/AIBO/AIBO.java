@@ -1,12 +1,7 @@
 package AIBO;
 
-import java.util.ArrayList;
-
 import AIBO.Extensions.TaskManager;
 import IrcNetwork.IrcNetwork;
-import IrcNetwork.MessageListener;
-import IrcNetwork.ServerListener;
-import IrcNetwork.EventListener;
 import IrcNetwork.IrcNetworkListener;
 import IrcNetwork.IrcMessage;
 import IrcNetwork.IrcEvent;
@@ -31,16 +26,22 @@ import IrcNetwork.IrcEvent;
  */
 
 public final class AIBO implements IrcNetworkListener {
-    private ExtensionManager extensionManager = new ExtensionManager(new String[]{ "core" });
-    private TaskManager taskManager = new TaskManager(this.extensionManager);
+    private TaskManager taskManager;
 
-    private IrcNetwork ircNetwork = new IrcNetwork("irc.quakenet.org", 6667, this);
+    private IrcNetwork ircNetwork;
 
+    public AIBO() {
+        this.ircNetwork = new IrcNetwork("irc.quakenet.org", 6667, this);
+
+        this.taskManager = new TaskManager(this.ircNetwork.getMessageSender());
+
+        this.ircNetwork.connect();
+    }
 
     public AIBO(String[] extensionNames) {
-        this.extensionManager.addExtensionsByNames(extensionNames);
+        this();
 
-        this.setIrcListeners();
+        this.taskManager.getExtensionManager().addExtensionsByNames(extensionNames);
     }
 
     @Override
@@ -50,30 +51,12 @@ public final class AIBO implements IrcNetworkListener {
             IrcEvent ircEvent = IrcEvent.tryParse(message);
 
             if (ircMessage != null) {
-                this.notifyMessageListeners(ircMessage);
+                this.taskManager.notifyMessageListeners(ircMessage);
             } else if (ircEvent != null) {
-                this.notifyEventListeners(ircEvent);
+                this.taskManager.notifyEventListeners(ircEvent);
             } else {
-                this.notifyServerListeners(message);
+                this.taskManager.notifyServerListeners(message);
             }
-        }
-    }
-
-    private void notifyMessageListeners(IrcMessage ircMessage) {
-        for(MessageListener listener : messageListeners) {
-            listener.messageReceived(ircMessage);
-        }
-    }
-
-    private void notifyEventListeners(IrcEvent ircEvent) {
-        for(EventListener listener : eventListeners) {
-            listener.eventReceived(ircEvent);
-        }
-    }
-
-    private void notifyServerListeners(String serverMessage) {
-        for(ServerListener listener : serverListeners) {
-            listener.serverMessageReceived(serverMessage);
         }
     }
 }

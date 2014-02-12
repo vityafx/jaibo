@@ -1,7 +1,8 @@
 package AIBO;
 
 import AIBO.Extensions.Extension;
-import IrcNetwork.MessageListener;
+import AIBO.Extensions.ExtensionMessenger;
+import IrcNetwork.IrcMessageSender;
 
 import java.util.ArrayList;
 
@@ -25,20 +26,24 @@ import java.util.ArrayList;
 
 public final class ExtensionManager {
     private ArrayList<Extension> extensions = new ArrayList<Extension>();
+    private ExtensionMessenger messenger;
 
 
     public ExtensionManager() {
 
     }
 
-    public ExtensionManager(String[] extensionNames) {
+    public ExtensionManager(String[] extensionNames, IrcMessageSender messageSender) {
+        this.setupExtensionMessenger(messageSender);
         this.addExtensionsByNames(extensionNames);
     }
 
 
     public void addExtensionsByNames(String[] extensionNames) {
-        for (String name : extensionNames) {
-            this.addExtensionByName(name);
+        if (extensionNames != null) {
+            for (String name : extensionNames) {
+                this.addExtensionByName(name);
+            }
         }
     }
 
@@ -46,6 +51,8 @@ public final class ExtensionManager {
         Extension extension = this.findExtensionByName(extensionName);
 
         if (extension != null) {
+            extension.setExtensionMessenger(this.messenger);
+
             this.extensions.add(extension);
         }
     }
@@ -60,17 +67,38 @@ public final class ExtensionManager {
         }
     }
 
-    public ArrayList<MessageListener> getMessageListeners() {
-        ArrayList<MessageListener> messageListeners = null;
-
-        for(int i = 0; i < this.extensions.size()) {
-            //this.messageListeners.addAll(this.extensions.get(0).getMessageListeners());
-        }
-
-        return messageListeners;
+    public ArrayList<Extension> getExtensions() {
+        return this.extensions;
     }
 
-    private Extension findExtensionByName(String extensionName) {
+
+    public Extension findExtensionByName(String extensionName) {
+        try {
+            Class<?> extensionClass = Class.forName("AIBO.Extensions." + extensionName + ".Object");
+
+            try {
+                return (Extension)extensionClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         return null;
+    }
+
+    public Extension getCurrentlyRunningExtensionByName(String extensionName) {
+        for(Extension extension : this.extensions) {
+            if (extension.getExtensionName().equalsIgnoreCase(extensionName)) {
+                return extension;
+            }
+        }
+
+        return null;
+    }
+
+    public void setupExtensionMessenger(IrcMessageSender messageSender) {
+        this.messenger = new ExtensionMessenger(messageSender, this);
     }
 }

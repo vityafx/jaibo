@@ -1,6 +1,9 @@
 package AIBO.Extensions.Core;
 
+import AIBO.Extensions.Core.Commands.ServerListeners.Login;
+import AIBO.Extensions.Core.Commands.ServerListeners.Pong;
 import AIBO.Extensions.Extension;
+import AIBO.Extensions.ExtensionMessenger;
 
 /**
  * Core extension object
@@ -22,6 +25,15 @@ import AIBO.Extensions.Extension;
 
 public class Object extends Extension {
 
+    public Object() {
+        this.addServerListener(new Pong(this));
+        this.addServerListener(new Login(this));
+    }
+
+    public Object(ExtensionMessenger messenger) {
+        this.setExtensionMessenger(messenger);
+    }
+
     @Override
     public void run() {
 
@@ -29,11 +41,6 @@ public class Object extends Extension {
 
     @Override
     public String getExtensionName() {
-        return "core";
-    }
-
-    @Override
-    public void processTask() {
-
+        return "Core";
     }
 }
