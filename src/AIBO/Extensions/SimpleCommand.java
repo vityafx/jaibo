@@ -1,9 +1,7 @@
-package IrcNetwork;
-
-import NetworkConnection.NetworkConnection;
+package AIBO.Extensions;
 
 /**
- * Realization of simple commands sender to irc network
+ * Simple command realization
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,22 +18,13 @@ import NetworkConnection.NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class IrcCommandSender {
-    private NetworkConnection connection;
+public abstract class SimpleCommand {
+    protected String arguments;
+    protected Extension object;
 
-
-    public IrcCommandSender() {
-
+    protected SimpleCommand(Extension extension) {
+        this.object = extension;
     }
 
-    public IrcCommandSender(NetworkConnection connection) {
-        this.connection = connection;
-    }
-
-
-    public void sendIrcCommand(String command, String arguments) {
-        if (this.connection != null) {
-            connection.send(String.format("%s %s", command, arguments));
-        }
-    }
+    public abstract void execute();
 }

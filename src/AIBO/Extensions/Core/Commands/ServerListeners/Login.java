@@ -53,6 +53,6 @@ public final class Login extends Command implements ServerListener {
     @Override
     protected void action() {
         this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("nick", "jaibo");
-        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("user", "aib aib *** : best irc bot");
+        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("user", "jaibo jaibo *** : Java IRC bot");
     }
 }

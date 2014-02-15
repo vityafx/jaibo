@@ -33,7 +33,7 @@ public final class IrcMessage {
         IrcMessage channelMessage = null;
 
         if(message != null) {
-            Pattern p = Pattern.compile("^(.*)!(.*) PRIVMSG (.*) :(.*)$");
+            Pattern p = Pattern.compile("^:(.*)!(.*) PRIVMSG (.*) :(.*)$", Pattern.DOTALL);
 
             CharSequence sequence = message.subSequence(0, message.length());
             Matcher matcher = p.matcher(sequence);
@@ -72,9 +72,9 @@ public final class IrcMessage {
         this.receiver = receiver;
 
         if (receiver.charAt(0) == '#') {
-            this.messageType = IrcMessageType.ChannelMessage;
+            this.setMessageType(IrcMessageType.ChannelMessage);
         } else {
-            this.messageType = IrcMessageType.PrivateMessage;
+            this.setMessageType(IrcMessageType.PrivateMessage);
         }
     }
 
@@ -90,8 +90,16 @@ public final class IrcMessage {
         return this.message;
     }
 
+    public IrcMessageType getMessageType() {
+        return this.messageType;
+    }
+
+    public void setMessageType(IrcMessageType messageType) {
+        this.messageType = messageType;
+    }
+
     public String toString() {
-        return String.format("User: %s\nHost: %s\nCommand: %s\nChannel: %s\nMessage: %s\n",
+        return String.format("User: %s\nHost: %s\nChannel: %s\nMessage: %s\n",
                 this.getUser(),
                 this.getHost(),
                 this.getReceiver(),

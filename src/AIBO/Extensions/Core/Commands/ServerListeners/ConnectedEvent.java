@@ -1,15 +1,16 @@
 package AIBO.Extensions.Core.Commands.ServerListeners;
 
 import AIBO.Extensions.Command;
-import AIBO.Extensions.Core.Object;
+import AIBO.Extensions.SimpleCommand;
 import IrcNetwork.ServerListener;
 
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Pong answer
+ * Launches when after bot finished to connect to irc server
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,17 +27,18 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Pong extends Command implements ServerListener {
+public final class ConnectedEvent extends Command implements ServerListener {
+    public ArrayList<SimpleCommand> commands = new ArrayList<SimpleCommand>();
 
-    private String pongAnswer;
-    private Object object;
 
-    public Pong() {
-
+    public ConnectedEvent(SimpleCommand[] commands) {
+        this.commands = new ArrayList<SimpleCommand>(Arrays.asList(commands));
     }
 
-    public Pong(Object object) {
-        this.object = object;
+    public ConnectedEvent(SimpleCommand command) {
+        if (command != null) {
+            this.commands.add(command);
+        }
     }
 
     @Override
@@ -44,18 +46,17 @@ public final class Pong extends Command implements ServerListener {
         this.checkAndExecute(message);
     }
 
+
     @Override
     public boolean check(String message) {
         boolean checkPassed = false;
 
-        Pattern p = Pattern.compile("^PING :(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
+        Pattern p = Pattern.compile("^:(.*) 001 jaibo :(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
 
         CharSequence sequence = message.subSequence(0, message.length());
         Matcher matcher = p.matcher(sequence);
 
         if (matcher.matches()) {
-            this.pongAnswer = String.format(matcher.group(1));
-
             checkPassed = true;
         }
 
@@ -64,6 +65,10 @@ public final class Pong extends Command implements ServerListener {
 
     @Override
     protected void action() {
-        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("PONG", this.pongAnswer);
+        if (this.commands != null) {
+            for(SimpleCommand command : this.commands) {
+                command.execute();
+            }
+        }
     }
 }

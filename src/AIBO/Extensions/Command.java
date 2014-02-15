@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 
 public abstract class Command {
-    private ArrayList<String> names;
+    private ArrayList<String> names = new ArrayList<String>();
 
 
     public void setNames(ArrayList<String> names) {
@@ -42,7 +42,7 @@ public abstract class Command {
         boolean checkPassed = false;
 
         for(String name : this.names) {
-            if(message.toLowerCase().startsWith(name + " ")) {
+            if(message.toLowerCase().startsWith(name)) {
                 checkPassed = true;
 
                 break;
