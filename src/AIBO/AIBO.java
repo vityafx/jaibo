@@ -1,6 +1,7 @@
 package AIBO;
 
 import AIBO.Extensions.TaskManager;
+import Helpers.Configuration;
 import IrcNetwork.IrcNetwork;
 import IrcNetwork.IrcNetworkListener;
 import IrcNetwork.IrcMessage;
@@ -26,9 +27,12 @@ import IrcNetwork.IrcEvent;
  */
 
 public final class AIBO implements IrcNetworkListener {
+    public static Configuration Configuration = new Configuration("/home/broken/IdeaProjects/jaibo/src/settings.ini");
+
     private TaskManager taskManager;
 
     private IrcNetwork ircNetwork;
+
 
     public AIBO() {
         this.ircNetwork = new IrcNetwork("irc.quakenet.org", 6667, this);

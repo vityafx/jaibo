@@ -1,6 +1,7 @@
 package AIBO.Extensions.Core;
 
 import AIBO.Extensions.Core.Commands.MessageListeners.Hello;
+import AIBO.Extensions.Core.Commands.ServerListeners.Auth;
 import AIBO.Extensions.Core.Commands.ServerListeners.ConnectedEvent;
 import AIBO.Extensions.Core.Commands.ServerListeners.Login;
 import AIBO.Extensions.Core.Commands.ServerListeners.Pong;
@@ -34,11 +35,12 @@ public class Object extends Extension {
         this.addMessageListener(new Hello(this));
 
         this.addServerListener(new ConnectedEvent(new SimpleCommand(this) {
-            @Override
-            public void execute() {
-                this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("JOIN", "#ircbottest");
-            }
-        }));
+                    @Override
+                    public void execute() {
+                        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("JOIN", "#ircbottest");
+                    }
+                },
+                new Auth(this)));
     }
 
     public Object(ExtensionMessenger messenger) {

@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Launches when after bot finished to connect to irc server
+ * Launches after bot have been connected to irc server
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ public final class ConnectedEvent extends Command implements ServerListener {
     public ArrayList<SimpleCommand> commands = new ArrayList<SimpleCommand>();
 
 
-    public ConnectedEvent(SimpleCommand[] commands) {
+    public ConnectedEvent(SimpleCommand... commands) {
         this.commands = new ArrayList<SimpleCommand>(Arrays.asList(commands));
     }
 
