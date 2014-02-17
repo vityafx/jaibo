@@ -1,7 +1,9 @@
 package AIBO;
 
+import AIBO.Extensions.Core.Object;
 import AIBO.Extensions.Extension;
 import AIBO.Extensions.ExtensionMessenger;
+import Errors.ExtensionManagerError;
 import IrcNetwork.IrcMessageSender;
 
 import java.util.ArrayList;
@@ -29,12 +31,9 @@ public final class ExtensionManager {
     private ExtensionMessenger messenger;
 
 
-    public ExtensionManager() {
-
-    }
-
     public ExtensionManager(String[] extensionNames, IrcMessageSender messageSender) {
         this.setupExtensionMessenger(messageSender);
+        this.createCoreExtension();
         this.addExtensionsByNames(extensionNames);
     }
 
@@ -48,8 +47,19 @@ public final class ExtensionManager {
     }
 
     public void addExtensionByName(String extensionName) {
-        Extension extension = this.findExtensionByName(extensionName);
+        if (!this.isExtensionAlreadyAdded(extensionName)) {
+            Extension extension = this.findAndCreateExtensionByName(extensionName);
 
+            if (extension != null) {
+                this.addExtension(extension);
+            }
+        } else {
+            throw new ExtensionManagerError(
+                    String.format("Extension \"%s\" is already loaded", extensionName));
+        }
+    }
+
+    public void addExtension(Extension extension) {
         if (extension != null) {
             extension.setExtensionMessenger(this.messenger);
 
@@ -58,11 +68,32 @@ public final class ExtensionManager {
     }
 
     public void removeExtensionByName(String extensionName) {
-        for(Extension extension : this.extensions) {
-            if (extension.getExtensionName().equals(extensionName)) {
-                this.extensions.remove(extension);
+        if (this.isExtensionAlreadyAdded(extensionName)) {
+            for(Extension extension : this.extensions) {
+                if (extension.getExtensionName().equals(extensionName)) {
+                    this.removeExtension(extension);
 
-                break;
+                    break;
+                }
+            }
+        } else {
+                throw new ExtensionManagerError(String.format("Extension \"%s\" was not loaded before", extensionName));
+            }
+    }
+
+    public void removeExtension(Extension extension) {
+        if (extension != null) {
+            if (this.isExtensionAlreadyAdded(extension)) {
+                if(extension.getExtensionName().equals("Core")) {
+                    throw new ExtensionManagerError("You can't remove core extension");
+                } else {
+                    extension.prepareToUnload();
+
+                    this.extensions.remove(extension);
+                }
+            } else {
+                throw new ExtensionManagerError(
+                        String.format("Extension \"%s\" was not loaded before", extension.getExtensionName()));
             }
         }
     }
@@ -72,20 +103,20 @@ public final class ExtensionManager {
     }
 
 
-    public Extension findExtensionByName(String extensionName) {
+    public Extension findAndCreateExtensionByName(String extensionName) {
         try {
             Class<?> extensionClass = Class.forName("AIBO.Extensions." + extensionName + ".Object");
 
             try {
                 return (Extension)extensionClass.newInstance();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new ExtensionManagerError(
+                        String.format("Can't instantiate an object of extension \"%s\"",
+                        extensionName));
             }
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new ExtensionManagerError(String.format("Can't find extension \"%s\"", extensionName));
         }
-
-        return null;
     }
 
     public Extension getCurrentlyRunningExtensionByName(String extensionName) {
@@ -100,5 +131,29 @@ public final class ExtensionManager {
 
     public void setupExtensionMessenger(IrcMessageSender messageSender) {
         this.messenger = new ExtensionMessenger(messageSender, this);
+    }
+
+    private void createCoreExtension() {
+        Object coreExtensionObject = new Object();
+        this.addExtension(coreExtensionObject);
+        coreExtensionObject.setExtensionManager(this);
+    }
+
+    private boolean isExtensionAlreadyAdded(String extensionName) {
+        boolean extensionAlreadyAdded = false;
+
+        for(Extension extension : this.extensions) {
+            if (extension.getExtensionName().equals(extensionName)) {
+                extensionAlreadyAdded = true;
+
+                break;
+            }
+        }
+
+        return extensionAlreadyAdded;
+    }
+
+    private boolean isExtensionAlreadyAdded(Extension extension) {
+        return this.extensions.contains(extension);
     }
 }

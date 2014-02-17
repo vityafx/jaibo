@@ -1,5 +1,8 @@
 package NetworkConnection;
 
+import AIBO.AIBO;
+import Helpers.ConfigurationListener;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -23,7 +26,9 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class NetworkConnection {
+public class NetworkConnection implements ConfigurationListener {
+    private boolean isDebug;
+
     public static final NetworkConnection sharedInstance = new NetworkConnection();
 
     private int port;
@@ -35,7 +40,9 @@ public class NetworkConnection {
 
 
     private NetworkConnection() {
+        AIBO.Configuration.addListener(this);
 
+        this.configurationChanged();
     }
 
 
@@ -76,13 +83,15 @@ public class NetworkConnection {
             BufferedReader networkInputStream = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 
             char[] inputChars = new char[1024];
-            int charsRead = 0;
+            int charsRead;
 
             while(true) {
                 if ((charsRead = networkInputStream.read(inputChars)) != -1) {
                     String data = new String(inputChars, 0, charsRead);
 
-                    System.out.print(data);
+                    if (this.isDebug) {
+                        System.out.print(String.format("<< %s", data));
+                    }
 
                     this.notifyListeners(data);
                 }
@@ -99,7 +108,10 @@ public class NetworkConnection {
 
             writer.write(data + "\r\n");
             writer.flush();
-            System.out.println(" >> " + data);
+
+            if (this.isDebug) {
+                System.out.println(String.format(">> %s", data));
+            }
 
         } catch (IOException e) {
             System.out.println(String.format("Got an exception: %s", e.getMessage()));
@@ -154,6 +166,17 @@ public class NetworkConnection {
             } catch(IOException exception) {
                 System.out.printf("%s", exception.getMessage());
             }
+        }
+    }
+
+    @Override
+    public void configurationChanged() {
+        String isDebugMode = AIBO.Configuration.getConfigurationHashMap().get("Network.debug");
+
+        if (isDebugMode != null && isDebugMode.equalsIgnoreCase("yes")) {
+            this.isDebug = true;
+        } else {
+            this.isDebug = false;
         }
     }
 }

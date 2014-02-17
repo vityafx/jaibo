@@ -25,10 +25,7 @@ public final class TaskManager {
     private ExtensionManager extensionManager;
 
     public TaskManager(IrcMessageSender messageSender) {
-        this.extensionManager = new ExtensionManager(
-                new String[]{ "Core" },
-                messageSender
-        );
+        this.extensionManager = new ExtensionManager(null, messageSender);
     }
 
 

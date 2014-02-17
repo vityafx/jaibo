@@ -1,5 +1,7 @@
 package AIBO.Extensions;
 
+import AIBO.AIBO;
+import Helpers.ConfigurationListener;
 import IrcNetwork.EventListener;
 import IrcNetwork.IrcMessage;
 import IrcNetwork.IrcEvent;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public abstract class Extension extends Thread {
+public abstract class Extension extends Thread implements ConfigurationListener {
 
     private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
     private ArrayList<EventListener> eventListeners = new ArrayList<EventListener>();
@@ -36,6 +38,20 @@ public abstract class Extension extends Thread {
 
     private String topic;
 
+    private String[] channels;
+
+
+    protected Extension() {
+        AIBO.Configuration.addListener(this);
+
+        this.configurationChanged();
+
+        this.setCommands();
+    }
+
+    protected Extension(ExtensionMessenger messenger) {
+        this.setExtensionMessenger(messenger);
+    }
 
     public void setTopic(String topic) {
         this.topic = topic;
@@ -106,5 +122,25 @@ public abstract class Extension extends Thread {
     @Override
     public void run() {
 
+    }
+
+    public void prepareToUnload() {
+        this.beforeUnload();
+    }
+
+    /* This method will be called before unloading extension */
+    protected void beforeUnload() {
+        System.out.println(String.format("Extension %s will be unloaded", this.getExtensionName()));
+    }
+
+    @Override
+    public void configurationChanged() {
+        this.channels = AIBO.Configuration.getConfigurationHashMap().get("AIBO.channels").split(" ");
+    }
+
+    protected abstract void setCommands();
+
+    public String[] getChannels() {
+        return this.channels;
     }
 }

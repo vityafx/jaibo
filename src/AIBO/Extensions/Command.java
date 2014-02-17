@@ -41,7 +41,7 @@ public abstract class Command {
     public boolean check(String message) {
         boolean checkPassed = false;
 
-        for(String name : this.names) {
+        for(String name : this.getNames()) {
             if(message.toLowerCase().startsWith(name)) {
                 checkPassed = true;
 

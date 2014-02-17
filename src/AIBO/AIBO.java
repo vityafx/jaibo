@@ -27,7 +27,7 @@ import IrcNetwork.IrcEvent;
  */
 
 public final class AIBO implements IrcNetworkListener {
-    public static Configuration Configuration = new Configuration("/home/broken/IdeaProjects/jaibo/src/settings.ini");
+    public static Configuration Configuration = new Configuration("settings.ini");
 
     private TaskManager taskManager;
 
@@ -35,7 +35,10 @@ public final class AIBO implements IrcNetworkListener {
 
 
     public AIBO() {
-        this.ircNetwork = new IrcNetwork("irc.quakenet.org", 6667, this);
+        this.ircNetwork = new IrcNetwork(
+                Configuration.getConfigurationHashMap().get("IrcConnection.host"),
+                Integer.parseInt(Configuration.getConfigurationHashMap().get("IrcConnection.port")),
+                this);
 
         this.taskManager = new TaskManager(this.ircNetwork.getMessageSender());
 

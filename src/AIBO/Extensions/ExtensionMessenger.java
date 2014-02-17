@@ -24,7 +24,6 @@ import IrcNetwork.IrcMessageSender;
  */
 
 public final class ExtensionMessenger implements ExtensionMessengerInterface {
-    private ExtensionMessage message;
     private IrcMessageSender sender;
     private ExtensionManager manager;
 

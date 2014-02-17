@@ -1,13 +1,13 @@
 package AIBO.Extensions.Core;
 
+import AIBO.ExtensionManager;
 import AIBO.Extensions.Core.Commands.MessageListeners.Hello;
-import AIBO.Extensions.Core.Commands.ServerListeners.Auth;
-import AIBO.Extensions.Core.Commands.ServerListeners.ConnectedEvent;
-import AIBO.Extensions.Core.Commands.ServerListeners.Login;
-import AIBO.Extensions.Core.Commands.ServerListeners.Pong;
+import AIBO.Extensions.Core.Commands.MessageListeners.LoadExtension;
+import AIBO.Extensions.Core.Commands.MessageListeners.UnloadExtension;
+import AIBO.Extensions.Core.Commands.MessageListeners.UpdateConfiguration;
+import AIBO.Extensions.Core.Commands.ServerListeners.*;
 import AIBO.Extensions.Extension;
-import AIBO.Extensions.ExtensionMessenger;
-import AIBO.Extensions.SimpleCommand;
+import Errors.ExtensionManagerError;
 
 /**
  * Core extension object
@@ -28,23 +28,19 @@ import AIBO.Extensions.SimpleCommand;
  */
 
 public class Object extends Extension {
+    private ExtensionManager extensionManager;
+
+    private static int ObjectCount = 0;
+    private final static int MaxObjectCount = 1;
 
     public Object() {
-        this.addServerListener(new Pong(this));
-        this.addServerListener(new Login(this));
-        this.addMessageListener(new Hello(this));
-
-        this.addServerListener(new ConnectedEvent(new SimpleCommand(this) {
-                    @Override
-                    public void execute() {
-                        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("JOIN", "#ircbottest");
-                    }
-                },
-                new Auth(this)));
-    }
-
-    public Object(ExtensionMessenger messenger) {
-        this.setExtensionMessenger(messenger);
+        if (Object.ObjectCount >= Object.MaxObjectCount) {
+            throw new ExtensionManagerError(
+                    String.format("Can't create core extension objects with count more than %s.",
+                            Object.MaxObjectCount));
+        } else {
+            Object.ObjectCount++;
+        }
     }
 
     @Override
@@ -55,5 +51,26 @@ public class Object extends Extension {
     @Override
     public String getExtensionName() {
         return "Core";
+    }
+
+    @Override
+    public void setCommands() {
+        this.addServerListener(new Pong(this));
+        this.addServerListener(new Login(this));
+
+        this.addMessageListener(new Hello(this));
+        this.addMessageListener(new LoadExtension(this));
+        this.addMessageListener(new UnloadExtension(this));
+        this.addMessageListener(new UpdateConfiguration(this));
+
+        this.addServerListener(new ConnectedToServerEvent(new JoinChannels(this), new Auth(this)));
+    }
+
+    public void setExtensionManager(ExtensionManager manager) {
+        this.extensionManager = manager;
+    }
+
+    public ExtensionManager getExtensionManager() {
+        return this.extensionManager;
     }
 }

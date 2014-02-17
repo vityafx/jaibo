@@ -27,15 +27,15 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class ConnectedEvent extends Command implements ServerListener {
+public final class ConnectedToServerEvent extends Command implements ServerListener {
     public ArrayList<SimpleCommand> commands = new ArrayList<SimpleCommand>();
 
 
-    public ConnectedEvent(SimpleCommand... commands) {
+    public ConnectedToServerEvent(SimpleCommand... commands) {
         this.commands = new ArrayList<SimpleCommand>(Arrays.asList(commands));
     }
 
-    public ConnectedEvent(SimpleCommand command) {
+    public ConnectedToServerEvent(SimpleCommand command) {
         if (command != null) {
             this.commands.add(command);
         }

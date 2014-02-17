@@ -1,8 +1,8 @@
 package Helpers;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -46,21 +46,30 @@ public final class Configuration {
         this.configurationFileName = configurationFileName;
 
         try {
-            FileInputStream settingsFileInputStream = new FileInputStream(this.configurationFileName);
-
-            Properties properties = new Properties();
+            URL resource = this.getClass().getClassLoader().getResource(String.format("%s",
+                    this.configurationFileName));
 
             try {
-                properties.load(settingsFileInputStream);
+                FileInputStream settingsFileInputStream = new FileInputStream(new File(resource.toURI()));
 
-                this.configurationHashMap = new HashMap<String, String>();
+                Properties properties = new Properties();
 
-                for (final String name: properties.stringPropertyNames())
-                    this.configurationHashMap.put(name, properties.getProperty(name));
+                try {
+                    properties.load(settingsFileInputStream);
 
-                this.notifyListeners();
+                    this.configurationHashMap = new HashMap<String, String>();
 
-            } catch (IOException e) {
+                    for (final String name: properties.stringPropertyNames())
+                        this.configurationHashMap.put(name, properties.getProperty(name));
+
+                    this.notifyListeners();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         } catch (FileNotFoundException e) {
