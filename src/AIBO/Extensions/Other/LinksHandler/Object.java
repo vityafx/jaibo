@@ -1,7 +1,9 @@
-import AIBO.AIBO;
+package AIBO.Extensions.Other.LinksHandler;
+
+import AIBO.Extensions.Extension;
 
 /**
- * Main class of AIBO java-port
+ * Links handler extension. Watches links on the channel and parses them
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +20,14 @@ import AIBO.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public final class Object extends Extension {
+    @Override
+    public String getExtensionName() {
+        return null;
+    }
 
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.getConfigurationHashMap().get("AIBO.extensions").split(" ");
+    @Override
+    protected void setCommands() {
 
-        AIBO bot = new AIBO(extensions);
-        bot.run();
     }
 }

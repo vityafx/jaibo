@@ -20,9 +20,13 @@ import NetworkConnection.NetworkConnection;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class IrcMessageSender implements IrcMessageSenderInterface {
-    private IrcCommandSender sender;
+public class IrcMessageSender implements IrcMessageSenderInterface {
+    protected IrcCommandSender sender;
 
+
+    protected IrcMessageSender() {
+
+    }
 
     public IrcMessageSender(NetworkConnection connection) {
         this.sender = new IrcCommandSender(connection);
@@ -54,6 +58,13 @@ public final class IrcMessageSender implements IrcMessageSenderInterface {
     @Override
     public void setTopic(String channel, String topicContent) {
         this.sender.sendIrcCommand("TOPIC", String.format("%s :%s", channel, topicContent));
+    }
+
+    @Override
+    public void setTopic(String[] channels, String topicContent) {
+        for (String channel : channels) {
+            this.setTopic(channel, topicContent);
+        }
     }
 
     public IrcCommandSender getCommandSender() {

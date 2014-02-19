@@ -1,6 +1,7 @@
 package AIBO.Extensions.Core.Commands.MessageListeners;
 
 import AIBO.Extensions.Command;
+import Errors.ExtensionError;
 import Errors.ExtensionManagerError;
 import IrcNetwork.IrcMessage;
 import IrcNetwork.IrcMessageType;
@@ -85,6 +86,8 @@ public final class UnloadExtension extends Command implements MessageListener {
 
             this.extensionName = null;
         } catch (ExtensionManagerError e) {
+            this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, e.getMessage());
+        } catch (ExtensionError e) {
             this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, e.getMessage());
         }
     }

@@ -35,12 +35,6 @@ public final class ConnectedToServerEvent extends Command implements ServerListe
         this.commands = new ArrayList<SimpleCommand>(Arrays.asList(commands));
     }
 
-    public ConnectedToServerEvent(SimpleCommand command) {
-        if (command != null) {
-            this.commands.add(command);
-        }
-    }
-
     @Override
     public void serverMessageReceived(String message) {
         this.checkAndExecute(message);
@@ -51,7 +45,7 @@ public final class ConnectedToServerEvent extends Command implements ServerListe
     public boolean check(String message) {
         boolean checkPassed = false;
 
-        Pattern p = Pattern.compile("^:(.*) 001 jaibo :(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
+        Pattern p = Pattern.compile("^:(.*) 001 (.*) :(.*)$");
 
         CharSequence sequence = message.subSequence(0, message.length());
         Matcher matcher = p.matcher(sequence);

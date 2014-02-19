@@ -50,14 +50,19 @@ public final class ExtensionMessenger implements ExtensionMessengerInterface {
 
     @Override
     public void sendBroadcastMessage(String[] channels, String message) {
-        for(String channel : channels) {
-            this.sender.sendChannelMessage(channel, message);
-        }
+        this.sender.sendBroadcastMessage(channels, message);
     }
 
     @Override
     public void setTopic(String channel, String topicContent) {
         this.sender.setTopic(channel, topicContent);
+    }
+
+    @Override
+    public void setTopic(String[] channels, String topicContent) {
+        for (String channel : channels) {
+            this.sender.setTopic(channel, topicContent);
+        }
     }
 
     @Override

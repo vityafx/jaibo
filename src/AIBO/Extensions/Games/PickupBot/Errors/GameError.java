@@ -1,7 +1,7 @@
-import AIBO.AIBO;
+package AIBO.Extensions.Games.PickupBot.Errors;
 
 /**
- * Main class of AIBO java-port
+ * Game error
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,13 @@ import AIBO.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public final class GameError extends Error {
+    public GameError(String errorText) {
+        super(errorText);
+    }
 
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.getConfigurationHashMap().get("AIBO.extensions").split(" ");
-
-        AIBO bot = new AIBO(extensions);
-        bot.run();
+    @Override
+    public String getMessage() {
+        return String.format("Game error: %s", super.getMessage());
     }
 }

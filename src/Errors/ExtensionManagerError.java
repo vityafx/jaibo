@@ -28,6 +28,6 @@ public final class ExtensionManagerError extends Error {
 
     @Override
     public String getMessage() {
-        return String.format("Extension manager error: %s", errorText);
+        return String.format("Extension manager error: %s", this.errorText);
     }
 }

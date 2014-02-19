@@ -1,7 +1,7 @@
-import AIBO.AIBO;
+package Errors;
 
 /**
- * Main class of AIBO java-port
+ * Extension error
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,18 @@ import AIBO.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public final class ExtensionError extends Error {
+    private String extensionName;
+    private String errorText;
 
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.getConfigurationHashMap().get("AIBO.extensions").split(" ");
 
-        AIBO bot = new AIBO(extensions);
-        bot.run();
+    public ExtensionError(String extensionName, String errorText) {
+        this.extensionName = extensionName;
+        this.errorText = errorText;
+    }
+
+    @Override
+    public String getMessage() {
+        return String.format("%s extension error: %s", this.extensionName, this.errorText);
     }
 }

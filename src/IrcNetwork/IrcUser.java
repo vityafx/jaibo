@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
  */
 
 public final class IrcUser {
+    private String nick;
     private String name;
     private String host;
     private String rights;
@@ -33,11 +34,13 @@ public final class IrcUser {
 
     }
 
-    private IrcUser(String name,
+    private IrcUser(String nick,
+                    String name,
                     String host,
                     String rights,
                     String lastLogin,
                     Map<String, String> information) {
+        this.setNick(nick);
         this.setName(name);
         this.setHost(host);
         this.setRights(rights);
@@ -58,6 +61,7 @@ public final class IrcUser {
                                     matcher.group(2),
                                     matcher.group(3),
                                     null,
+                                    null,
                                     null
             );
         }
@@ -65,6 +69,13 @@ public final class IrcUser {
         return ircUser;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getHost() {
         return host;
@@ -74,12 +85,12 @@ public final class IrcUser {
         this.host = host;
     }
 
-    public String getName() {
-        return name;
+    public String getNick() {
+        return nick;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNick(String nick) {
+        this.nick = nick;
     }
 
     public String getRights() {

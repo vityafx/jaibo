@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Bot configuration parser and keeper
+ * Class operates bot configuration
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify

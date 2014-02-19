@@ -3,7 +3,10 @@ package NetworkConnection;
 import AIBO.AIBO;
 import Helpers.ConfigurationListener;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -67,13 +70,13 @@ public class NetworkConnection implements ConfigurationListener {
     }
 
     public void addListener(NetworkConnectionListener listener) {
-        if (! this.listeners.contains(listener)) {
+        if (!this.listeners.contains(listener)) {
             this.listeners.add(listener);
         }
     }
 
     private void notifyListeners(String data) {
-        for(NetworkConnectionListener listener : this.listeners) {
+        for (NetworkConnectionListener listener : this.listeners) {
             listener.dataReceived(data);
         }
     }
@@ -85,7 +88,7 @@ public class NetworkConnection implements ConfigurationListener {
             char[] inputChars = new char[1024];
             int charsRead;
 
-            while(true) {
+            while (true) {
                 if ((charsRead = networkInputStream.read(inputChars)) != -1) {
                     String data = new String(inputChars, 0, charsRead);
 
@@ -96,9 +99,8 @@ public class NetworkConnection implements ConfigurationListener {
                     this.notifyListeners(data);
                 }
             }
-        }
-        catch (IOException e) {
-            System.out.println(String.format("I've got an exception: %s", e.getMessage()));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -114,7 +116,7 @@ public class NetworkConnection implements ConfigurationListener {
             }
 
         } catch (IOException e) {
-            System.out.println(String.format("Got an exception: %s", e.getMessage()));
+            e.printStackTrace();
         }
     }
 
@@ -163,7 +165,7 @@ public class NetworkConnection implements ConfigurationListener {
         if (this.socket.isConnected()) {
             try {
                 this.socket.close();
-            } catch(IOException exception) {
+            } catch (IOException exception) {
                 System.out.printf("%s", exception.getMessage());
             }
         }

@@ -1,8 +1,14 @@
 package AIBO.Extensions.Core.Commands.ServerListeners;
 
+import AIBO.AIBO;
 import AIBO.Extensions.Command;
 import AIBO.Extensions.Core.Object;
+import Errors.ExtensionError;
+import Helpers.ConfigurationListener;
 import IrcNetwork.ServerListener;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Login and authentication
@@ -22,15 +28,27 @@ import IrcNetwork.ServerListener;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Login extends Command implements ServerListener {
-    //private String login;
+public final class Login extends Command implements ServerListener, ConfigurationListener {
+    private String[] nicknames;
+    private String[] identities;
+    private String information;
+
+    private boolean loggedIn;
+
+    private static int CurrentNicknameIndex = 0;
+    private static int CurrentIdentityIndex = 0;
+
     private Object object;
 
     public Login() {
+        AIBO.Configuration.addListener(this);
 
+        this.configurationChanged();
     }
 
     public Login(Object object) {
+        this();
+
         this.object = object;
     }
 
@@ -45,6 +63,15 @@ public final class Login extends Command implements ServerListener {
 
         if (message.startsWith("NOTICE AUTH :*** Looking up your hostname")) {
             checkPassed = true;
+        } else {
+            Pattern p = Pattern.compile("^:(.*) 433 (.*):Nickname is already in use.$");
+
+            CharSequence sequence = message.subSequence(0, message.length());
+            Matcher matcher = p.matcher(sequence);
+
+            if (matcher.matches()) {
+                checkPassed = true;
+            }
         }
 
         return checkPassed;
@@ -52,7 +79,44 @@ public final class Login extends Command implements ServerListener {
 
     @Override
     protected void action() {
-        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("nick", "jaibo");
-        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("user", "jaibo jaibo *** : Java IRC bot");
+        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("nick", this.getNickName());
+
+        if (!loggedIn) {
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("user",
+                    String.format("%s * ** : %s", this.getIdentity(), this.getInformation()));
+
+            this.loggedIn = true;
+        }
+    }
+
+    @Override
+    public void configurationChanged() {
+        this.nicknames = AIBO.Configuration.getConfigurationHashMap().get("Login.nicknames").split(" ");
+        this.identities = AIBO.Configuration.getConfigurationHashMap().get("Login.identities").split(" ");
+        this.information = AIBO.Configuration.getConfigurationHashMap().get("AIBO.whois_information");
+
+        if (this.object != null) {
+            this.action();
+        }
+    }
+
+    private String getNickName() {
+        if (Login.CurrentNicknameIndex >= this.nicknames.length) {
+            throw new ExtensionError(this.object.getExtensionName(), "All nicknames are already in use");
+        } else {
+            return this.nicknames[Login.CurrentNicknameIndex++];
+        }
+    }
+
+    private String getIdentity() {
+        if (Login.CurrentIdentityIndex >= this.identities.length) {
+            throw new ExtensionError(this.object.getExtensionName(), "All identities are already in use");
+        } else {
+            return this.identities[Login.CurrentIdentityIndex++];
+        }
+    }
+
+    private String getInformation() {
+        return this.information;
     }
 }

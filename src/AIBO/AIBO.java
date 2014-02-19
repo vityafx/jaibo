@@ -2,10 +2,10 @@ package AIBO;
 
 import AIBO.Extensions.TaskManager;
 import Helpers.Configuration;
+import IrcNetwork.IrcEvent;
+import IrcNetwork.IrcMessage;
 import IrcNetwork.IrcNetwork;
 import IrcNetwork.IrcNetworkListener;
-import IrcNetwork.IrcMessage;
-import IrcNetwork.IrcEvent;
 
 
 /**
@@ -36,16 +36,14 @@ public final class AIBO implements IrcNetworkListener {
 
     public AIBO() {
         this.ircNetwork = new IrcNetwork(
-                Configuration.getConfigurationHashMap().get("IrcConnection.host"),
+                Configuration.getConfigurationHashMap().get("IrcConnection.host").split(" "),
                 Integer.parseInt(Configuration.getConfigurationHashMap().get("IrcConnection.port")),
                 this);
 
         this.taskManager = new TaskManager(this.ircNetwork.getMessageSender());
-
-        this.ircNetwork.connect();
     }
 
-    public AIBO(String[] extensionNames) {
+    public AIBO(String... extensionNames) {
         this();
 
         this.taskManager.getExtensionManager().addExtensionsByNames(extensionNames);
@@ -65,5 +63,9 @@ public final class AIBO implements IrcNetworkListener {
                 this.taskManager.notifyServerListeners(message);
             }
         }
+    }
+
+    public void run() {
+        this.ircNetwork.connect();
     }
 }

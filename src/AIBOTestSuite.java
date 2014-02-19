@@ -1,7 +1,11 @@
-import AIBO.AIBO;
+import Tests.IrcChannelTests;
+import Tests.IrcUserTests;
+
+import junit.framework.TestResult;
+import junit.framework.TestSuite;
 
 /**
- * Main class of AIBO java-port
+ * AIBO tests suite
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +22,22 @@ import AIBO.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public final class AIBOTestSuite extends TestSuite {
+    public AIBOTestSuite() {
+        addTestSuite(IrcChannelTests.class);
+        addTestSuite(IrcUserTests.class);
+    }
 
     public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.getConfigurationHashMap().get("AIBO.extensions").split(" ");
+        AIBOTestSuite suite = new AIBOTestSuite();
 
-        AIBO bot = new AIBO(extensions);
-        bot.run();
+        TestResult result = new TestResult();
+
+        suite.run(result);
+
+        System.out.println(String.format("Tests passed: %s", result.wasSuccessful()));
+
+        System.out.println(String.format("Error count: %s", result.errorCount()));
+        System.out.println(String.format("Failure count: %s", result.failureCount()));
     }
 }

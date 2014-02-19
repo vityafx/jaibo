@@ -7,7 +7,7 @@ import AIBO.Extensions.Core.Commands.MessageListeners.UnloadExtension;
 import AIBO.Extensions.Core.Commands.MessageListeners.UpdateConfiguration;
 import AIBO.Extensions.Core.Commands.ServerListeners.*;
 import AIBO.Extensions.Extension;
-import Errors.ExtensionManagerError;
+import Errors.ExtensionError;
 
 /**
  * Core extension object
@@ -35,7 +35,7 @@ public class Object extends Extension {
 
     public Object() {
         if (Object.ObjectCount >= Object.MaxObjectCount) {
-            throw new ExtensionManagerError(
+            throw new ExtensionError(this.getExtensionName(),
                     String.format("Can't create core extension objects with count more than %s.",
                             Object.MaxObjectCount));
         } else {
@@ -64,6 +64,11 @@ public class Object extends Extension {
         this.addMessageListener(new UpdateConfiguration(this));
 
         this.addServerListener(new ConnectedToServerEvent(new JoinChannels(this), new Auth(this)));
+    }
+
+    @Override
+    protected void beforeUnload() {
+        throw new ExtensionError(this.getExtensionName(), "Can't unload extension");
     }
 
     public void setExtensionManager(ExtensionManager manager) {

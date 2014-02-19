@@ -59,7 +59,7 @@ public final class ExtensionManager {
         }
     }
 
-    public void addExtension(Extension extension) {
+    private void addExtension(Extension extension) {
         if (extension != null) {
             extension.setExtensionMessenger(this.messenger);
 
@@ -77,24 +77,15 @@ public final class ExtensionManager {
                 }
             }
         } else {
-                throw new ExtensionManagerError(String.format("Extension \"%s\" was not loaded before", extensionName));
-            }
+            throw new ExtensionManagerError(String.format("Extension \"%s\" was not loaded before", extensionName));
+        }
     }
 
-    public void removeExtension(Extension extension) {
+    private void removeExtension(Extension extension) {
         if (extension != null) {
-            if (this.isExtensionAlreadyAdded(extension)) {
-                if(extension.getExtensionName().equals("Core")) {
-                    throw new ExtensionManagerError("You can't remove core extension");
-                } else {
-                    extension.prepareToUnload();
+            extension.prepareToUnload();
 
-                    this.extensions.remove(extension);
-                }
-            } else {
-                throw new ExtensionManagerError(
-                        String.format("Extension \"%s\" was not loaded before", extension.getExtensionName()));
-            }
+            this.extensions.remove(extension);
         }
     }
 
@@ -111,7 +102,7 @@ public final class ExtensionManager {
                 return (Extension)extensionClass.newInstance();
             } catch (Exception e) {
                 throw new ExtensionManagerError(
-                        String.format("Can't instantiate an object of extension \"%s\"",
+                        String.format("Can't create an object of extension \"%s\"",
                         extensionName));
             }
         } catch (ClassNotFoundException e) {
@@ -135,8 +126,9 @@ public final class ExtensionManager {
 
     private void createCoreExtension() {
         Object coreExtensionObject = new Object();
-        this.addExtension(coreExtensionObject);
         coreExtensionObject.setExtensionManager(this);
+
+        this.addExtension(coreExtensionObject);
     }
 
     private boolean isExtensionAlreadyAdded(String extensionName) {

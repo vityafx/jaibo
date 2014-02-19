@@ -48,7 +48,7 @@ public final class Pong extends Command implements ServerListener {
     public boolean check(String message) {
         boolean checkPassed = false;
 
-        Pattern p = Pattern.compile("^PING :(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
+        Pattern p = Pattern.compile("^PING :(.*)$");
 
         CharSequence sequence = message.subSequence(0, message.length());
         Matcher matcher = p.matcher(sequence);

@@ -4,6 +4,7 @@ import NetworkConnection.NetworkConnection;
 import NetworkConnection.NetworkConnectionListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Class introduces an Irc Network
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 
 public final class IrcNetwork implements NetworkConnectionListener {
     private ArrayList<IrcChannel> channels = new ArrayList<IrcChannel>();
+    private ArrayList<String> servers = new ArrayList<String>();
+    private static int CurrentServerIndex = 0;
 
     private IrcNetworkListener ircNetworkListener;
 
@@ -32,14 +35,15 @@ public final class IrcNetwork implements NetworkConnectionListener {
     private NetworkConnection connection = NetworkConnection.sharedInstance;
 
 
-    public IrcNetwork(String server, int port, IrcNetworkListener ircNetworkListener) {
+    public IrcNetwork(String[] servers, int port, IrcNetworkListener ircNetworkListener) {
+        this.setServers(servers);
+
         this.sender = new IrcMessageSender(this.connection);
 
         this.ircNetworkListener = ircNetworkListener;
 
         this.connection.addListener(this);
-
-        this.connection.setAddress(server);
+        this.connection.setAddress(this.getServer());
         this.connection.setPort(port);
     }
 
@@ -53,6 +57,18 @@ public final class IrcNetwork implements NetworkConnectionListener {
 
     @Override
     public void dataReceived(String data) {
-        this.ircNetworkListener.ircMessageReceived(data);
+        this.ircNetworkListener.ircMessageReceived(data.replace("\r\n",""));
+    }
+
+    private void setServers(String[] servers) {
+        this.servers.addAll(Arrays.asList(servers));
+    }
+
+    private String getServer() {
+        if (IrcNetwork.CurrentServerIndex >= this.servers.size()) {
+            IrcNetwork.CurrentServerIndex = 0;
+        }
+
+        return this.servers.get(IrcNetwork.CurrentServerIndex++);
     }
 }

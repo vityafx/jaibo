@@ -1,6 +1,7 @@
 package AIBO.Extensions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Command abstract class
@@ -24,7 +25,7 @@ public abstract class Command {
     private ArrayList<String> names = new ArrayList<String>();
 
 
-    public void setNames(ArrayList<String> names) {
+    public void addNames(ArrayList<String> names) {
         this.names = names;
     }
 
@@ -32,12 +33,20 @@ public abstract class Command {
         this.names.add(name);
     }
 
+    public void addNames(String[] names) {
+        this.names.addAll(Arrays.asList(names));
+    }
+
+    public void clearNames() {
+        this.names.clear();
+    }
+
     public ArrayList<String> getNames() {
         return this.names;
     }
 
 
-    // This is a simple check, developer usually have to reimplement check with regexp's in implementations
+    // This is a simple check, developer usually have to reimplement check with regexps in implementations
     public boolean check(String message) {
         boolean checkPassed = false;
 

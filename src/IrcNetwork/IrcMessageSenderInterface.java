@@ -28,4 +28,6 @@ public interface IrcMessageSenderInterface {
     public void sendBroadcastMessage(String[] channels, String message);
 
     public void setTopic(String channel, String topicContent);
+
+    public void setTopic(String[] channels, String topicContent);
 }
