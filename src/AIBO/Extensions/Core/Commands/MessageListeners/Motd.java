@@ -1,11 +1,7 @@
-package AIBO.Extensions.Games.PickupBot.Commands.MessageListeners;
+package AIBO.Extensions.Core.Commands.MessageListeners;
 
 import AIBO.Extensions.Command;
-import AIBO.Extensions.Games.PickupBot.Errors.GameError;
-import AIBO.Extensions.Games.PickupBot.Errors.PickupBotError;
-import AIBO.Extensions.Games.PickupBot.Object;
-import AIBO.Extensions.Games.PickupBot.Player;
-import Helpers.ConfigurationListener;
+import AIBO.Extensions.Core.Object;
 import IrcNetwork.IrcMessage;
 import IrcNetwork.IrcMessageType;
 import IrcNetwork.MessageListener;
@@ -14,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Add player to pickup
+ * Sets message of the day on the channel
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,38 +27,24 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Add extends Command implements MessageListener, ConfigurationListener {
+public final class Motd extends Command implements MessageListener {
     private Object object;
+    private String messageOfTheDay;
 
-    private Player player;
-    private String gameType;
-
-    public Add() {
-        this.configurationChanged();
+    public Motd() {
+        this.addName("!motd");
     }
 
-    public Add(Object object) {
+    public Motd(Object object) {
         this();
 
         this.object = object;
     }
 
-
-    @Override
-    public void configurationChanged() {
-        this.clearNames();
-
-        String[] names = Object.Configuration.getConfigurationHashMap().get("Commands.add").split(" ");
-
-        this.addNames(names);
-    }
-
     @Override
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
-            this.player = new Player(message.getUser(), message.getHost());
-
-            this.execute();
+        if (message.getMessageType() == IrcMessageType.ChannelMessage) {
+            this.checkAndExecute(message.getMessage().trim());
         }
     }
 
@@ -78,7 +60,7 @@ public final class Add extends Command implements MessageListener, Configuration
                 Matcher matcher = p.matcher(sequence);
 
                 if (matcher.matches()) {
-                    this.gameType = matcher.group(1);
+                    this.messageOfTheDay = matcher.group(1);
 
                     break;
                 }
@@ -92,15 +74,6 @@ public final class Add extends Command implements MessageListener, Configuration
 
     @Override
     protected void action() {
-        try {
-            this.object.addPlayer(this.player, this.gameType);
-        } catch (PickupBotError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
-        } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
-        } finally {
-            this.player = null;
-            this.gameType = null;
-        }
+        this.object.getExtensionMessenger().setMessageOfTheDay(this.object.getChannels(), this.messageOfTheDay);
     }
 }

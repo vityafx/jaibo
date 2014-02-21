@@ -3,6 +3,7 @@ package AIBO.Extensions.Games.PickupBot.Tests;
 import AIBO.Extensions.ExtensionMessenger;
 import AIBO.Extensions.Games.PickupBot.*;
 import IrcNetwork.DebugIrcMessageSender;
+import IrcNetwork.IrcEvent;
 import IrcNetwork.IrcMessage;
 import junit.framework.TestCase;
 
@@ -37,12 +38,44 @@ public final class CommandsTests extends TestCase {
             "test2/4"
     };
 
-    private String testPlayer1Message = ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!add test";
-    private String testPlayer2Message = ":testNickName2!testUser2@test2.users.quakenet.org PRIVMSG #test-channel :!add test";
-    private String testPlayer3Message = ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!add";
+    private String testAdd1Message =
+    ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!add test";
+
+    private String testAdd2Message = ":testNickName2!testUser2@test2.users.quakenet.org PRIVMSG #test-channel :!add test";
+    private String testAdd3Message = ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!add";
 
     private String testWrongAddMessage =    ":testNickName1!testUser1@test1.users.quakenet.org " +
                                             "PRIVMSG #test-channel :!add 5492dsgw53";
+
+    private String testPromoteDefaultGameTypeMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!p";
+
+    private String testPromoteTestGameTypeMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!p test";
+
+    private String testPromoteWrongGameTypeMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!p sdafsf3245fgh421";
+
+    private String testRemovePlayerMessageFromDefaultGameType =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!r";
+
+    private String testRemovePlayerMessageFromTestGameType =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!r test";
+
+    private String testWrongRemovePlayerMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!r sdafsf3245fgh421";
+
+    private String testWhoDefaultMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!w";
+
+    private String testWhoTestMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!w";
+
+    private String testWrongWhoMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!w sdafsf3245fgh421";
+
+    private String testPlayer1KickMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org KICK #test-channel testNickName1 :awesome reason";
 
 
     @Override
@@ -55,8 +88,8 @@ public final class CommandsTests extends TestCase {
     }
 
     public void testPickupBotAddPlayer() {
-        this.object.processTask(IrcMessage.tryParse(testPlayer1Message));
-        this.object.processTask(IrcMessage.tryParse(testPlayer1Message));
+        this.object.processTask(IrcMessage.tryParse(testAdd1Message));
+        this.object.processTask(IrcMessage.tryParse(testAdd1Message));
 
         assertEquals(this.messageSender.isSetTopicEvent(), true);
 
@@ -66,52 +99,74 @@ public final class CommandsTests extends TestCase {
     }
 
     public void testPickupBotAddToDefaultGameType() {
-        this.object.processTask(IrcMessage.tryParse(this.testPlayer3Message));
+        this.object.processTask(IrcMessage.tryParse(this.testAdd3Message));
 
         assertEquals(this.messageSender.isSetTopicEvent(), true);
     }
 
     public void testPickupBotGatherPickupGame() {
-        this.object.processTask(IrcMessage.tryParse(this.testPlayer1Message));
-        this.object.processTask(IrcMessage.tryParse(this.testPlayer2Message));
+        this.object.processTask(IrcMessage.tryParse(this.testAdd1Message));
+        this.object.processTask(IrcMessage.tryParse(this.testAdd2Message));
 
         assertEquals(this.messageSender.isSetTopicEvent(), true);
         assertEquals(this.messageSender.isSendBroadcastMessageEvent(), true);
         assertEquals(this.messageSender.isSendPrivateMessageEvent(), true);
     }
 
-    /*
     public void testPromote() {
-        this.object.addPlayer(this.testPlayer1Message, Game.tryParse(this.games[2]).getGameType());
-        this.object.promote(Game.tryParse(this.games[2]).getGameType());
+        this.object.processTask(IrcMessage.tryParse(testAdd3Message));
+        this.messageSender.isSendBroadcastMessageEvent();
+        this.object.processTask(IrcMessage.tryParse(this.testPromoteDefaultGameTypeMessage));
 
         assertEquals(this.messageSender.isSendBroadcastMessageEvent(), true);
+
+
+        this.object.processTask(IrcMessage.tryParse(testAdd1Message));
+        this.messageSender.isSendBroadcastMessageEvent();
+        this.object.processTask(IrcMessage.tryParse(this.testPromoteTestGameTypeMessage));
+
+        assertEquals(this.messageSender.isSendBroadcastMessageEvent(), true);
+
+        this.object.processTask(IrcMessage.tryParse(this.testPromoteWrongGameTypeMessage));
+        assertEquals(this.messageSender.isSendBroadcastMessageEvent(), false);
+        assertEquals(this.messageSender.isSendNoticeEvent(), true);
     }
 
     public void testRemovePlayer() {
-        this.object.addPlayer(this.testPlayer1Message, Game.tryParse(this.games[2]).getGameType());
+        this.object.processTask(IrcMessage.tryParse(testAdd3Message));
 
         this.messageSender.isSetTopicEvent();
 
 
-        this.object.removePlayer(this.testPlayer3Message, Game.tryParse(this.games[2]).getGameType());
-        assertEquals(this.messageSender.isSetTopicEvent(), false);
-
-        this.object.removePlayer(this.testPlayer1Message, Game.tryParse(this.games[2]).getGameType());
+        this.object.processTask(IrcMessage.tryParse(testRemovePlayerMessageFromDefaultGameType));
         assertEquals(this.messageSender.isSetTopicEvent(), true);
+
+        this.object.processTask(IrcMessage.tryParse(testRemovePlayerMessageFromDefaultGameType));
+        assertEquals(this.messageSender.isSetTopicEvent(), false);
     }
 
     public void testGetPlayerList() {
-        this.object.addPlayer(this.testPlayer1Message, Game.tryParse(this.games[3]).getGameType());
+        this.object.processTask(IrcMessage.tryParse(testAdd1Message));
+        this.object.processTask(IrcMessage.tryParse(testAdd3Message));
 
+        assertEquals(this.messageSender.isSetTopicEvent(), true);
 
-        String players = this.object.getPlayers(Game.tryParse(this.games[3]).getGameType());
-        assertEquals(players, this.testPlayer1Message.getNick());
+        this.object.processTask(IrcMessage.tryParse(testWhoDefaultMessage));
+        assertEquals(this.messageSender.isSendBroadcastMessageEvent(), true);
 
-        this.object.addPlayer(this.testPlayer3Message, Game.tryParse(this.games[3]).getGameType());
+        this.object.processTask(IrcMessage.tryParse(testWhoTestMessage));
+        assertEquals(this.messageSender.isSendBroadcastMessageEvent(), true);
 
-        players = this.object.getPlayers(Game.tryParse(this.games[3]).getGameType());
-        assertEquals(players, this.testPlayer1Message.getNick() + ", " + this.testPlayer3Message.getNick());
+        this.object.processTask(IrcMessage.tryParse(testWrongWhoMessage));
+        assertEquals(this.messageSender.isSendBroadcastMessageEvent(), false);
+        assertEquals(this.messageSender.isSendNoticeEvent(), true);
     }
-    */
+
+    public void testPlayerRemoveOnKickPartQuit() {
+        this.object.processTask(IrcMessage.tryParse(testAdd1Message));
+        assertEquals(this.messageSender.isSetTopicEvent(), true);
+
+        this.object.processTask(IrcEvent.tryParse(testPlayer1KickMessage));
+        assertEquals(this.messageSender.isSetTopicEvent(), true);
+    }
 }

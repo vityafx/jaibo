@@ -23,7 +23,7 @@ import AIBO.Extensions.Extension;
 public final class Object extends Extension {
     @Override
     public String getExtensionName() {
-        return null;
+        return "Other.Polling";
     }
 
     @Override

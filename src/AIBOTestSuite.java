@@ -1,3 +1,4 @@
+import Tests.ExtensionManagerTests;
 import Tests.IrcChannelTests;
 import Tests.IrcUserTests;
 
@@ -26,6 +27,7 @@ public final class AIBOTestSuite extends TestSuite {
     public AIBOTestSuite() {
         addTestSuite(IrcChannelTests.class);
         addTestSuite(IrcUserTests.class);
+        addTestSuite(ExtensionManagerTests.class);
     }
 
     public static void main(String[] args) {
@@ -35,7 +37,15 @@ public final class AIBOTestSuite extends TestSuite {
 
         suite.run(result);
 
-        System.out.println(String.format("Tests passed: %s", result.wasSuccessful()));
+        String testResult;
+
+        if (result.wasSuccessful()) {
+            testResult = "passed";
+        } else {
+            testResult = "failed";
+        }
+
+        System.out.println(String.format("Tests %s!", testResult));
 
         System.out.println(String.format("Error count: %s", result.errorCount()));
         System.out.println(String.format("Failure count: %s", result.failureCount()));

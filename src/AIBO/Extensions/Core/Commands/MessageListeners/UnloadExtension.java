@@ -57,7 +57,7 @@ public final class UnloadExtension extends Command implements MessageListener {
         boolean checkPassed = false;
 
         for (String name : this.getNames()) {
-            Pattern p = Pattern.compile(String.format("^%s (.*)\r\n$", name));
+            Pattern p = Pattern.compile(String.format("^%s (.*)$", name));
 
             CharSequence sequence = message.subSequence(0, message.length());
             Matcher matcher = p.matcher(sequence);

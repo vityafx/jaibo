@@ -1,7 +1,11 @@
 package AIBO.Extensions.Games.PickupBot;
 
 import AIBO.Extensions.Extension;
+import AIBO.Extensions.Games.PickupBot.Commands.EventListeners.KickPartQuit;
 import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Add;
+import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Promote;
+import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Remove;
+import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Who;
 import AIBO.Extensions.Games.PickupBot.Errors.GameError;
 import AIBO.Extensions.Games.PickupBot.Errors.PickupBotError;
 import Helpers.Configuration;
@@ -45,12 +49,17 @@ public final class Object extends Extension implements GameListener {
 
     @Override
     public String getExtensionName() {
-        return "PickupBot";
+        return "Games.PickupBot";
     }
 
     @Override
     public void setCommands() {
         this.addMessageListener(new Add(this));
+        this.addMessageListener(new Promote(this));
+        this.addMessageListener(new Remove(this));
+        this.addMessageListener(new Who(this));
+
+        this.addEventListener(new KickPartQuit(this));
     }
 
     @Override
@@ -59,8 +68,6 @@ public final class Object extends Extension implements GameListener {
 
         if (currentTopic == null || !currentTopic.equals(topic)) {
             super.setTopic(topic);
-
-            this.getExtensionMessenger().setTopic(this.getChannels(), topic);
         }
     }
 
@@ -110,10 +117,34 @@ public final class Object extends Extension implements GameListener {
         }
     }
 
+    public void removePlayerFromEachGameType(Player player) {
+        for (Game game : this.games) {
+            game.removePlayer(player);
+        }
+
+        this.updateTopic();
+    }
+
     public String getPlayers(String gameType, boolean usingZeroWidthSpace) {
         Game game = this.getGameByType(gameType);
 
         return game.getPlayerNicknamesAsString(", ", usingZeroWidthSpace);
+    }
+
+    public String getRegisteredPlayers(String gameType) {
+        StringBuilder registeredPlayersListBuilder = new StringBuilder();
+
+        String playersList = this.getPlayers(gameType, true);
+
+        if (playersList.equals("")) {
+            playersList = "No players";
+        }
+
+        Game game = this.getGameByType(gameType);
+
+        registeredPlayersListBuilder.append(String.format("[%s] %s", game.getGameType(), playersList));
+
+        return registeredPlayersListBuilder.toString();
     }
 
     private Game getGameByType(String gameType) {

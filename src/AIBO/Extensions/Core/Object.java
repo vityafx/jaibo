@@ -1,10 +1,7 @@
 package AIBO.Extensions.Core;
 
 import AIBO.ExtensionManager;
-import AIBO.Extensions.Core.Commands.MessageListeners.Hello;
-import AIBO.Extensions.Core.Commands.MessageListeners.LoadExtension;
-import AIBO.Extensions.Core.Commands.MessageListeners.UnloadExtension;
-import AIBO.Extensions.Core.Commands.MessageListeners.UpdateConfiguration;
+import AIBO.Extensions.Core.Commands.MessageListeners.*;
 import AIBO.Extensions.Core.Commands.ServerListeners.*;
 import AIBO.Extensions.Extension;
 import Errors.ExtensionError;
@@ -44,6 +41,13 @@ public class Object extends Extension {
     }
 
     @Override
+    protected void finalize() throws Throwable {
+        Object.ObjectCount--;
+
+        super.finalize();
+    }
+
+    @Override
     public void run() {
 
     }
@@ -59,6 +63,7 @@ public class Object extends Extension {
         this.addServerListener(new Login(this));
 
         this.addMessageListener(new Hello(this));
+        this.addMessageListener(new Motd(this));
         this.addMessageListener(new LoadExtension(this));
         this.addMessageListener(new UnloadExtension(this));
         this.addMessageListener(new UpdateConfiguration(this));

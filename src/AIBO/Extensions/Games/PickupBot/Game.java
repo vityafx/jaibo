@@ -25,15 +25,15 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Game {
-    private String gameType;
-    private int maxPlayers;
-    private final ArrayList<Player> playerList = new ArrayList<Player>();
+public class Game {
+    protected String gameType;
+    protected int maxPlayers;
+    protected final ArrayList<Player> playerList = new ArrayList<Player>();
 
-    private final ArrayList<GameListener> listeners = new ArrayList<GameListener>();
+    protected final ArrayList<GameListener> listeners = new ArrayList<GameListener>();
 
 
-    private Game() {
+    protected Game() {
 
     }
 
@@ -75,13 +75,13 @@ public final class Game {
         }
     }
 
-    private void checkPickupFormed() {
+    protected void checkPickupFormed() {
         if (playerList.size() == this.maxPlayers) {
             this.pickupFormed();
         }
     }
 
-    private void pickupFormed() {
+    protected void pickupFormed() {
         this.notifyListeners();
 
         this.playerList.clear();

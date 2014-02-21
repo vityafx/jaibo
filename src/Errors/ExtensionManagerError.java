@@ -19,15 +19,13 @@ package Errors;
  */
 
 public final class ExtensionManagerError extends Error {
-    private String errorText;
-
 
     public ExtensionManagerError(String errorText) {
-        this.errorText = errorText;
+        super(errorText);
     }
 
     @Override
     public String getMessage() {
-        return String.format("Extension manager error: %s", this.errorText);
+        return String.format("Extension manager error: %s", super.getMessage());
     }
 }

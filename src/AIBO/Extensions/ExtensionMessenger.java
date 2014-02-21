@@ -5,6 +5,9 @@ import AIBO.ExtensionManager;
 import IrcNetwork.IrcCommandSender;
 import IrcNetwork.IrcMessageSender;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Extension message sender
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
@@ -26,11 +29,45 @@ import IrcNetwork.IrcMessageSender;
 public final class ExtensionMessenger implements ExtensionMessengerInterface {
     private IrcMessageSender sender;
     private ExtensionManager manager;
+    private final HashMap<String, String> topics = new HashMap<String, String>();
+    private String messageOfTheDay;
+    private String fullTopicMessage;
 
 
     public ExtensionMessenger(IrcMessageSender sender, ExtensionManager manager) {
         this.sender = sender;
         this.manager = manager;
+    }
+
+
+    private void updateTopic(String[] channels) {
+        StringBuilder topicBuilder = new StringBuilder();
+
+        for (String topic : this.topics.values()) {
+            topicBuilder.append(String.format("%s | ", topic));
+        }
+
+        if (this.messageOfTheDay != null && !this.messageOfTheDay.isEmpty()) {
+            topicBuilder.append(this.messageOfTheDay);
+        }
+
+        this.fullTopicMessage = topicBuilder.toString();
+
+        this.setTopic(channels, this.fullTopicMessage);
+    }
+
+    @Override
+    public void setTopicForExtension(String[] channels, String extensionName, String topic) {
+        this.topics.put(extensionName, topic);
+
+        this.updateTopic(channels);
+    }
+
+    @Override
+    public void setMessageOfTheDay(String[] channels, String messageOfTheDay) {
+        this.messageOfTheDay = messageOfTheDay;
+
+        this.updateTopic(channels);
     }
 
     @Override

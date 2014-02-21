@@ -55,6 +55,8 @@ public abstract class Extension extends Thread implements ConfigurationListener 
 
     public void setTopic(String topic) {
         this.topic = topic;
+
+        this.getExtensionMessenger().setTopicForExtension(this.getChannels(), this.getExtensionName(), this.topic);
     }
 
     public String getTopic() {
@@ -146,5 +148,18 @@ public abstract class Extension extends Thread implements ConfigurationListener 
 
     public String[] getChannels() {
         return this.channels;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this != obj) {
+            Extension extensionObject = (Extension)obj;
+
+            if (extensionObject != null) {
+                return extensionObject.getExtensionName().equalsIgnoreCase(this.getExtensionName());
+            }
+        }
+
+        return false;
     }
 }

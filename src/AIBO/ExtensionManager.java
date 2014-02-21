@@ -6,7 +6,7 @@ import AIBO.Extensions.ExtensionMessenger;
 import Errors.ExtensionManagerError;
 import IrcNetwork.IrcMessageSender;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Extension manager realization
@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 
 public final class ExtensionManager {
-    private ArrayList<Extension> extensions = new ArrayList<Extension>();
+    private final CopyOnWriteArrayList<Extension> extensions = new CopyOnWriteArrayList<Extension>();
     private ExtensionMessenger messenger;
 
 
@@ -89,7 +89,7 @@ public final class ExtensionManager {
         }
     }
 
-    public ArrayList<Extension> getExtensions() {
+    public CopyOnWriteArrayList<Extension> getExtensions() {
         return this.extensions;
     }
 
@@ -147,5 +147,12 @@ public final class ExtensionManager {
 
     private boolean isExtensionAlreadyAdded(Extension extension) {
         return this.extensions.contains(extension);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        this.extensions.clear();
+
+        super.finalize();
     }
 }

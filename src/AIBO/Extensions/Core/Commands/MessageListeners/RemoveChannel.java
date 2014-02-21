@@ -1,9 +1,7 @@
-package AIBO.Extensions.Other.Greeting;
-
-import AIBO.Extensions.Extension;
+package AIBO.Extensions.Core.Commands.MessageListeners;
 
 /**
- * Greets people when they are joins the channel
+ * Remove channel from aibo's channel list
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,14 +18,5 @@ import AIBO.Extensions.Extension;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Object extends Extension {
-    @Override
-    public String getExtensionName() {
-        return "Other.Greeting";
-    }
-
-    @Override
-    protected void setCommands() {
-
-    }
+public class RemoveChannel {
 }
