@@ -95,6 +95,27 @@
                             </resources>
                         </configuration>
                     </execution>
+
+
+                    <execution>
+                        <id>copy-shell-runner-dist</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>**/dist-run.sh</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
