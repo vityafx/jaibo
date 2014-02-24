@@ -177,6 +177,19 @@ public class Game {
         return game;
     }
 
+    public void substitutePlayers(Player playerToSubstitute, Player newPlayer) {
+        if (this.isPlayerAdded(playerToSubstitute)) {
+            if (!this.isPlayerAdded(newPlayer)) {
+                this.removePlayer(playerToSubstitute);
+                this.addPlayer(newPlayer);
+            } else {
+                throw new GameError(String.format("Player \"%s\" is already added in \"%s\"",
+                        newPlayer.getNick(),
+                        this.getGameType()));
+            }
+        }
+    }
+
     @Override
     public String toString() {
         return this.gameType;

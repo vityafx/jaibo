@@ -1,7 +1,7 @@
-package IrcNetwork;
+package IrcNetwork.IrcEvent;
 
 /**
- * Irc Events
+ * IrcEvent parser interface
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,6 @@ package IrcNetwork;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public enum IrcEventType {
-    Quit,
-    Part,
-    Join,
-    Kick,
-    Mode,
-    Nick
+public interface IrcEventParser {
+    public IrcEvent tryParse(String message);
 }

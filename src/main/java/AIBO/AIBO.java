@@ -2,7 +2,7 @@ package AIBO;
 
 import AIBO.Extensions.TaskManager;
 import Helpers.Configuration;
-import IrcNetwork.IrcEvent;
+import IrcNetwork.IrcEvent.IrcEvent;
 import IrcNetwork.IrcMessage;
 import IrcNetwork.IrcNetwork;
 import IrcNetwork.IrcNetworkListener;

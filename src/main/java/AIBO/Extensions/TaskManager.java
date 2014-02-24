@@ -2,6 +2,7 @@ package AIBO.Extensions;
 
 import AIBO.ExtensionManager;
 import IrcNetwork.*;
+import IrcNetwork.IrcEvent.IrcEvent;
 
 /**
  * Sends tasks to each extension

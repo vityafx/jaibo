@@ -3,7 +3,7 @@ package PickupBotTests;
 import AIBO.Extensions.ExtensionMessenger;
 import AIBO.Extensions.Games.PickupBot.*;
 import IrcNetwork.DebugIrcMessageSender;
-import IrcNetwork.IrcEvent;
+import IrcNetwork.IrcEvent.IrcEvent;
 import IrcNetwork.IrcMessage;
 import junit.framework.TestCase;
 
@@ -46,6 +46,9 @@ public final class CommandsTests extends TestCase {
 
     private String testWrongAddMessage =    ":testNickName1!testUser1@test1.users.quakenet.org " +
                                             "PRIVMSG #test-channel :!add 5492dsgw53";
+
+    private String testPlayerNickChangeMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org NICK :testNickName2";
 
     private String testPromoteDefaultGameTypeMessage =
             ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!p";
@@ -168,5 +171,14 @@ public final class CommandsTests extends TestCase {
 
         this.object.processTask(IrcEvent.tryParse(testPlayer1KickMessage));
         assertEquals(this.messageSender.isSetTopicEvent(), true);
+    }
+
+    public void testPlayerNickChange() {
+        this.object.processTask(IrcMessage.tryParse(testAdd3Message));
+        assertEquals(this.messageSender.isSetTopicEvent(), true);
+
+        this.object.processTask(IrcEvent.tryParse(testPlayerNickChangeMessage));
+        assertEquals(this.messageSender.isSetTopicEvent(), false);
+        assertEquals(this.object.getPlayers(null, false), "testNickName2");
     }
 }

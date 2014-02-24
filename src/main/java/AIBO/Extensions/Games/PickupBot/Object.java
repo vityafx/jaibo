@@ -2,6 +2,7 @@ package AIBO.Extensions.Games.PickupBot;
 
 import AIBO.Extensions.Extension;
 import AIBO.Extensions.Games.PickupBot.Commands.EventListeners.KickPartQuit;
+import AIBO.Extensions.Games.PickupBot.Commands.EventListeners.NickChange;
 import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Add;
 import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Promote;
 import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Remove;
@@ -61,6 +62,7 @@ public final class Object extends Extension implements GameListener, Configurati
         this.addMessageListener(new Who(this));
 
         this.addEventListener(new KickPartQuit(this));
+        this.addEventListener(new NickChange(this));
     }
 
     @Override
@@ -216,6 +218,12 @@ public final class Object extends Extension implements GameListener, Configurati
         }
 
         this.setTopic(topicBuilder.toString());
+    }
+
+    public void renamePlayer(Player oldPlayer, Player newPlayer) {
+        for (Game game : this.games) {
+            game.substitutePlayers(oldPlayer, newPlayer);
+        }
     }
 
     @Override

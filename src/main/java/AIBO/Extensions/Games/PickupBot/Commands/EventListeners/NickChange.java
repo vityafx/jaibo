@@ -1,11 +1,11 @@
 package AIBO.Extensions.Games.PickupBot.Commands.EventListeners;
 
 import AIBO.Extensions.Command;
-import AIBO.Extensions.Games.PickupBot.*;
 import AIBO.Extensions.Games.PickupBot.Object;
+import AIBO.Extensions.Games.PickupBot.Player;
 import IrcNetwork.EventListener;
-import IrcNetwork.IrcEvent;
-import IrcNetwork.IrcEventType;
+import IrcNetwork.IrcEvent.IrcEvent;
+import IrcNetwork.IrcEvent.IrcEventType;
 
 /**
  * Change nickname in pickupbot game
@@ -26,8 +26,9 @@ import IrcNetwork.IrcEventType;
  */
 
 public final class NickChange extends Command implements EventListener {
-    private AIBO.Extensions.Games.PickupBot.Object object;
-    private Player player;
+    private Object object;
+    private Player oldPlayer;
+    private Player newPlayer;
 
     public NickChange(Object object) {
         this.object = object;
@@ -36,7 +37,8 @@ public final class NickChange extends Command implements EventListener {
     @Override
     public void eventReceived(IrcEvent ircEvent) {
         if (ircEvent.getEventType() == IrcEventType.Nick) {
-            this.player = new Player(ircEvent.getArguments(), null);
+            this.oldPlayer = new Player(ircEvent.getUser(), null);
+            this.newPlayer = new Player(ircEvent.getArgument("NewNickName"), null);
 
             this.execute();
         }
@@ -44,6 +46,6 @@ public final class NickChange extends Command implements EventListener {
 
     @Override
     protected void action() {
-        this.object.removePlayerFromEachGameType(this.player);
+        this.object.renamePlayer(this.oldPlayer, this.newPlayer);
     }
 }

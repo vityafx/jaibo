@@ -4,7 +4,7 @@ import AIBO.AIBO;
 import Helpers.ConfigurationListener;
 import IrcNetwork.EventListener;
 import IrcNetwork.IrcMessage;
-import IrcNetwork.IrcEvent;
+import IrcNetwork.IrcEvent.IrcEvent;
 import IrcNetwork.MessageListener;
 import IrcNetwork.ServerListener;
 

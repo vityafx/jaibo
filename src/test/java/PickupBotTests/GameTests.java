@@ -99,4 +99,16 @@ public final class GameTests extends TestCase {
                             this.testPlayer1.getNick(),
                             this.testPlayer2.getNick()));
     }
+
+    public void testPlayerSubstitution() {
+        Game game = Game.tryParse(this.games[0]);
+
+        game.addPlayer(this.testPlayer1);
+
+        game.substitutePlayers(this.testPlayer1, this.testPlayer2);
+
+        assertTrue(game.hasPlayers());
+
+        assertEquals(game.getPlayerList().get(0), this.testPlayer2);
+    }
 }

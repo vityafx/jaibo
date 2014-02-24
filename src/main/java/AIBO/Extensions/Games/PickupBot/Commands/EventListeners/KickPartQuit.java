@@ -4,8 +4,8 @@ import AIBO.Extensions.Command;
 import AIBO.Extensions.Games.PickupBot.Object;
 import AIBO.Extensions.Games.PickupBot.Player;
 import IrcNetwork.EventListener;
-import IrcNetwork.IrcEvent;
-import IrcNetwork.IrcEventType;
+import IrcNetwork.IrcEvent.IrcEvent;
+import IrcNetwork.IrcEvent.IrcEventType;
 
 /**
  * On kick/part/quit event - remove player
@@ -36,7 +36,7 @@ public final class KickPartQuit extends Command implements EventListener {
     @Override
     public void eventReceived(IrcEvent ircEvent) {
         if (ircEvent.getEventType() == IrcEventType.Kick) {
-            this.player = new Player(ircEvent.getArguments(), null);
+            this.player = new Player(ircEvent.getArgument("UserKicked"), null);
         } else if (ircEvent.getEventType() == IrcEventType.Part || ircEvent.getEventType() == IrcEventType.Quit) {
             this.player = new Player(ircEvent.getUser(), ircEvent.getHost());
         }
