@@ -75,9 +75,11 @@ public class NetworkConnection implements ConfigurationListener {
         }
     }
 
-    private void notifyListeners(String data) {
+    private void notifyListeners(String[] data) {
         for (NetworkConnectionListener listener : this.listeners) {
-            listener.dataReceived(data);
+            for (String dataString : data) {
+                listener.dataReceived(dataString);
+            }
         }
     }
 
@@ -90,10 +92,11 @@ public class NetworkConnection implements ConfigurationListener {
 
             while (true) {
                 if ((charsRead = networkInputStream.read(inputChars)) != -1) {
-                    String data = new String(inputChars, 0, charsRead);
+                    String dataString = new String(inputChars, 0, charsRead);
+                    String[] data = dataString.split("\r\n");
 
                     if (this.isDebug) {
-                        System.out.print(String.format("<< %s", data));
+                        System.out.print(String.format("<< %s", dataString));
                     }
 
                     this.notifyListeners(data);
