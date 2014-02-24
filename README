@@ -1,0 +1,14 @@
+# Java IRC Bot (JAIBO)
+JAIBO is a port of [AIBO](https://bitbucket.org/fx_/aibo).
+
+## License
+Code is licensed to GPL v3. See 'LICENSE' file.
+
+## System requirements
+Java SE 1.6+
+
+## Available extensions at this moment
+1. Game Pickup Bot (Games.PickupBot)
+
+## Using
+Download distribution, modify settings files and execute run.sh.

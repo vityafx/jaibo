@@ -75,24 +75,30 @@
                             </resources>
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>copy-text-files-dist</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>%regex[README|LICENSE]</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
         </plugins>
     </build>
-
-    <!--<copy file="src/main/resources/config.properties" tofile="${project.server.config}/config.properties"/>-->
-    <!--
-    <files>
-        <file>
-            <source>settings.ini</source>
-            <outputDirectory>/</outputDirectory>
-        </file>
-        <file>
-            <source>Games.PickupBot.ini</source>
-            <outputDirectory>/</outputDirectory>
-        </file>
-    </files>
-    -->
 
 </project>
