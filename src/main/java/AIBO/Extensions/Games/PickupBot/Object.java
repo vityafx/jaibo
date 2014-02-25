@@ -177,7 +177,10 @@ public final class Object extends Extension implements GameListener, Configurati
 
         Game game = this.getGameByType(gameType);
 
-        registeredPlayersListBuilder.append(String.format("[%s] %s", game.getGameType(), playersList));
+        registeredPlayersListBuilder.append(String.format(
+                "[%s] %s",
+                IrcMessageTextModifier.makeBold(game.getGameType()),
+                playersList));
 
         return registeredPlayersListBuilder.toString();
     }

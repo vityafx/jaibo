@@ -1,6 +1,7 @@
 package AIBO.Extensions.Games.PickupBot;
 
 import AIBO.Extensions.Games.PickupBot.Errors.GameError;
+import IrcNetwork.IrcMessageTextModifier;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -67,7 +68,8 @@ public class Game {
 
             this.checkPickupFormed();
         } else {
-            throw new GameError(String.format("You have been already added to play %s game type", this.getGameType()));
+            throw new GameError(String.format("You have been already added to play %s game type",
+                    IrcMessageTextModifier.makeBold(this.getGameType())));
         }
     }
 
@@ -147,8 +149,10 @@ public class Game {
     }
 
     public String getPromoteMessage() {
-        return String.format("%d more players needed in \"%s\" game type! - type '!add %s' now!",
-                this.remainingPlayersCount(), this.getGameType(), this.getGameType());
+        return String.format("%s more players needed in %s game type! - type '!add %s' now!",
+                IrcMessageTextModifier.makeBold(String.format("%d", this.remainingPlayersCount())),
+                IrcMessageTextModifier.makeBold(this.getGameType()),
+                IrcMessageTextModifier.makeBold(this.getGameType()));
     }
 
     public String getPlayerNicknamesAsString(String separator, boolean usingZeroWidthSpace) {
@@ -238,9 +242,9 @@ public class Game {
                 this.removePlayer(playerToSubstitute);
                 this.addPlayer(newPlayer);
             } else {
-                throw new GameError(String.format("Player \"%s\" is already added in \"%s\"",
-                        newPlayer.getNick(),
-                        this.getGameType()));
+                throw new GameError(String.format("Player %s is already added in %s",
+                        IrcMessageTextModifier.makeBold(newPlayer.getNick()),
+                        IrcMessageTextModifier.makeBold(this.getGameType())));
             }
         }
     }

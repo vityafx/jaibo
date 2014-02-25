@@ -1,6 +1,7 @@
 package AIBO.Extensions.Games.PickupBot;
 
 import AIBO.Extensions.Games.PickupBot.Errors.GameError;
+import IrcNetwork.IrcMessageTextModifier;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,22 +42,24 @@ public final class Tournament extends Game {
 
             this.playerList.add(player);
         } else {
-            throw new GameError(String.format("You have been already added to play \"%s\" tournament",
-                    this.getGameType()));
+            throw new GameError(String.format("You have been already added to play %s tournament",
+                    IrcMessageTextModifier.makeBold(this.getGameType())));
         }
     }
 
     private void checkOverflow() {
         if (remainingPlayersCount() == 0) {
-            throw new GameError(String.format("Maximum players registered to play \"%s\" tournament ",
-                    this.getGameType()));
+            throw new GameError(String.format("Maximum players registered to play %s tournament ",
+                    IrcMessageTextModifier.makeBold(this.getGameType())));
         }
     }
 
     @Override
     public String getPromoteMessage() {
-        return String.format("%d more players needed in \"%s\" tournament! - type '!add %s' now!",
-                this.remainingPlayersCount(), this.getGameType(), this.getGameType());
+        return String.format("%s more players needed in \"%s\" tournament! - type '!add %s' now!",
+                IrcMessageTextModifier.makeBold(String.format("%d", this.remainingPlayersCount())),
+                IrcMessageTextModifier.makeBold(this.getGameType()),
+                IrcMessageTextModifier.makeBold(this.getGameType()));
     }
 
     public static Tournament tryParse(String tournamentString) {
