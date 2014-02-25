@@ -97,9 +97,9 @@ public final class Who extends Command implements MessageListener, Configuration
 
             this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), registeredPlayers);
         } catch (PickupBotError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.player.getFormattedNickName(), e.getMessage());
         } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.player.getFormattedNickName(), e.getMessage());
         } finally {
             this.player = null;
             this.gameType = null;

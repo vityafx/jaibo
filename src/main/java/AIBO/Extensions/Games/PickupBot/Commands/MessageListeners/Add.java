@@ -95,9 +95,9 @@ public final class Add extends Command implements MessageListener, Configuration
         try {
             this.object.addPlayer(this.player, this.gameType);
         } catch (PickupBotError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.player.getFormattedNickName(), e.getMessage());
         } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.player.getFormattedNickName(), e.getMessage());
         } finally {
             this.player = null;
             this.gameType = null;

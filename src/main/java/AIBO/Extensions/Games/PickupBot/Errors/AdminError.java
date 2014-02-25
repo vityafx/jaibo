@@ -1,7 +1,7 @@
-package AIBO.Extensions.Games.PickupBot;
+package AIBO.Extensions.Games.PickupBot.Errors;
 
 /**
- * Game listener interface
+ * Admin error class
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,13 @@ package AIBO.Extensions.Games.PickupBot;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface GameListener {
-    public void pickupFormed(Game game);
+public final class AdminError extends Error {
+    public AdminError(String errorText) {
+        super(errorText);
+    }
 
-    public void playerAutomaticallyRemoved(Player player, Game game);
+    @Override
+    public String getMessage() {
+        return String.format("Admin error: %s", super.getMessage());
+    }
 }

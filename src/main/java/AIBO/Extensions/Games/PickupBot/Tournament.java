@@ -37,7 +37,7 @@ public final class Tournament extends Game {
 
     @Override
     public void addPlayer(Player player) {
-        if (!this.isPlayerAdded(player)) {
+        if (!this.isPlayerAddedByHost(player)) {
             this.checkOverflow();
 
             this.playerList.add(player);

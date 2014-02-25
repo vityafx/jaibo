@@ -256,4 +256,17 @@ public final class Object extends Extension implements GameListener, Configurati
                             IrcMessageTextModifier.makeBold(game.getGameType())));
         }
     }
+
+    @Override
+    public void playerAutomaticallyRemoved(Player player, Game game) {
+        String messagePattern = "%s was automatically removed from %s game type [maximum added time reached]";
+        String message = String.format(
+                messagePattern,
+                IrcMessageTextModifier.makeBold(player.getNick()),
+                game.getGameType());
+
+        this.getExtensionMessenger().sendBroadcastMessage(this.getChannels(), message);
+
+        this.getExtensionMessenger().sendPrivateMessage(player.getNick(), message);
+    }
 }

@@ -21,9 +21,9 @@ import java.lang.Object;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Player {
-    private String nick;
-    private String host;
+public class Player {
+    protected String nick;
+    protected String host;
 
     public Player() {
 
@@ -34,8 +34,11 @@ public final class Player {
         this.setHost(host);
     }
 
-
     public String getNick() {
+        return nick;
+    }
+
+    public String getFormattedNickName() {
         return nick;
     }
 
@@ -60,6 +63,6 @@ public final class Player {
     public boolean equals(Object obj) {
         Player player = (Player) obj;
 
-        return player != null && player.getNick().equals(this.getNick());
+        return player != null && player.nick.equals(this.nick);
     }
 }

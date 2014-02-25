@@ -1,7 +1,9 @@
-package AIBO.Extensions.Games.PickupBot;
+package AIBO.Extensions.Games.LiveStreams.Providers;
+
+import AIBO.Extensions.Games.LiveStreams.Provider;
 
 /**
- * Game listener interface
+ * Twitch.tv live streams extension provider
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +20,11 @@ package AIBO.Extensions.Games.PickupBot;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface GameListener {
-    public void pickupFormed(Game game);
+public class TwitchProvider extends Provider {
 
-    public void playerAutomaticallyRemoved(Player player, Game game);
+
+    @Override
+    public String[] getStreams(String tag) {
+        return new String[0];
+    }
 }

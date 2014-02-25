@@ -65,8 +65,13 @@ public final class GameTests extends TestCase {
         game.addListener(new GameListener() {
             @Override
             public void pickupFormed(Game game) {
-                assertEquals(game.getPlayerNicknames()[0], "testPlayerNick1");
-                assertEquals(game.getPlayerNicknames()[1], "testPlayerNick2");
+                assertTrue(game.getPlayerNicknames()[0].startsWith("testPlayerNick1"));
+                assertTrue(game.getPlayerNicknames()[1].startsWith("testPlayerNick2"));
+            }
+
+            @Override
+            public void playerAutomaticallyRemoved(Player player, Game game) {
+
             }
         });
 
@@ -95,9 +100,9 @@ public final class GameTests extends TestCase {
         String nickNames = game.getPlayerNicknamesAsString(", ", false);
 
         assertEquals(nickNames,
-                    String.format("%s, %s",
-                            this.testPlayer1.getNick(),
-                            this.testPlayer2.getNick()));
+                    String.format("%s(0m), %s(0m)",
+                            this.testPlayer1.getFormattedNickName(),
+                            this.testPlayer2.getFormattedNickName()));
     }
 
     public void testPlayerSubstitution() {

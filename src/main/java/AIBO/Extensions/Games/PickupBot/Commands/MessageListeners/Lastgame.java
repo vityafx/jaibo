@@ -96,7 +96,7 @@ public final class Lastgame extends Command implements MessageListener, Configur
 
             this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), lastGameString);
         } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.receiver.getNick(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.receiver.getFormattedNickName(), e.getMessage());
         } finally {
             this.receiver = null;
             this.gameType = null;

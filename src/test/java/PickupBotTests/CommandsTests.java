@@ -179,6 +179,6 @@ public final class CommandsTests extends TestCase {
 
         this.object.processTask(IrcEvent.tryParse(testPlayerNickChangeMessage));
         assertEquals(this.messageSender.isSetTopicEvent(), false);
-        assertEquals(this.object.getPlayers(null, false), "testNickName2");
+        assertTrue(this.object.getPlayers(null, false).startsWith("testNickName2"));
     }
 }

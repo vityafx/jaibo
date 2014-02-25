@@ -54,6 +54,18 @@ public class Game {
         return this.playerList.contains(player);
     }
 
+    public boolean isPlayerAddedByHost(Player player) {
+        for (Player registeredPlayer : this.playerList) {
+            String host = registeredPlayer.getHost();
+
+            if (host != null && host.equalsIgnoreCase(player.getHost())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public boolean hasPlayers() {
         return this.addedPlayersCount() > 0;
     }
@@ -64,7 +76,9 @@ public class Game {
 
     public void addPlayer(Player player) {
         if (!this.isPlayerAdded(player)) {
-            this.playerList.add(player);
+            AutoRemovablePlayer autoRemovablePlayer = new AutoRemovablePlayer(player, this);
+
+            this.playerList.add(autoRemovablePlayer);
 
             this.checkPickupFormed();
         } else {
@@ -79,6 +93,12 @@ public class Game {
         }
     }
 
+    public void automaticallyRemovePlayer(Player player) {
+        this.removePlayer(player);
+
+        this.notifyPlayerAutoRemovedUpListeners(player);
+    }
+
     protected void checkPickupFormed() {
         if (playerList.size() == this.maxPlayers) {
             this.pickupFormed();
@@ -86,7 +106,7 @@ public class Game {
     }
 
     protected void pickupFormed() {
-        this.notifyListeners();
+        this.notifyPickupFormedUpListeners();
 
         this.playerList.clear();
 
@@ -164,7 +184,7 @@ public class Game {
             if (!iterator.hasNext())
                 separator = "";
 
-            StringBuilder playerNickNameBuilder = new StringBuilder(player.getNick());
+            StringBuilder playerNickNameBuilder = new StringBuilder(player.getFormattedNickName());
 
             if (usingZeroWidthSpace) {
                 playerNickNameBuilder.insert(1, "\u200B");
@@ -181,15 +201,21 @@ public class Game {
         String[] nickNames = new String[]{};
 
         for (Player player : this.playerList) {
-            allAddedPlayerNickNames.add(player.getNick());
+            allAddedPlayerNickNames.add(player.getFormattedNickName());
         }
 
         return allAddedPlayerNickNames.toArray(nickNames);
     }
 
-    private void notifyListeners() {
+    private void notifyPickupFormedUpListeners() {
         for (GameListener listener : this.listeners) {
             listener.pickupFormed(this);
+        }
+    }
+
+    private void notifyPlayerAutoRemovedUpListeners(Player player) {
+        for (GameListener listener : this.listeners) {
+            listener.playerAutomaticallyRemoved(player, this);
         }
     }
 

@@ -95,9 +95,9 @@ public final class Remove extends Command implements MessageListener, Configurat
         try {
             this.object.removePlayer(this.player, this.gameType);
         } catch (PickupBotError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.player.getFormattedNickName(), e.getMessage());
         } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.player.getFormattedNickName(), e.getMessage());
         } finally {
             this.player = null;
             this.gameType = null;
