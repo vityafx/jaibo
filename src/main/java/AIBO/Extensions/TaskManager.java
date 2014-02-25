@@ -4,6 +4,8 @@ import AIBO.ExtensionManager;
 import IrcNetwork.*;
 import IrcNetwork.IrcEvent.IrcEvent;
 
+import java.util.Iterator;
+
 /**
  * Sends tasks to each extension
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
@@ -35,19 +37,37 @@ public final class TaskManager {
     }
 
     public void notifyMessageListeners(IrcMessage ircMessage) {
-        for (Extension extension : extensionManager.getExtensions()) {
+        Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
+
+        Extension extension;
+
+        while(extensionIterator.hasNext()) {
+            extension = extensionIterator.next();
+
             extension.processTask(ircMessage);
         }
     }
 
     public void notifyEventListeners(IrcEvent ircEvent) {
-        for (Extension extension : extensionManager.getExtensions()) {
+        Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
+
+        Extension extension;
+
+        while(extensionIterator.hasNext()) {
+            extension = extensionIterator.next();
+
             extension.processTask(ircEvent);
         }
     }
 
     public void notifyServerListeners(String serverMessage) {
-        for (Extension extension : extensionManager.getExtensions()) {
+        Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
+
+        Extension extension;
+
+        while(extensionIterator.hasNext()) {
+            extension = extensionIterator.next();
+
             extension.processTask(serverMessage);
         }
     }

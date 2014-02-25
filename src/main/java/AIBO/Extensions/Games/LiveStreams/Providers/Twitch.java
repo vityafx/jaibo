@@ -1,5 +1,6 @@
 package AIBO.Extensions.Games.LiveStreams.Providers;
 
+import AIBO.Extensions.Games.LiveStreams.Errors.ProviderError;
 import AIBO.Extensions.Games.LiveStreams.Provider;
 
 /**
@@ -25,7 +26,8 @@ public class Twitch extends Provider {
 
     @Override
     public String[] getStreams(String tag) {
-        return null;
+        throw new ProviderError(String.format("No streams found on \"%s\" service with tag \"%s\"",
+                this.getProviderName(), tag));
     }
 
     @Override

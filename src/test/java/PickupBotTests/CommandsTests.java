@@ -85,7 +85,13 @@ public final class CommandsTests extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        object.addGame(Game.tryParse(this.games[3]));
+        this.object.clearGames();
+
+        for (String gameType : this.games) {
+            Game game = Game.tryParse(gameType);
+
+            this.object.addGame(game);
+        }
 
         object.setExtensionMessenger(this.messenger);
     }

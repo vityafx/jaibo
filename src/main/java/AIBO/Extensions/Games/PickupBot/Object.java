@@ -138,6 +138,10 @@ public final class Object extends Extension implements GameListener, Configurati
         }
     }
 
+    public void clearGames() {
+        this.games.clear();
+    }
+
     public void removePlayer(Player player, String gameType) {
         if (player != null) {
             Game game = this.getGameByType(gameType);
@@ -255,8 +259,9 @@ public final class Object extends Extension implements GameListener, Configurati
                     String.format("Your %s pickup game was started! More info on the channel.",
                             IrcMessageTextModifier.makeBold(game.getGameType())));
         }
+        ArrayList<Player> playerList = (ArrayList<Player>)game.getPlayerList().clone();
 
-        for (Player player : game.getPlayerList()) {
+        for (Player player : playerList) {
             this.removePlayerFromEachGameType(player, false);
         }
 

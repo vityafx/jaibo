@@ -80,11 +80,21 @@ public final class Add extends Command implements MessageListener, Configuration
                 if (matcher.matches()) {
                     this.gameType = matcher.group(1);
 
+                    checkPassed = true;
+
                     break;
                 }
             }
 
-            checkPassed = true;
+            if (!checkPassed) {
+                for (String name : this.getNames()) {
+                    if (message.equalsIgnoreCase(name)) {
+                        checkPassed = true;
+
+                        break;
+                    }
+                }
+            }
         }
 
         return checkPassed;

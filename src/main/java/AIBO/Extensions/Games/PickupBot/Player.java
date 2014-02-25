@@ -61,8 +61,12 @@ public class Player {
 
     @Override
     public boolean equals(Object obj) {
-        Player player = (Player) obj;
+        if(obj instanceof Player){
+            Player toCompare = (Player) obj;
 
-        return player != null && player.nick.equals(this.nick);
+            return this.getNick().equalsIgnoreCase(toCompare.getNick());
+        }
+
+        return false;
     }
 }

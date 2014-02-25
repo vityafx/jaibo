@@ -79,11 +79,21 @@ public final class Lastgame extends Command implements MessageListener, Configur
                 if (matcher.matches()) {
                     this.gameType = matcher.group(1);
 
+                    checkPassed = true;
+
                     break;
                 }
             }
 
-            checkPassed = true;
+            if (!checkPassed) {
+                for (String name : this.getNames()) {
+                    if (message.equalsIgnoreCase(name)) {
+                        checkPassed = true;
+
+                        break;
+                    }
+                }
+            }
         }
 
         return checkPassed;

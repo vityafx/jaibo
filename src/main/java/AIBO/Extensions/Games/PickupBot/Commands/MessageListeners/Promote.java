@@ -70,21 +70,29 @@ public final class Promote extends Command implements MessageListener, Configura
     public boolean check(String message) {
         boolean checkPassed = false;
 
-        if (super.check(message)) {
+        for (String name : this.getNames()) {
+            Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
+
+            CharSequence sequence = message.subSequence(0, message.length());
+            Matcher matcher = p.matcher(sequence);
+
+            if (matcher.matches()) {
+                this.gameType = matcher.group(1);
+
+                checkPassed = true;
+
+                break;
+            }
+        }
+
+        if (!checkPassed) {
             for (String name : this.getNames()) {
-                Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
-
-                CharSequence sequence = message.subSequence(0, message.length());
-                Matcher matcher = p.matcher(sequence);
-
-                if (matcher.matches()) {
-                    this.gameType = matcher.group(1);
+                if (message.equalsIgnoreCase(name)) {
+                    checkPassed = true;
 
                     break;
                 }
             }
-
-            checkPassed = true;
         }
 
         return checkPassed;
@@ -95,9 +103,9 @@ public final class Promote extends Command implements MessageListener, Configura
         try {
             this.object.promote(this.player, this.gameType);
         } catch (PickupBotError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getFormattedNickName(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
         } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getFormattedNickName(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
         } finally {
             this.player = null;
             this.gameType = null;
