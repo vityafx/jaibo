@@ -97,10 +97,10 @@ public final class GameTests extends TestCase {
         game.addPlayer(this.testPlayer1);
         game.addPlayer(this.testPlayer2);
 
-        String nickNames = game.getPlayerNicknamesAsString(", ", false);
+        String nickNames = game.getPlayerNicknamesAsString(", ", false, false);
 
         assertEquals(nickNames,
-                    String.format("%s(0m), %s(0m)",
+                    String.format("%s, %s",
                             this.testPlayer1.getFormattedNickName(),
                             this.testPlayer2.getFormattedNickName()));
     }

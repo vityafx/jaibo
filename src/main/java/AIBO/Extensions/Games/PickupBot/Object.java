@@ -163,7 +163,7 @@ public final class Object extends Extension implements GameListener, Configurati
     public String getPlayers(String gameType, boolean usingZeroWidthSpace) {
         Game game = this.getGameByType(gameType);
 
-        return game.getPlayerNicknamesAsString(", ", usingZeroWidthSpace);
+        return game.getPlayerNicknamesAsString(", ", usingZeroWidthSpace, true);
     }
 
     public String getRegisteredPlayers(String gameType) {
@@ -252,7 +252,7 @@ public final class Object extends Extension implements GameListener, Configurati
                 String.format(
                         notifyPattern,
                         IrcMessageTextModifier.makeBold(game.getGameType()),
-                        game.getPlayerNicknamesAsString(", ", true)));
+                        game.getPlayerNicknamesAsString(", ", true, false)));
 
         for (String playerNickName : game.getPlayerNicknames()) {
             this.getExtensionMessenger().sendPrivateMessage(playerNickName,

@@ -175,7 +175,7 @@ public class Game {
                 IrcMessageTextModifier.makeBold(this.getGameType()));
     }
 
-    public String getPlayerNicknamesAsString(String separator, boolean usingZeroWidthSpace) {
+    public String getPlayerNicknamesAsString(String separator, boolean usingZeroWidthSpace, boolean formattedNickNames) {
         StringBuilder allAddedPlayerNickNames = new StringBuilder();
 
         for(Iterator iterator = playerList.iterator(); iterator.hasNext();) {
@@ -184,7 +184,13 @@ public class Game {
             if (!iterator.hasNext())
                 separator = "";
 
-            StringBuilder playerNickNameBuilder = new StringBuilder(player.getFormattedNickName());
+            StringBuilder playerNickNameBuilder = new StringBuilder();
+
+            if (formattedNickNames) {
+                playerNickNameBuilder.append(player.getFormattedNickName());
+            } else {
+                playerNickNameBuilder.append(player.getNick());
+            }
 
             if (usingZeroWidthSpace) {
                 playerNickNameBuilder.insert(1, "\u200B");
