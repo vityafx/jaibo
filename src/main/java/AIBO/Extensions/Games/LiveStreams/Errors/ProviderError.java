@@ -1,9 +1,7 @@
-package AIBO.Extensions.Games.LiveStreams.Providers;
-
-import AIBO.Extensions.Games.LiveStreams.Provider;
+package AIBO.Extensions.Games.LiveStreams.Errors;
 
 /**
- * Twitch.tv live streams extension provider
+ * LiveStreams provider error class
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +18,13 @@ import AIBO.Extensions.Games.LiveStreams.Provider;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class TwitchProvider extends Provider {
-
+public final class ProviderError extends Error {
+    public ProviderError(String errorText) {
+        super(errorText);
+    }
 
     @Override
-    public String[] getStreams(String tag) {
-        return null;
+    public String getMessage() {
+        return String.format("Provider error: %s", super.getMessage());
     }
 }

@@ -242,10 +242,6 @@ public final class Object extends Extension implements GameListener, Configurati
 
     @Override
     public void pickupFormed(Game game) {
-        for (Player player : game.getPlayerList()) {
-            this.removePlayerFromEachGameType(player, false);
-        }
-
         String notifyPattern = "%s pickup game is ready to play! Players are [%s]";
 
         this.getExtensionMessenger().sendBroadcastMessage(this.getChannels(),
@@ -258,6 +254,10 @@ public final class Object extends Extension implements GameListener, Configurati
             this.getExtensionMessenger().sendPrivateMessage(playerNickName,
                     String.format("Your %s pickup game was started! More info on the channel.",
                             IrcMessageTextModifier.makeBold(game.getGameType())));
+        }
+
+        for (Player player : game.getPlayerList()) {
+            this.removePlayerFromEachGameType(player, false);
         }
 
         this.updateTopic();
