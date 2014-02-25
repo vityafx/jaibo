@@ -48,7 +48,7 @@ public final class KickPartQuit extends Command implements EventListener {
 
     @Override
     protected void action() {
-        this.object.removePlayerFromEachGameType(this.player);
+        this.object.removePlayerFromEachGameType(this.player, true);
 
         this.player = null;
     }

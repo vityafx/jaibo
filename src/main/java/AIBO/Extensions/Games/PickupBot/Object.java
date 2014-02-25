@@ -31,8 +31,6 @@ import java.util.ArrayList;
  */
 
 public final class Object extends Extension implements GameListener, ConfigurationListener {
-    private String defaultGameType;
-
     private final ArrayList<Game> games = new ArrayList<Game>();
 
     public final static Configuration Configuration = new Configuration("Games.PickupBot.ini");
@@ -150,14 +148,16 @@ public final class Object extends Extension implements GameListener, Configurati
         }
     }
 
-    public void removePlayerFromEachGameType(Player player) {
+    public void removePlayerFromEachGameType(Player player, boolean updateTopic) {
         for (Game game : this.games) {
             if (!(game instanceof Tournament)) {
                 game.removePlayer(player);
             }
         }
 
-        this.updateTopic();
+        if (updateTopic) {
+            this.updateTopic();
+        }
     }
 
     public String getPlayers(String gameType, boolean usingZeroWidthSpace) {
@@ -242,6 +242,10 @@ public final class Object extends Extension implements GameListener, Configurati
 
     @Override
     public void pickupFormed(Game game) {
+        for (Player player : game.getPlayerList()) {
+            this.removePlayerFromEachGameType(player, false);
+        }
+
         String notifyPattern = "%s pickup game is ready to play! Players are [%s]";
 
         this.getExtensionMessenger().sendBroadcastMessage(this.getChannels(),
@@ -255,6 +259,8 @@ public final class Object extends Extension implements GameListener, Configurati
                     String.format("Your %s pickup game was started! More info on the channel.",
                             IrcMessageTextModifier.makeBold(game.getGameType())));
         }
+
+        this.updateTopic();
     }
 
     @Override
