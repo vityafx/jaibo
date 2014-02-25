@@ -3,6 +3,7 @@ package AIBO.Extensions.Games.PickupBot;
 import AIBO.Extensions.Games.PickupBot.Errors.GameError;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 public class Game {
     protected String gameType;
     protected int maxPlayers;
+    protected GregorianCalendar lastGameDate;
     protected final ArrayList<Player> playerList = new ArrayList<Player>();
 
     private final ArrayList<GameListener> listeners = new ArrayList<GameListener>();
@@ -85,6 +87,59 @@ public class Game {
         this.notifyListeners();
 
         this.playerList.clear();
+
+        this.lastGameDate = new GregorianCalendar();
+    }
+
+    protected String getTimeDifferenceFromLastGame() {
+        long difference = new GregorianCalendar().getTimeInMillis() - this.lastGameDate.getTimeInMillis();
+
+        long secondInMillis = 1000;
+        long minuteInMillis = secondInMillis * 60;
+        long hourInMillis = minuteInMillis * 60;
+        long dayInMillis = hourInMillis * 24;
+
+        long elapsedDays = difference / dayInMillis;
+        difference = difference % dayInMillis;
+        long elapsedHours = difference / hourInMillis;
+        difference = difference % hourInMillis;
+        long elapsedMinutes = difference / minuteInMillis;
+        difference = difference % minuteInMillis;
+        long elapsedSeconds = difference / secondInMillis;
+
+        StringBuilder lastGameStringBuilder = new StringBuilder();
+
+        if (elapsedDays > 0) {
+            lastGameStringBuilder.append(String.format("%d days", elapsedDays));
+        }
+
+        if (elapsedHours > 0) {
+            lastGameStringBuilder.append(String.format("%d hours", elapsedHours));
+        }
+
+        if (elapsedMinutes > 0) {
+            lastGameStringBuilder.append(String.format("%d minutes", elapsedMinutes));
+        }
+
+        if (elapsedSeconds > 0) {
+            lastGameStringBuilder.append(String.format("%d seconds", elapsedSeconds));
+        }
+
+        if (lastGameStringBuilder.length() > 0) {
+            lastGameStringBuilder.append(" ago");
+        } else {
+            lastGameStringBuilder.append("Just a moment ago");
+        }
+
+        return lastGameStringBuilder.toString();
+    }
+
+    public String lastGame() {
+        if (this.lastGameDate == null) {
+            return "No games was played yet";
+        } else {
+            return this.getTimeDifferenceFromLastGame();
+        }
     }
 
     public int remainingPlayersCount() {

@@ -1,10 +1,7 @@
-package AIBO.Extensions.Games.PickupBot.Commands.MessageListeners;
+package AIBO.Extensions.Core.Commands.MessageListeners;
 
 import AIBO.Extensions.Command;
-import AIBO.Extensions.Games.PickupBot.*;
-import AIBO.Extensions.Games.PickupBot.Errors.GameError;
-import AIBO.Extensions.Games.PickupBot.Object;
-import Helpers.ConfigurationListener;
+import AIBO.Extensions.Extension;
 import IrcNetwork.IrcMessage;
 import IrcNetwork.IrcMessageType;
 import IrcNetwork.MessageListener;
@@ -13,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Outputs a time spent since last pickup game was played
+ * Gives people help about extension.
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,36 +27,25 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Lastgame extends Command implements MessageListener, ConfigurationListener {
-    private Object object;
+public final class Help extends Command implements MessageListener {
+    private Extension object;
+    private String receiver;
+    private String askedHelpPage;
 
-    private Player receiver;
-    private String gameType;
-
-    public Lastgame() {
-        this.configurationChanged();
+    public Help() {
+        this.addName("!help");
     }
 
-    public Lastgame(Object object) {
+    public Help(Extension object) {
         this();
 
         this.object = object;
     }
 
-
-    @Override
-    public void configurationChanged() {
-        this.clearNames();
-
-        String[] names = Object.Configuration.getConfigurationHashMap().get("Commands.last_game").split(" ");
-
-        this.addNames(names);
-    }
-
     @Override
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
-            this.receiver = new Player(message.getUser(), message.getHost());
+        if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage())) {
+            this.receiver = message.getUser();
 
             this.execute();
         }
@@ -77,8 +63,6 @@ public final class Lastgame extends Command implements MessageListener, Configur
                 Matcher matcher = p.matcher(sequence);
 
                 if (matcher.matches()) {
-                    this.gameType = matcher.group(1);
-
                     break;
                 }
             }
@@ -91,15 +75,9 @@ public final class Lastgame extends Command implements MessageListener, Configur
 
     @Override
     protected void action() {
-        try {
-            String lastGameString = this.object.lastGame(this.gameType);
+//        this.object.
+//        this.object.getExtensionMessenger().sendNotice(this.receiver, helpPage);
 
-            this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), lastGameString);
-        } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.receiver.getNick(), e.getMessage());
-        } finally {
-            this.receiver = null;
-            this.gameType = null;
-        }
+//        this.askedHelpPage = null;
     }
 }

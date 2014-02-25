@@ -30,4 +30,9 @@ public final class Object extends Extension {
     protected void setCommands() {
 
     }
+
+    @Override
+    public String getHelpPage() {
+        return null;
+    }
 }

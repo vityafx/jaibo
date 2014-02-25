@@ -1,9 +1,7 @@
-package AIBO.Extensions.Other.LinksHandler;
-
-import AIBO.Extensions.Extension;
+package IrcNetwork;
 
 /**
- * Links handler extension. Watches links on the channel and parses them
+ * All possible irc text colors
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,19 +18,21 @@ import AIBO.Extensions.Extension;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Object extends Extension {
-    @Override
-    public String getExtensionName() {
-        return "Other.LinksHandler";
-    }
-
-    @Override
-    protected void setCommands() {
-
-    }
-
-    @Override
-    public String getHelpPage() {
-        return null;
-    }
+public enum IrcTextColor {
+    White,
+    Black,
+    DarkBlue,
+    Green,
+    Red,
+    Brown,
+    DarkPurple,
+    Orange,
+    Yellow,
+    LightGreen,
+    SeaColor,
+    LightBlue,
+    Blue,
+    Pink,
+    DarkGrey,
+    Grey,
 }

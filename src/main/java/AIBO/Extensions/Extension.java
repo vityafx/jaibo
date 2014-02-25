@@ -154,6 +154,8 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         return this.channels;
     }
 
+    public abstract String getHelpPage();
+
     @Override
     public boolean equals(Object obj) {
         if (this != obj) {

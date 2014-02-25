@@ -109,4 +109,11 @@ public final class Configuration {
     public HashMap<String, String> getConfigurationHashMap() {
         return configurationHashMap;
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        _Configurations.remove(this);
+
+        super.finalize();
+    }
 }

@@ -111,4 +111,15 @@ public final class GameTests extends TestCase {
 
         assertEquals(game.getPlayerList().get(0), this.testPlayer2);
     }
+
+    public void testLastGame() {
+        Game game = Game.tryParse(this.games[2]);
+
+        game.addPlayer(this.testPlayer1);
+        game.addPlayer(this.testPlayer2);
+
+        System.out.println(game.lastGame());
+
+        assertTrue(true);
+    }
 }

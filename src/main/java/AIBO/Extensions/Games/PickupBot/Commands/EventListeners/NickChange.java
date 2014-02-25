@@ -46,6 +46,6 @@ public final class NickChange extends Command implements EventListener {
 
     @Override
     protected void action() {
-        this.object.renamePlayer(this.oldPlayer, this.newPlayer);
+        this.object.substitutePlayer(this.oldPlayer, this.newPlayer);
     }
 }

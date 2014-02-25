@@ -1,5 +1,6 @@
 package AIBO.Extensions.Core;
 
+import AIBO.AIBO;
 import AIBO.ExtensionManager;
 import AIBO.Extensions.Core.Commands.MessageListeners.*;
 import AIBO.Extensions.Core.Commands.ServerListeners.*;
@@ -69,6 +70,11 @@ public class Object extends Extension {
         this.addMessageListener(new UpdateConfiguration(this));
 
         this.addServerListener(new ConnectedToServerEvent(new JoinChannels(this), new Auth(this)));
+    }
+
+    @Override
+    public String getHelpPage() {
+        return AIBO.Configuration.getConfigurationHashMap().get("AIBO.HelpPage");
     }
 
     @Override

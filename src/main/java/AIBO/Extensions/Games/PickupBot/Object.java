@@ -3,14 +3,12 @@ package AIBO.Extensions.Games.PickupBot;
 import AIBO.Extensions.Extension;
 import AIBO.Extensions.Games.PickupBot.Commands.EventListeners.KickPartQuit;
 import AIBO.Extensions.Games.PickupBot.Commands.EventListeners.NickChange;
-import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Add;
-import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Promote;
-import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Remove;
-import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.Who;
+import AIBO.Extensions.Games.PickupBot.Commands.MessageListeners.*;
 import AIBO.Extensions.Games.PickupBot.Errors.GameError;
 import AIBO.Extensions.Games.PickupBot.Errors.PickupBotError;
 import Helpers.Configuration;
 import Helpers.ConfigurationListener;
+import IrcNetwork.IrcMessageTextModifier;
 
 import java.util.ArrayList;
 
@@ -60,9 +58,15 @@ public final class Object extends Extension implements GameListener, Configurati
         this.addMessageListener(new Promote(this));
         this.addMessageListener(new Remove(this));
         this.addMessageListener(new Who(this));
+        this.addMessageListener(new Lastgame(this));
 
         this.addEventListener(new KickPartQuit(this));
         this.addEventListener(new NickChange(this));
+    }
+
+    @Override
+    public String getHelpPage() {
+        return Object.Configuration.getConfigurationHashMap().get("HelpPage");
     }
 
     @Override
@@ -188,7 +192,8 @@ public final class Object extends Extension implements GameListener, Configurati
                 }
             }
 
-            throw new PickupBotError(String.format("Unknown game type %s", gameType));
+            throw new PickupBotError(String.format("Unknown game type %s",
+                    IrcMessageTextModifier.makeBold(gameType)));
         }
     }
 
@@ -220,10 +225,16 @@ public final class Object extends Extension implements GameListener, Configurati
         this.setTopic(topicBuilder.toString());
     }
 
-    public void renamePlayer(Player oldPlayer, Player newPlayer) {
+    public void substitutePlayer(Player oldPlayer, Player newPlayer) {
         for (Game game : this.games) {
             game.substitutePlayers(oldPlayer, newPlayer);
         }
+    }
+
+    public String lastGame(String gameType) {
+        Game game = this.getGameByType(gameType);
+
+        return game.lastGame();
     }
 
     @Override
@@ -231,11 +242,15 @@ public final class Object extends Extension implements GameListener, Configurati
         String notifyPattern = "%s pickup game is ready to play! Players are [%s]";
 
         this.getExtensionMessenger().sendBroadcastMessage(this.getChannels(),
-                String.format(notifyPattern, game.getGameType(), game.getPlayerNicknamesAsString(", ", true)));
+                String.format(
+                        notifyPattern,
+                        IrcMessageTextModifier.makeBold(game.getGameType()),
+                        game.getPlayerNicknamesAsString(", ", true)));
 
         for (String playerNickName : game.getPlayerNicknames()) {
             this.getExtensionMessenger().sendPrivateMessage(playerNickName,
-                    String.format("Your %s pickup game was started! More info on the channel.", game.getGameType()));
+                    String.format("Your %s pickup game was started! More info on the channel.",
+                            IrcMessageTextModifier.makeBold(game.getGameType())));
         }
     }
 }
