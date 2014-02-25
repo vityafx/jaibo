@@ -42,7 +42,7 @@ public final class CommandsTests extends TestCase {
     ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!add test";
 
     private String testAdd2Message = ":testNickName2!testUser2@test2.users.quakenet.org PRIVMSG #test-channel :!add test";
-    private String testAdd3Message = ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!add";
+    private String testAdd3Message = ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!a";
 
     private String testWrongAddMessage =    ":testNickName1!testUser1@test1.users.quakenet.org " +
                                             "PRIVMSG #test-channel :!add 5492dsgw53";
@@ -79,6 +79,9 @@ public final class CommandsTests extends TestCase {
 
     private String testPlayer1KickMessage =
             ":testNickName1!testUser1@test1.users.quakenet.org KICK #test-channel testNickName1 :awesome reason";
+
+    private String testPlayer1NickCaseChangeMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org NICK :TeStNIcKNAME1";
 
 
     @Override
@@ -186,5 +189,14 @@ public final class CommandsTests extends TestCase {
         this.object.processTask(IrcEvent.tryParse(testPlayerNickChangeMessage));
         assertEquals(this.messageSender.isSetTopicEvent(), false);
         assertTrue(this.object.getPlayers(null, false).startsWith("testNickName2"));
+    }
+
+    public void testPlayerCaseNickChange() {
+        this.object.processTask(IrcMessage.tryParse(testAdd3Message));
+        assertEquals(this.messageSender.isSetTopicEvent(), true);
+
+        this.object.processTask(IrcEvent.tryParse(testPlayer1NickCaseChangeMessage));
+        assertEquals(this.messageSender.isSetTopicEvent(), false);
+        assertTrue(this.object.getPlayers(null, false).startsWith("TeStNIcKNAME1"));
     }
 }

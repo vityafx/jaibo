@@ -259,7 +259,8 @@ public final class Object extends Extension implements GameListener, Configurati
                     String.format("Your %s pickup game was started! More info on the channel.",
                             IrcMessageTextModifier.makeBold(game.getGameType())));
         }
-        ArrayList<Player> playerList = (ArrayList<Player>)game.getPlayerList().clone();
+
+        ArrayList<Player> playerList = new ArrayList<Player>(game.getPlayerList());
 
         for (Player player : playerList) {
             this.removePlayerFromEachGameType(player, false);

@@ -32,6 +32,10 @@ public final class Object extends Extension implements ConfigurationListener {
 
     public final static Helpers.Configuration Configuration = new Configuration("Games.LiveStreams.ini");
 
+    public Object() {
+        this.configurationChanged();
+    }
+
     @Override
     public String getExtensionName() {
         return "Games.LiveStreams";

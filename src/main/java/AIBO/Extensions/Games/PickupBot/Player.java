@@ -64,7 +64,7 @@ public class Player {
         if(obj instanceof Player){
             Player toCompare = (Player) obj;
 
-            return this.getNick().equalsIgnoreCase(toCompare.getNick());
+            return this.getNick().equals(toCompare.getNick());
         }
 
         return false;

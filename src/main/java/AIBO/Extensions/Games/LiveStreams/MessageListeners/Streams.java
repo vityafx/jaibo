@@ -71,7 +71,7 @@ public final class Streams extends Command implements MessageListener, Configura
 
             if (matcher.matches()) {
                 this.providerName = matcher.group(1);
-                this.streamTag = matcher.group(1);
+                this.streamTag = matcher.group(2);
 
                 checkPassed = true;
 
@@ -86,6 +86,12 @@ public final class Streams extends Command implements MessageListener, Configura
     protected void action() {
         String[] streams = this.object.getStreams(this.providerName, this.streamTag);
 
-        this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), streams.toString());
+        StringBuilder answerBuilder = new StringBuilder();
+
+        for(String stream : streams) {
+            answerBuilder.append(stream);
+        }
+
+        this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), answerBuilder.toString());
     }
 }
