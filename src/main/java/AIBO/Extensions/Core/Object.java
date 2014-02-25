@@ -68,6 +68,7 @@ public class Object extends Extension {
         this.addMessageListener(new LoadExtension(this));
         this.addMessageListener(new UnloadExtension(this));
         this.addMessageListener(new UpdateConfiguration(this));
+        this.addMessageListener(new Shutdown(this));
 
         this.addServerListener(new ConnectedToServerEvent(new JoinChannels(this), new Auth(this)));
     }

@@ -25,6 +25,6 @@ public class TwitchProvider extends Provider {
 
     @Override
     public String[] getStreams(String tag) {
-        return new String[0];
+        return null;
     }
 }
