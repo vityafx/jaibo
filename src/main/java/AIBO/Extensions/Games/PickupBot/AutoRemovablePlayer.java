@@ -51,12 +51,20 @@ public final class AutoRemovablePlayer extends Player {
     }
 
     public void removePlayer() {
-        this.timer.cancel();
-        this.timer.purge();
+        this.cancelPlayerTimer();
 
         this.game.automaticallyRemovePlayer(this);
     }
 
+    public void cancelPlayerTimer() {
+        this.timer.cancel();
+        this.timer.purge();
+    }
+
+    @Override
+    public void beforeRemove() {
+        this.cancelPlayerTimer();
+    }
 
     @Override
     public String toString() {

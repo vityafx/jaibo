@@ -111,4 +111,14 @@ public final class PickupBotTests extends TestCase {
         players = this.object.getPlayers(Game.tryParse(this.games[3]).getGameType(), false);
         assertEquals(players, this.testPlayer1.getFormattedNickName() + "(0m), " + this.testPlayer2.getFormattedNickName() + "(0m)");
     }
+
+    public void testPickupBotReset() {
+        this.object.addPlayer(this.testPlayer1, Game.tryParse(this.games[3]).getGameType());
+
+        this.object.reset();
+
+
+        String players = this.object.getPlayers(Game.tryParse(this.games[3]).getGameType(), false);
+        assertEquals(players.length(), 0);
+    }
 }

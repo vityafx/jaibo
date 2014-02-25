@@ -57,6 +57,7 @@ public final class Object extends Extension implements GameListener, Configurati
         this.addMessageListener(new Remove(this));
         this.addMessageListener(new Who(this));
         this.addMessageListener(new Lastgame(this));
+        this.addMessageListener(new Reset(this));
 
         this.addEventListener(new KickPartQuit(this));
         this.addEventListener(new NickChange(this));
@@ -269,13 +270,21 @@ public final class Object extends Extension implements GameListener, Configurati
         this.updateTopic();
     }
 
+    public void reset() {
+        for (Game game : this.games) {
+            game.clearPlayerList();
+        }
+
+        this.updateTopic();
+    }
+
     @Override
     public void playerAutomaticallyRemoved(Player player, Game game) {
         String messagePattern = "%s was automatically removed from %s game type [maximum added time reached]";
         String message = String.format(
                 messagePattern,
                 IrcMessageTextModifier.makeBold(player.getNick()),
-                game.getGameType());
+                IrcMessageTextModifier.makeBold(game.getGameType()));
 
         this.getExtensionMessenger().sendBroadcastMessage(this.getChannels(), message);
 

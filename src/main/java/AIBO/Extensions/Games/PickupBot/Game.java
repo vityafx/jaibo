@@ -87,8 +87,20 @@ public class Game {
         }
     }
 
+    public Player getPlayerByNick(String nick) {
+        for (Player player : this.playerList) {
+            if (player.getNick().equalsIgnoreCase(nick)) {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
     public void removePlayer(Player player) {
         if (this.isPlayerAdded(player)) {
+            this.getPlayerByNick(player.getNick()).beforeRemove();
+
             this.playerList.remove(player);
         }
     }
@@ -97,6 +109,10 @@ public class Game {
         this.removePlayer(player);
 
         this.notifyPlayerAutoRemovedUpListeners(player);
+    }
+
+    public void clearPlayerList() {
+        this.playerList.clear();
     }
 
     protected void checkPickupFormed() {
@@ -108,7 +124,7 @@ public class Game {
     protected void pickupFormed() {
         this.notifyPickupFormedUpListeners();
 
-        this.playerList.clear();
+        this.clearPlayerList();
 
         this.lastGameDate = new GregorianCalendar();
     }

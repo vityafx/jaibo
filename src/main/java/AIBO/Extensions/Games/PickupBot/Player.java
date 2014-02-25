@@ -54,6 +54,11 @@ public class Player {
         this.host = host;
     }
 
+    // This method will be called before player will be removed from list
+    public void beforeRemove() {
+
+    }
+
     @Override
     public String toString() {
         return String.format("Nick: %s | Host: %s", this.nick, this.host);

@@ -83,6 +83,9 @@ public final class CommandsTests extends TestCase {
     private String testPlayer1NickCaseChangeMessage =
             ":testNickName1!testUser1@test1.users.quakenet.org NICK :TeStNIcKNAME1";
 
+    private String testResetMessage =
+            ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG fgd :!reset";
+
 
     @Override
     protected void setUp() throws Exception {
@@ -198,5 +201,14 @@ public final class CommandsTests extends TestCase {
         this.object.processTask(IrcEvent.tryParse(testPlayer1NickCaseChangeMessage));
         assertEquals(this.messageSender.isSetTopicEvent(), false);
         assertTrue(this.object.getPlayers(null, false).startsWith("TeStNIcKNAME1"));
+    }
+
+    public void testPickupBotReset() {
+        this.object.processTask(IrcMessage.tryParse(testAdd3Message));
+        this.object.processTask(IrcMessage.tryParse(testAdd1Message));
+
+        this.object.processTask(IrcMessage.tryParse(testResetMessage));
+        assertEquals(this.object.getPlayers(null, false).length(), 0);
+        assertEquals(this.object.getPlayers(Game.tryParse(this.games[2]).getGameType(), false).length(), 0);
     }
 }
