@@ -201,7 +201,7 @@ public class Game {
         String[] nickNames = new String[]{};
 
         for (Player player : this.playerList) {
-            allAddedPlayerNickNames.add(player.getFormattedNickName());
+            allAddedPlayerNickNames.add(player.getNick());
         }
 
         return allAddedPlayerNickNames.toArray(nickNames);
