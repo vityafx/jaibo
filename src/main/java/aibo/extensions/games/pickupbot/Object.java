@@ -289,5 +289,7 @@ public final class Object extends Extension implements GameListener, Configurati
         this.getExtensionMessenger().sendBroadcastMessage(this.getChannels(), message);
 
         this.getExtensionMessenger().sendPrivateMessage(player.getNick(), message);
+
+        this.updateTopic();
     }
 }
