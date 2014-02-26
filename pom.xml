@@ -4,7 +4,7 @@
 
     <groupId>jaibo</groupId>
     <artifactId>jaibo</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
 
     <scm>
         <connection>scm:git:git@bitbucket.org:fx_/jaibo.git</connection>
