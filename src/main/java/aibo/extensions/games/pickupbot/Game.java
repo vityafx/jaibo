@@ -148,23 +148,23 @@ public class Game {
         StringBuilder lastGameStringBuilder = new StringBuilder();
 
         if (elapsedDays > 0) {
-            lastGameStringBuilder.append(String.format("%d days", elapsedDays));
+            lastGameStringBuilder.append(String.format("%d days ", elapsedDays));
         }
 
         if (elapsedHours > 0) {
-            lastGameStringBuilder.append(String.format("%d hours", elapsedHours));
+            lastGameStringBuilder.append(String.format("%d hours ", elapsedHours));
         }
 
         if (elapsedMinutes > 0) {
-            lastGameStringBuilder.append(String.format("%d minutes", elapsedMinutes));
+            lastGameStringBuilder.append(String.format("%d minutes ", elapsedMinutes));
         }
 
         if (elapsedSeconds > 0) {
-            lastGameStringBuilder.append(String.format("%d seconds", elapsedSeconds));
+            lastGameStringBuilder.append(String.format("%d seconds ", elapsedSeconds));
         }
 
         if (lastGameStringBuilder.length() > 0) {
-            lastGameStringBuilder.append(" ago");
+            lastGameStringBuilder.append("ago");
         } else {
             lastGameStringBuilder.append("Just a moment ago");
         }
