@@ -4,7 +4,7 @@
 
     <groupId>jaibo</groupId>
     <artifactId>jaibo</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
 
     <scm>
         <connection>scm:git:git@bitbucket.org:fx_/jaibo.git</connection>
@@ -24,10 +24,10 @@
     <distributionManagement>
         <repository>
             <id>my.bitbucket.repo</id>
-            <url>https://fx_@bitbucket.org/fx_/jaibo.git</url>
+            <url>git:git@bitbucket.org:fx_/jaibo.git</url>
         </repository>
     </distributionManagement>
-
+    
     <build>
         <plugins>
             <plugin>
