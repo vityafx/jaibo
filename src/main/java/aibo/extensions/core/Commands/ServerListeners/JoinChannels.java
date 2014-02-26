@@ -1,7 +1,10 @@
-import aibo.AIBO;
+package aibo.extensions.core.Commands.ServerListeners;
+
+import aibo.extensions.Extension;
+import aibo.extensions.SimpleCommand;
 
 /**
- * Main class of aibo java-port
+ * Command to join a channel in irc network
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +21,18 @@ import aibo.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public final class JoinChannels extends SimpleCommand {
+    public JoinChannels(Extension object) {
+        super(object);
+    }
 
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.get("aibo.extensions").split(" ");
+    @Override
+    public void execute() {
+        String[] channels = this.object.getChannels();
 
-        AIBO bot = new AIBO(extensions);
-        bot.run();
+        for (String channel : channels) {
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("JOIN",
+                    String.format("%s", channel));
+        }
     }
 }

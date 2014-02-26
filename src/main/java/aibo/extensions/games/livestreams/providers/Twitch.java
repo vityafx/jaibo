@@ -1,7 +1,10 @@
-import aibo.AIBO;
+package aibo.extensions.games.livestreams.providers;
+
+import aibo.extensions.games.livestreams.errors.ProviderError;
+import aibo.extensions.games.livestreams.Provider;
 
 /**
- * Main class of aibo java-port
+ * Twitch.tv live streams extension provider
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +21,17 @@ import aibo.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public class Twitch extends Provider {
 
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.get("aibo.extensions").split(" ");
 
-        AIBO bot = new AIBO(extensions);
-        bot.run();
+    @Override
+    public String[] getStreams(String tag) {
+        throw new ProviderError(String.format("No streams found on \"%s\" service with tag \"%s\"",
+                this.getProviderName(), tag));
+    }
+
+    @Override
+    public String getProviderName() {
+        return "Twitch";
     }
 }

@@ -1,7 +1,9 @@
-import aibo.AIBO;
+package aibo.extensions.other.greeting;
+
+import aibo.extensions.Extension;
 
 /**
- * Main class of aibo java-port
+ * Greets people when they are joins the channel
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +20,19 @@ import aibo.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public final class Object extends Extension {
+    @Override
+    public String getExtensionName() {
+        return "other.greeting";
+    }
 
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.get("aibo.extensions").split(" ");
+    @Override
+    protected void setCommands() {
 
-        AIBO bot = new AIBO(extensions);
-        bot.run();
+    }
+
+    @Override
+    public String getHelpPage() {
+        return null;
     }
 }

@@ -1,7 +1,7 @@
-import aibo.AIBO;
+package ircnetwork;
 
 /**
- * Main class of aibo java-port
+ * Message sender interface
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,16 @@ import aibo.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public interface IrcMessageSenderInterface {
+    public void sendNotice(String username, String message);
 
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.get("aibo.extensions").split(" ");
+    public void sendPrivateMessage(String username, String message);
 
-        AIBO bot = new AIBO(extensions);
-        bot.run();
-    }
+    public void sendChannelMessage(String channel, String message);
+
+    public void sendBroadcastMessage(String[] channels, String message);
+
+    public void setTopic(String channel, String topicContent);
+
+    public void setTopic(String[] channels, String topicContent);
 }

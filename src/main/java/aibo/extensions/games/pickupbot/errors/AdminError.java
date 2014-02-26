@@ -1,7 +1,7 @@
-import aibo.AIBO;
+package aibo.extensions.games.pickupbot.errors;
 
 /**
- * Main class of aibo java-port
+ * Admin error class
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,13 @@ import aibo.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public final class AdminError extends Error {
+    public AdminError(String errorText) {
+        super(errorText);
+    }
 
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.get("aibo.extensions").split(" ");
-
-        AIBO bot = new AIBO(extensions);
-        bot.run();
+    @Override
+    public String getMessage() {
+        return String.format("Admin error: %s", super.getMessage());
     }
 }

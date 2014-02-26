@@ -1,7 +1,7 @@
-import aibo.AIBO;
+package ircnetwork;
 
 /**
- * Main class of aibo java-port
+ * Debug version of IrcCommandSender
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,10 @@ import aibo.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
+public final class DebugIrcCommandSender extends IrcCommandSender {
 
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.get("aibo.extensions").split(" ");
-
-        AIBO bot = new AIBO(extensions);
-        bot.run();
+    @Override
+    public void sendIrcCommand(String command, String arguments) {
+        System.out.println(String.format("Sending %s: %s", command, arguments));
     }
 }

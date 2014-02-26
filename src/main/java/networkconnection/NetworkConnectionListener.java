@@ -1,7 +1,7 @@
-import aibo.AIBO;
+package networkconnection;
 
 /**
- * Main class of aibo java-port
+ * Network listeners
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,6 @@ import aibo.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
-
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.get("aibo.extensions").split(" ");
-
-        AIBO bot = new AIBO(extensions);
-        bot.run();
-    }
+public interface NetworkConnectionListener {
+    public void dataReceived(String data);
 }

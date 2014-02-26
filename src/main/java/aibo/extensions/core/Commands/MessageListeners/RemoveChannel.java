@@ -1,7 +1,7 @@
-import aibo.AIBO;
+package aibo.extensions.core.Commands.MessageListeners;
 
 /**
- * Main class of aibo java-port
+ * Remove channel from aibo's channel list
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,5 @@ import aibo.AIBO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Main {
-
-    public static void main(String[] args) {
-        String[] extensions = AIBO.Configuration.get("aibo.extensions").split(" ");
-
-        AIBO bot = new AIBO(extensions);
-        bot.run();
-    }
+public class RemoveChannel {
 }
