@@ -27,6 +27,7 @@ public final class IrcMessage {
     private String host;
     private String receiver;
     private String message;
+    private String fullMessage;
 
 
     public static IrcMessage tryParse(String message) {
@@ -40,6 +41,7 @@ public final class IrcMessage {
 
             if (matcher.matches()) {
                 channelMessage = new IrcMessage();
+                channelMessage.setFullMessage(message);
 
                 channelMessage.setUser(matcher.group(1));
                 channelMessage.setHost(matcher.group(2));
@@ -96,6 +98,14 @@ public final class IrcMessage {
 
     public void setMessageType(IrcMessageType messageType) {
         this.messageType = messageType;
+    }
+
+    public String getFullMessage() {
+        return fullMessage;
+    }
+
+    public void setFullMessage(String fullMessage) {
+        this.fullMessage = fullMessage;
     }
 
     public String toString() {

@@ -1,7 +1,7 @@
-package aibo.extensions.core.Commands.MessageListeners;
+package aibo.extensions.other.advertisement.messagelisteners;
 
 /**
- * Remove channel from aibo's channel list
+ * Removes advertisement
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,5 +18,5 @@ package aibo.extensions.core.Commands.MessageListeners;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class RemoveChannel {
+public class RemoveAd {
 }

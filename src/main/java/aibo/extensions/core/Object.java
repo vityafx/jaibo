@@ -2,8 +2,8 @@ package aibo.extensions.core;
 
 import aibo.AIBO;
 import aibo.ExtensionManager;
-import aibo.extensions.core.Commands.MessageListeners.*;
-import aibo.extensions.core.Commands.ServerListeners.*;
+import aibo.extensions.core.commands.messagelisteners.*;
+import aibo.extensions.core.commands.serverlisteners.*;
 import aibo.extensions.Extension;
 import errors.ExtensionError;
 
@@ -69,6 +69,7 @@ public class Object extends Extension {
         this.addMessageListener(new UnloadExtension(this));
         this.addMessageListener(new UpdateConfiguration(this));
         this.addMessageListener(new Shutdown(this));
+        this.addMessageListener(new GetOp(this));
 
         this.addServerListener(new ConnectedToServerEvent(new JoinChannels(this), new Auth(this)));
     }

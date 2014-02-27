@@ -26,13 +26,18 @@ public final class IrcUserTests extends TestCase {
     private String[] users = {
             ":nick!~user@host.org",
             ":esdf!esdf@esdf.users.quakenet.org",
-            ":ph0en|X!~phoenix@vlhurgs.net"
+            ":ph0en|X!~phoenix@vlhurgs.net",
+            ":testNickName1!~testUser1@test1.users.quakenet.org PRIVMSG #test-channel :test text",
+            ":testNickName1!~testUser1@test1.users.quakenet.org KICK #test_channel kicked_user_nick :kick message"
+
     };
 
     public void testIrcMessageParser() {
         IrcUser user1 = IrcUser.tryParse(this.users[0]);
         IrcUser user2 = IrcUser.tryParse(this.users[1]);
         IrcUser user3 = IrcUser.tryParse(this.users[2]);
+        IrcUser user4 = IrcUser.tryParseFromIrcMessage(this.users[3]);
+        IrcUser user5 = IrcUser.tryParseFromIrcMessage(this.users[4]);
 
         assertNotNull(user1);
 
@@ -53,5 +58,19 @@ public final class IrcUserTests extends TestCase {
         assertEquals(user3.getNick(), "ph0en|X");
         assertEquals(user3.getName(), "~phoenix");
         assertEquals(user3.getHost(), "vlhurgs.net");
+
+
+        assertNotNull(user4);
+
+        assertEquals(user4.getNick(), "testNickName1");
+        assertEquals(user4.getName(), "~testUser1");
+        assertEquals(user4.getHost(), "test1.users.quakenet.org");
+
+
+        assertNotNull(user5);
+
+        assertEquals(user5.getNick(), "testNickName1");
+        assertEquals(user5.getName(), "~testUser1");
+        assertEquals(user5.getHost(), "test1.users.quakenet.org");
     }
 }

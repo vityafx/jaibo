@@ -1,4 +1,4 @@
-package aibo.extensions.core.Commands.ServerListeners;
+package aibo.extensions.core.commands.serverlisteners;
 
 import aibo.AIBO;
 import aibo.extensions.Command;

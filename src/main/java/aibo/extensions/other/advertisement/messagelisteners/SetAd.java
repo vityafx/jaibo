@@ -1,8 +1,8 @@
-package aibo.extensions.core.Commands.MessageListeners;
+package aibo.extensions.other.advertisement.messagelisteners;
 
 import aibo.extensions.Command;
-import errors.ExtensionError;
-import errors.ExtensionManagerError;
+import aibo.extensions.other.advertisement.Object;
+import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
 import ircnetwork.MessageListener;
@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Unloads extension at runtime
+ * Sets advertisement
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,24 +28,37 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class UnloadExtension extends Command implements MessageListener {
-    private aibo.extensions.core.Object object;
-    private String receiver;
-    private String extensionName;
+public final class SetAd extends Command implements MessageListener, ConfigurationListener {
+    private Object object;
 
-    public UnloadExtension() {
-        this.addName("!unload");
+    private String receiver;
+    private String timePeriod;
+    private String advertisementText;
+
+
+    public SetAd() {
+        this.configurationChanged();
     }
 
-    public UnloadExtension(aibo.extensions.core.Object object) {
+    public SetAd(Object object) {
         this();
 
         this.object = object;
     }
 
+
+    @Override
+    public void configurationChanged() {
+        this.clearNames();
+
+        String[] names = Object.Configuration.get("commands.set_ad").split(" ");
+
+        this.addNames(names);
+    }
+
     @Override
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage())) {
+        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage().trim())) {
             this.receiver = message.getUser();
 
             this.execute();
@@ -57,13 +70,14 @@ public final class UnloadExtension extends Command implements MessageListener {
         boolean checkPassed = false;
 
         for (String name : this.getNames()) {
-            Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
+            Pattern p = Pattern.compile(String.format("^%s (.*) :(.*)$", name), Pattern.CASE_INSENSITIVE);
 
             CharSequence sequence = message.subSequence(0, message.length());
             Matcher matcher = p.matcher(sequence);
 
             if (matcher.matches()) {
-                this.extensionName = matcher.group(1);
+                this.timePeriod = matcher.group(1);
+                this.advertisementText = matcher.group(2);
 
                 checkPassed = true;
 
@@ -76,19 +90,13 @@ public final class UnloadExtension extends Command implements MessageListener {
 
     @Override
     protected void action() {
-        try {
-            this.object.getExtensionManager().removeExtensionByName(this.extensionName);
-
-            if (this.object.getExtensionManager().getCurrentlyRunningExtensionByName(this.extensionName) == null) {
-                this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
-                        String.format("'%s' extension successfully unloaded", this.extensionName));
-            }
-
-            this.extensionName = null;
-        } catch (ExtensionManagerError e) {
-            this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, e.getMessage());
-        } catch (ExtensionError e) {
-            this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, e.getMessage());
-        }
+//        try {
+//            this.object.setAdvertisement(this.gameType);
+//
+//            this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
+//                    "Advertisement has been set successfully.");
+//        } catch (GameError e) {
+//            this.object.getExtensionMessenger().sendNotice(this.receiver.getFormattedNickName(), e.getMessage());
+//        }
     }
 }

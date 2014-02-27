@@ -1,14 +1,14 @@
-package aibo.extensions.core.Commands.MessageListeners;
+package aibo.extensions.core.commands.messagelisteners;
 
 import aibo.AIBO;
 import aibo.extensions.Command;
-import aibo.extensions.Extension;
+import aibo.extensions.core.Object;
 import ircnetwork.IrcMessage;
-import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
 import ircnetwork.MessageListener;
 
 /**
- * Command reloads configuration and it's listeners
+ * Gives operator privileges to a user with host = root_admin_host
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,16 +25,15 @@ import ircnetwork.MessageListener;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class UpdateConfiguration extends Command implements MessageListener {
+public final class GetOp extends Command implements MessageListener {
+    private Object object;
+    private IrcUser ircUser;
 
-    private Extension object;
-    private String receiver;
-
-    public UpdateConfiguration() {
-        this.addName("!update_configuration");
+    public GetOp() {
+        this.addName("!get_op");
     }
 
-    public UpdateConfiguration(Extension object) {
+    public GetOp(Object object) {
         this();
 
         this.object = object;
@@ -42,8 +41,8 @@ public final class UpdateConfiguration extends Command implements MessageListene
 
     @Override
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage())) {
-            this.receiver = message.getUser();
+        if (this.check(message.getMessage())) {
+            this.ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
             this.execute();
         }
@@ -51,8 +50,11 @@ public final class UpdateConfiguration extends Command implements MessageListene
 
     @Override
     protected void action() {
-        AIBO.Configuration.update();
-
-        this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, "Configuration updated successfully");
+        if (AIBO.Configuration.get("aibo.root_admin_host").equalsIgnoreCase(this.ircUser.getHost())) {
+            for(String channel : this.object.getChannels()) {
+                this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("MODE",
+                        String.format("%s +o %s", channel, this.ircUser.getNick()));
+            }
+        }
     }
 }

@@ -1,19 +1,19 @@
 #!/bin/bash
 
 export dist_package=jaibo
-export version=0.1
+export version=0.2
 export target_directory=target
 
 ls $target_directory
 if [ ! -d "$target_directory" ]; then
-    echo "Target distribution directory not exists. Creating distribution with maven."
+    echo "Target compile directory not exists. Compiling with gradle."
 
-    mvn install
+    gradle build
 fi
 
-echo "Target distribution directory exists. Running the bot. Press CTRL+C to shut it down."
+echo "Target compile directory exists. Running the bot. Press CTRL+C to shut it down."
 
-cd target
+cd target/libs
 
 # Uncomment line below to run it in background mode
 #java -jar $dist_package-$version.jar < /dev/null > aibo.log 2>&1 &

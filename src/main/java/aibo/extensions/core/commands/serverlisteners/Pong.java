@@ -1,16 +1,15 @@
-package aibo.extensions.core.Commands.ServerListeners;
+package aibo.extensions.core.commands.serverlisteners;
 
 import aibo.extensions.Command;
-import aibo.extensions.SimpleCommand;
+import aibo.extensions.core.Object;
 import ircnetwork.ServerListener;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Launches after bot have been connected to irc server
+ * Pong answer
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,12 +26,17 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class ConnectedToServerEvent extends Command implements ServerListener {
-    public ArrayList<SimpleCommand> commands = new ArrayList<SimpleCommand>();
+public final class Pong extends Command implements ServerListener {
 
+    private String pongAnswer;
+    private Object object;
 
-    public ConnectedToServerEvent(SimpleCommand... commands) {
-        this.commands = new ArrayList<SimpleCommand>(Arrays.asList(commands));
+    public Pong() {
+
+    }
+
+    public Pong(Object object) {
+        this.object = object;
     }
 
     @Override
@@ -40,17 +44,18 @@ public final class ConnectedToServerEvent extends Command implements ServerListe
         this.checkAndExecute(message);
     }
 
-
     @Override
     public boolean check(String message) {
         boolean checkPassed = false;
 
-        Pattern p = Pattern.compile("^:(.*) 001 (.*) :(.*)$");
+        Pattern p = Pattern.compile("^PING :(.*)$");
 
         CharSequence sequence = message.subSequence(0, message.length());
         Matcher matcher = p.matcher(sequence);
 
         if (matcher.matches()) {
+            this.pongAnswer = String.format(matcher.group(1));
+
             checkPassed = true;
         }
 
@@ -59,10 +64,6 @@ public final class ConnectedToServerEvent extends Command implements ServerListe
 
     @Override
     protected void action() {
-        if (this.commands != null) {
-            for(SimpleCommand command : this.commands) {
-                command.execute();
-            }
-        }
+        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("PONG", this.pongAnswer);
     }
 }

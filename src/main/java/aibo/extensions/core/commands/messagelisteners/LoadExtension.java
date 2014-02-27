@@ -1,4 +1,4 @@
-package aibo.extensions.core.Commands.MessageListeners;
+package aibo.extensions.core.commands.messagelisteners;
 
 import aibo.extensions.Command;
 import errors.ExtensionManagerError;

@@ -1,7 +1,10 @@
-package aibo.extensions.core.Commands.MessageListeners;
+package aibo.extensions.other.advertisement;
+
+import aibo.extensions.Extension;
+import helpers.Configuration;
 
 /**
- * Adds channel to aibo's channel list
+ * Greets people when they are joins the channel
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,5 +21,22 @@ package aibo.extensions.core.Commands.MessageListeners;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class AddChannel {
+public final class Object extends Extension {
+
+    public final static helpers.Configuration Configuration = new Configuration("Other.Advertisement.ini");
+
+    @Override
+    public String getExtensionName() {
+        return "other.advertisement";
+    }
+
+    @Override
+    protected void setCommands() {
+
+    }
+
+    @Override
+    public String getHelpPage() {
+        return Object.Configuration.get("helppage");
+    }
 }

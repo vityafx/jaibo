@@ -51,7 +51,7 @@ public final class IrcUser {
     public static IrcUser tryParse(String user) {
         IrcUser ircUser = null;
 
-        Pattern p = Pattern.compile("^[:~](.*)!(.*)@(.*)$");
+        Pattern p = Pattern.compile("^[:](.*)!(.*)@(.*)$");
 
         CharSequence sequence = user.subSequence(0, user.length());
         Matcher matcher = p.matcher(sequence);
@@ -63,6 +63,27 @@ public final class IrcUser {
                                     null,
                                     null,
                                     null
+            );
+        }
+
+        return ircUser;
+    }
+
+    public static IrcUser tryParseFromIrcMessage(String message) {
+        IrcUser ircUser = null;
+
+        Pattern p = Pattern.compile("^[:](.*)!(.*)@([\\.|\\w+]*) (.*)$");
+
+        CharSequence sequence = message.subSequence(0, message.length());
+        Matcher matcher = p.matcher(sequence);
+
+        if (matcher.matches()) {
+            ircUser = new IrcUser(  matcher.group(1),
+                    matcher.group(2),
+                    matcher.group(3),
+                    null,
+                    null,
+                    null
             );
         }
 
