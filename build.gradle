@@ -1,0 +1,58 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: 'distribution'
+
+group = 'jaibo'
+version = '0.2'
+
+description = """Java Advanced IRC BOt"""
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+buildDir = "target"
+
+repositories {
+
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version:'3.8.1'
+}
+
+task copyTask(type: Copy) {
+
+    println 'Copying configuration files and distribution files...'
+
+    ['target/classes/', 'target/libs'].each { dest ->
+        copy {
+            with from ('src/main/java/') {
+                include '*.ini'
+            }
+            into dest
+        }
+    }
+
+    from (rootProject.rootDir) {
+        include '[README|LICENSE|CHANGELOG]'
+        include '*.sh'
+    }
+    into 'target/libs'
+}
+
+jar {
+    manifest.attributes("Main-Class": "Main")
+}
+
+compileJava.dependsOn(copyTask)
+
+
+distributions {
+    main {
+        contents {
+            from { 'target/libs' }
+        }
+    }
+}
