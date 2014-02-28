@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'idea'
-apply plugin: 'distribution'
+apply plugin: 'application'
 
 group = 'jaibo'
 version = '0.2'
@@ -12,6 +12,8 @@ sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
 buildDir = "target"
+
+mainClassName = "Main"
 
 repositories {
 
@@ -42,17 +44,19 @@ task copyTask(type: Copy) {
     into 'target/libs'
 }
 
+compileJava.dependsOn(copyTask)
+
 jar {
     manifest.attributes("Main-Class": "Main")
 }
 
-compileJava.dependsOn(copyTask)
+/* Overwriting distribution tasks: */
+task distZip(type:Zip, overwrite:true) {
+    archiveName = "$project.name-$version" + '.zip'
+    from "target/libs"
+}
 
-
-distributions {
-    main {
-        contents {
-            from { 'target/libs' }
-        }
-    }
+task distTar(type:Tar, overwrite:true) {
+    archiveName = "$project.name-$version" + '.tar'
+    from "target/libs"
 }
