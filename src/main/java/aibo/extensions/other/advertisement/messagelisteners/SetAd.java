@@ -71,7 +71,7 @@ public final class SetAd extends Command implements MessageListener, Configurati
         boolean checkPassed = false;
 
         for (String name : this.getNames()) {
-            Pattern p = Pattern.compile(String.format("^!set_ad (\\d+) (.*)$", name), Pattern.CASE_INSENSITIVE);
+            Pattern p = Pattern.compile(String.format("^%s (\\d+) (.*)$", name), Pattern.CASE_INSENSITIVE);
 
             CharSequence sequence = message.subSequence(0, message.length());
             Matcher matcher = p.matcher(sequence);
