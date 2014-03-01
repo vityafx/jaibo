@@ -2,6 +2,7 @@ package aibo.extensions.other.advertisement.messagelisteners;
 
 import aibo.extensions.Command;
 import aibo.extensions.other.advertisement.Object;
+import aibo.extensions.other.advertisement.errors.AdvertisementError;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
@@ -32,7 +33,7 @@ public final class SetAd extends Command implements MessageListener, Configurati
     private Object object;
 
     private String receiver;
-    private String timePeriod;
+    private short timePeriod;
     private String advertisementText;
 
 
@@ -70,13 +71,13 @@ public final class SetAd extends Command implements MessageListener, Configurati
         boolean checkPassed = false;
 
         for (String name : this.getNames()) {
-            Pattern p = Pattern.compile(String.format("^%s (.*) :(.*)$", name), Pattern.CASE_INSENSITIVE);
+            Pattern p = Pattern.compile(String.format("^!set_ad (\\d+) (.*)$", name), Pattern.CASE_INSENSITIVE);
 
             CharSequence sequence = message.subSequence(0, message.length());
             Matcher matcher = p.matcher(sequence);
 
             if (matcher.matches()) {
-                this.timePeriod = matcher.group(1);
+                this.timePeriod = Short.parseShort(matcher.group(1));
                 this.advertisementText = matcher.group(2);
 
                 checkPassed = true;
@@ -90,13 +91,13 @@ public final class SetAd extends Command implements MessageListener, Configurati
 
     @Override
     protected void action() {
-//        try {
-//            this.object.setAdvertisement(this.gameType);
-//
-//            this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
-//                    "Advertisement has been set successfully.");
-//        } catch (GameError e) {
-//            this.object.getExtensionMessenger().sendNotice(this.receiver.getFormattedNickName(), e.getMessage());
-//        }
+        try {
+            this.object.setAdvertisement(this.advertisementText, this.timePeriod);
+
+            this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
+                    "Advertisement has been set successfully.");
+        } catch (AdvertisementError e) {
+            this.object.getExtensionMessenger().sendNotice(this.receiver, e.getMessage());
+        }
     }
 }

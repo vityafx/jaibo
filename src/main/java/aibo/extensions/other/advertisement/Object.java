@@ -1,6 +1,9 @@
 package aibo.extensions.other.advertisement;
 
 import aibo.extensions.Extension;
+import aibo.extensions.other.advertisement.errors.AdvertisementError;
+import aibo.extensions.other.advertisement.messagelisteners.RemoveAd;
+import aibo.extensions.other.advertisement.messagelisteners.SetAd;
 import helpers.Configuration;
 
 /**
@@ -24,6 +27,7 @@ import helpers.Configuration;
 public final class Object extends Extension {
 
     public final static helpers.Configuration Configuration = new Configuration("Other.Advertisement.ini");
+    private Advertisement advertisement;
 
     @Override
     public String getExtensionName() {
@@ -32,11 +36,26 @@ public final class Object extends Extension {
 
     @Override
     protected void setCommands() {
-
+        this.addMessageListener(new SetAd(this));
+        this.addMessageListener(new RemoveAd(this));
     }
 
     @Override
     public String getHelpPage() {
         return Object.Configuration.get("helppage");
+    }
+
+    public void setAdvertisement(String advertisementText, short timePeriod) {
+        this.advertisement = new Advertisement(advertisementText, timePeriod, this);
+    }
+
+    public void removeAdvertisement() {
+        if (this.advertisement != null) {
+            this.advertisement.stopAdvertisementTimer();
+
+            this.advertisement = null;
+        } else {
+            throw new AdvertisementError("No advertisement has been set before.");
+        }
     }
 }

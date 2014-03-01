@@ -1,5 +1,8 @@
 package aibo.extensions.other.advertisement;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Advertisement realization
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
@@ -18,9 +21,22 @@ package aibo.extensions.other.advertisement;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Advertisement {
+public final class Advertisement extends TimerTask {
     private String advertisementText;
     private short timePeriod;
+    Object object;
+
+    private final Timer timer = new Timer();
+
+
+
+    public Advertisement(String advertisementText, short timePeriod, Object object) {
+        this.advertisementText = advertisementText;
+        this.timePeriod = timePeriod;
+        this.object = object;
+
+        this.setTimer();
+    }
 
     public String getAdvertisementText() {
         return advertisementText;
@@ -36,5 +52,27 @@ public final class Advertisement {
 
     public void setTimePeriod(short timePeriod) {
         this.timePeriod = timePeriod;
+    }
+
+    @Override
+    public void run() {
+        if (this.object != null) {
+            this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(),
+                    "Advertisement: " + this.advertisementText);
+        }
+    }
+
+
+    private void setTimer() {
+        this.timer.scheduleAtFixedRate(this, this.timePeriod * 60 * 1000, this.timePeriod * 60 * 1000);
+    }
+
+    private void cancelTimer() {
+        this.timer.cancel();
+        this.timer.purge();
+    }
+
+    public void stopAdvertisementTimer() {
+        this.cancelTimer();
     }
 }
