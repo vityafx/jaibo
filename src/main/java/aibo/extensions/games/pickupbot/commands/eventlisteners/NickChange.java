@@ -3,6 +3,7 @@ package aibo.extensions.games.pickupbot.commands.eventlisteners;
 import aibo.extensions.Command;
 import aibo.extensions.games.pickupbot.Object;
 import aibo.extensions.games.pickupbot.Player;
+import aibo.extensions.games.pickupbot.errors.GameError;
 import ircnetwork.EventListener;
 import ircnetwork.ircevent.IrcEvent;
 import ircnetwork.ircevent.IrcEventType;
@@ -46,6 +47,10 @@ public final class NickChange extends Command implements EventListener {
 
     @Override
     protected void action() {
-        this.object.substitutePlayer(this.oldPlayer, this.newPlayer);
+        try {
+            this.object.substitutePlayer(this.oldPlayer, this.newPlayer);
+        } catch (GameError e) {
+            System.out.println("Error while substituting players: " + e.getMessage());
+        }
     }
 }
