@@ -38,7 +38,10 @@ task copyTask(type: Copy) {
     }
 
     from (rootProject.rootDir) {
-        include '[README|LICENSE|CHANGELOG]'
+        include 'README.md'
+        include 'LICENSE'
+        include 'CHANGELOG'
+
         include '*.sh'
     }
     into 'target/libs'
