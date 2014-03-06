@@ -1,5 +1,7 @@
 # Java Advanced IRC BOt (JAIBO)
 **JAIBO** is a port of [AIBO](https://bitbucket.org/fx_/aibo).
+[bitbucket](https://bitbucket.org/fx_/jaibo/)
+[github](https://github.com/vityafx/jaibo)
 
 # License
 Code is licensed to GPL v3. See 'LICENSE' file.
