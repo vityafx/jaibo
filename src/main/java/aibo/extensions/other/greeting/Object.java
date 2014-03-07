@@ -1,6 +1,12 @@
 package aibo.extensions.other.greeting;
 
 import aibo.extensions.Extension;
+import aibo.extensions.other.greeting.eventlisteners.Join;
+import aibo.extensions.other.greeting.messagelisteners.RemoveGreetingMessage;
+import aibo.extensions.other.greeting.messagelisteners.SetGreetingMessage;
+import helpers.Configuration;
+import helpers.ConfigurationListener;
+import ircnetwork.IrcUser;
 
 /**
  * Greets people when they are joins the channel
@@ -20,7 +26,10 @@ import aibo.extensions.Extension;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Object extends Extension {
+public final class Object extends Extension implements ConfigurationListener {
+    public final static Configuration Configuration = new Configuration("Other.Greeting.ini");
+
+
     @Override
     public String getExtensionName() {
         return "other.greeting";
@@ -28,11 +37,33 @@ public final class Object extends Extension {
 
     @Override
     protected void setCommands() {
+        this.addEventListener(new Join(this));
 
+        this.addMessageListener(new SetGreetingMessage(this));
+        this.addMessageListener(new RemoveGreetingMessage(this));
     }
 
     @Override
     public String getHelpPage() {
         return null;
+    }
+
+    public void setGreeting(IrcUser user, String greetingMessage) {
+
+    }
+
+    public void removeGreeting(IrcUser user) {
+
+    }
+
+    public void showGreetingMessage(IrcUser user) {
+        // if user exists in the database - show appropriate message
+        // else do nothing
+    }
+
+    @Override
+    public void configurationChanged() {
+        super.configurationChanged();
+
     }
 }

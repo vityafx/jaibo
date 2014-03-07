@@ -125,11 +125,6 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         this.messenger = messenger;
     }
 
-    @Override
-    public void run() {
-
-    }
-
     public void prepareToUnload() {
         this.beforeUnload();
     }

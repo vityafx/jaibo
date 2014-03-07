@@ -30,11 +30,11 @@ public final class IrcUser {
     private String lastLogin;
     private Map<String, String> information;
 
-    private IrcUser() {
+    public IrcUser() {
 
     }
 
-    private IrcUser(String nick,
+    public IrcUser(String nick,
                     String name,
                     String host,
                     String rights,
@@ -46,6 +46,11 @@ public final class IrcUser {
         this.setRights(rights);
         this.setLastLogin(lastLogin);
         this.setInformation(information);
+    }
+
+    public IrcUser(String nick, String host) {
+        this.setNick(nick);
+        this.setHost(host);
     }
 
     public static IrcUser tryParse(String user) {
