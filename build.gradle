@@ -22,6 +22,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version:'3.8.1'
+    compile 'org.xerial:sqlite-jdbc:3.7.2'
 }
 
 task copyTask(type: Copy) {

@@ -1,6 +1,10 @@
 package database;
 
+import javax.sql.rowset.CachedRowSet;
 import java.sql.*;
+
+import aibo.AIBO;
+import com.sun.rowset.CachedRowSetImpl;
 
 /**
  * SQLite database provider
@@ -21,15 +25,39 @@ import java.sql.*;
  */
 
 public final class SQLiteProvider {
+    private static SQLiteProvider DatabaseProvider = null;
+
     private Connection connection;
 
     private String databaseName;
 
-
-    public SQLiteProvider(String databaseName) throws SQLException, ClassNotFoundException {
+    private SQLiteProvider(String databaseName) throws SQLException, ClassNotFoundException {
         this.setDatabaseName(databaseName);
 
         this.connect();
+    }
+
+    public static SQLiteProvider getInstance() {
+        if (DatabaseProvider == null) {
+            DatabaseProvider = SQLiteProvider.getNewInstanceForDatabase(AIBO.Configuration.get("aibo.database_name"));
+        }
+
+        return DatabaseProvider;
+    }
+
+    public static SQLiteProvider getNewInstanceForDatabase(String databaseName) {
+        try {
+            String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
+            SQLiteProvider databaseProvider = null;
+
+            databaseProvider = new SQLiteProvider(formattedDatabaseName);
+
+            return databaseProvider;
+        } catch (Exception e) {
+            System.out.println("Exception occured while creating database provider object:" + e.getMessage());
+        }
+
+        return null;
     }
 
     public String getDatabaseName() {
@@ -50,12 +78,31 @@ public final class SQLiteProvider {
         }
     }
 
-    public void executeStatement(String sqlStatement, boolean commitAfterExecuting) throws SQLException {
+    public CachedRowSet executeStatement(String sqlStatement, boolean needResult)
+            throws SQLException {
+        CachedRowSet cachedRowSet = null;
+
         if (sqlStatement != null && !sqlStatement.isEmpty()) {
+
             Statement statement = this.connection.createStatement();
 
-            statement.executeUpdate(sqlStatement);
+            if (needResult) {
+                cachedRowSet = new CachedRowSetImpl();
+                cachedRowSet.populate(statement.executeQuery(sqlStatement));
+            } else {
+                statement.executeUpdate(sqlStatement);
+            }
+
             statement.close();
         }
+
+        return cachedRowSet;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        this.connection.close();
+
+        super.finalize();
     }
 }
