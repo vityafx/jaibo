@@ -25,66 +25,39 @@ import com.sun.rowset.CachedRowSetImpl;
  */
 
 public final class SQLiteProvider {
-    private static SQLiteProvider DatabaseProvider = null;
-
-    private Connection connection;
-
-    private String databaseName;
-
-    private SQLiteProvider(String databaseName) throws SQLException, ClassNotFoundException {
-        this.setDatabaseName(databaseName);
-
-        this.connect();
-    }
-
-    public static SQLiteProvider getInstance() {
-        if (DatabaseProvider == null) {
-            DatabaseProvider = SQLiteProvider.getNewInstanceForDatabase(AIBO.Configuration.get("aibo.database_name"));
-        }
-
-        return DatabaseProvider;
-    }
-
-    public static SQLiteProvider getNewInstanceForDatabase(String databaseName) {
+    private static Connection getConnection(String databaseName) {
         try {
-            String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
-            SQLiteProvider databaseProvider = null;
+            if (databaseName != null && !databaseName.isEmpty()) {
+                Class.forName("org.sqlite.JDBC");
 
-            databaseProvider = new SQLiteProvider(formattedDatabaseName);
+                Connection connection = DriverManager.getConnection(databaseName);
 
-            return databaseProvider;
+                System.out.println("Opened database file successfully");
+
+                return connection;
+            }
         } catch (Exception e) {
-            System.out.println("Exception occured while creating database provider object:" + e.getMessage());
+            System.out.println("Exception occured during connecting to the database: " + e.getMessage());
         }
 
         return null;
     }
 
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = String.format("jdbc:sqlite:%s", databaseName);
-    }
-
-    public void connect() throws SQLException, ClassNotFoundException {
-        if (this.databaseName != null && !this.databaseName.isEmpty()) {
-            Class.forName("org.sqlite.JDBC");
-
-            this.connection = DriverManager.getConnection(this.databaseName);
-
-            System.out.println("Opened database file successfully");
-        }
-    }
-
-    public CachedRowSet executeStatement(String sqlStatement, boolean needResult)
+    public static CachedRowSet executeStatement(String sqlStatement, boolean needResult)
             throws SQLException {
+
+        return executeStatement(AIBO.Configuration.get("aibo.database_name"), sqlStatement, needResult);
+    }
+
+    public static CachedRowSet executeStatement(String databaseName, String sqlStatement, boolean needResult)
+            throws SQLException {
+        String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
+
         CachedRowSet cachedRowSet = null;
+        Connection sqlConnection = getConnection(formattedDatabaseName);
 
-        if (sqlStatement != null && !sqlStatement.isEmpty()) {
-
-            Statement statement = this.connection.createStatement();
+        if (sqlConnection != null && sqlStatement != null && !sqlStatement.isEmpty()) {
+            Statement statement = sqlConnection.createStatement();
 
             if (needResult) {
                 cachedRowSet = new CachedRowSetImpl();
@@ -94,15 +67,9 @@ public final class SQLiteProvider {
             }
 
             statement.close();
+            sqlConnection.close();
         }
 
         return cachedRowSet;
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        this.connection.close();
-
-        super.finalize();
     }
 }

@@ -33,8 +33,6 @@ public final class DatabaseTests extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        this.database = SQLiteProvider.getNewInstanceForDatabase(this.testDatabaseName);
-
         super.setUp();
     }
 
@@ -43,7 +41,7 @@ public final class DatabaseTests extends TestCase {
                 this.testTableName, this.testFieldName);
 
         try {
-            this.database.executeStatement(createString, false);
+            SQLiteProvider.executeStatement(createString, false);
 
             assertTrue(true);
         } catch (SQLException e) {
@@ -61,8 +59,8 @@ public final class DatabaseTests extends TestCase {
                 this.testTableName, this.testFieldName, this.testFieldValue);
 
         try {
-            this.database.executeStatement(createString, false);
-            this.database.executeStatement(insertString, false);
+            SQLiteProvider.executeStatement(createString, false);
+            SQLiteProvider.executeStatement(insertString, false);
 
             assertTrue(true);
         } catch (SQLException e) {
@@ -82,10 +80,10 @@ public final class DatabaseTests extends TestCase {
         String selectString = String.format("SELECT * from %s t", this.testTableName);
 
         try {
-            this.database.executeStatement(createString, false);
-            this.database.executeStatement(insertString, false);
+            SQLiteProvider.executeStatement(createString, false);
+            SQLiteProvider.executeStatement(insertString, false);
 
-            ResultSet rs = this.database.executeStatement(selectString, true);
+            ResultSet rs = SQLiteProvider.executeStatement(selectString, true);
 
             assertTrue(rs.next());
 
@@ -112,11 +110,11 @@ public final class DatabaseTests extends TestCase {
         String selectString = String.format("SELECT t.%s from %s t", this.testFieldName, this.testTableName);
 
         try {
-            this.database.executeStatement(createString, false);
-            this.database.executeStatement(insertString, false);
-            this.database.executeStatement(updateString, false);
+            SQLiteProvider.executeStatement(createString, false);
+            SQLiteProvider.executeStatement(insertString, false);
+            SQLiteProvider.executeStatement(updateString, false);
 
-            ResultSet rs = this.database.executeStatement(selectString, true);
+            ResultSet rs = SQLiteProvider.executeStatement(selectString, true);
 
             assertTrue(rs.next());
 
@@ -142,11 +140,11 @@ public final class DatabaseTests extends TestCase {
         String selectString = String.format("SELECT t.%s from %s t", this.testFieldName, this.testTableName);
 
         try {
-            this.database.executeStatement(createString, false);
-            this.database.executeStatement(insertString, false);
-            this.database.executeStatement(deleteString, false);
+            SQLiteProvider.executeStatement(createString, false);
+            SQLiteProvider.executeStatement(insertString, false);
+            SQLiteProvider.executeStatement(deleteString, false);
 
-            ResultSet rs = this.database.executeStatement(selectString, true);
+            ResultSet rs = SQLiteProvider.executeStatement(selectString, true);
 
             assertFalse(rs.next());
         } catch (SQLException e) {
