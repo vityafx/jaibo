@@ -3,6 +3,7 @@ package aibotests;
 import database.SQLiteProvider;
 import junit.framework.TestCase;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -41,7 +42,7 @@ public final class DatabaseTests extends TestCase {
                 this.testTableName, this.testFieldName);
 
         try {
-            SQLiteProvider.executeStatement(createString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
 
             assertTrue(true);
         } catch (SQLException e) {
@@ -59,8 +60,8 @@ public final class DatabaseTests extends TestCase {
                 this.testTableName, this.testFieldName, this.testFieldValue);
 
         try {
-            SQLiteProvider.executeStatement(createString, false);
-            SQLiteProvider.executeStatement(insertString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
 
             assertTrue(true);
         } catch (SQLException e) {
@@ -80,10 +81,10 @@ public final class DatabaseTests extends TestCase {
         String selectString = String.format("SELECT * from %s t", this.testTableName);
 
         try {
-            SQLiteProvider.executeStatement(createString, false);
-            SQLiteProvider.executeStatement(insertString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
 
-            ResultSet rs = SQLiteProvider.executeStatement(selectString, true);
+            ResultSet rs = SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, selectString, true);
 
             assertTrue(rs.next());
 
@@ -110,11 +111,11 @@ public final class DatabaseTests extends TestCase {
         String selectString = String.format("SELECT t.%s from %s t", this.testFieldName, this.testTableName);
 
         try {
-            SQLiteProvider.executeStatement(createString, false);
-            SQLiteProvider.executeStatement(insertString, false);
-            SQLiteProvider.executeStatement(updateString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, updateString, false);
 
-            ResultSet rs = SQLiteProvider.executeStatement(selectString, true);
+            ResultSet rs = SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, selectString, true);
 
             assertTrue(rs.next());
 
@@ -140,13 +141,73 @@ public final class DatabaseTests extends TestCase {
         String selectString = String.format("SELECT t.%s from %s t", this.testFieldName, this.testTableName);
 
         try {
-            SQLiteProvider.executeStatement(createString, false);
-            SQLiteProvider.executeStatement(insertString, false);
-            SQLiteProvider.executeStatement(deleteString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, deleteString, false);
 
-            ResultSet rs = SQLiteProvider.executeStatement(selectString, true);
+            ResultSet rs = SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, selectString, true);
 
             assertFalse(rs.next());
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
+            assertTrue(false);
+        }
+    }
+
+    public void testInsertWithPreparedStatement() {
+        String createString = String.format("CREATE TABLE IF NOT EXISTS %s(%s text)",
+                this.testTableName, this.testFieldName);
+
+        PreparedStatement preparedInsertStatement = SQLiteProvider.createPreparedStatement(this.testDatabaseName,
+                String.format("INSERT INTO %s(%s) VALUES (?)", this.testTableName, this.testFieldName));
+
+        String selectString = String.format("SELECT t.%s from %s t", this.testFieldName, this.testTableName);
+
+        try {
+            preparedInsertStatement.setString(1, this.testFieldValue);
+
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
+
+            SQLiteProvider.executePreparedStatementWithDatabase(this.testDatabaseName,
+                    preparedInsertStatement, false);
+
+            ResultSet rs = SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, selectString, true);
+
+            assertTrue(rs.next());
+
+            String testData = rs.getString(1);
+
+            assertEquals(testData, this.testFieldValue);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+            assertTrue(false);
+        }
+    }
+
+    public void testSelectWithPreparedStatement() {
+        String createString = String.format("CREATE TABLE IF NOT EXISTS %s(%s text)",
+                this.testTableName, this.testFieldName);
+
+        String insertString = String.format("INSERT INTO %s(%s) VALUES (\"%s\")",
+                this.testTableName, this.testFieldName, this.testFieldValue);
+
+        PreparedStatement preparedSelectStatement = SQLiteProvider.createPreparedStatement(this.testDatabaseName,
+                String.format("SELECT * from %s t", this.testTableName));
+
+        try {
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
+            SQLiteProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
+
+            ResultSet rs = SQLiteProvider.executePreparedStatementWithDatabase(this.testDatabaseName,
+                    preparedSelectStatement, true);
+
+            assertTrue(rs.next());
+
+            String testData = rs.getString(1);
+
+            assertEquals(testData, this.testFieldValue);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
 

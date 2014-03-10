@@ -46,10 +46,10 @@ public final class SQLiteProvider {
     public static CachedRowSet executeStatement(String sqlStatement, boolean needResult)
             throws SQLException {
 
-        return executeStatement(AIBO.Configuration.get("aibo.database_name"), sqlStatement, needResult);
+        return executeStatementWithDatabase(AIBO.Configuration.get("aibo.database_name"), sqlStatement, needResult);
     }
 
-    public static CachedRowSet executeStatement(String databaseName, String sqlStatement, boolean needResult)
+    public static CachedRowSet executeStatementWithDatabase(String databaseName, String sqlStatement, boolean needResult)
             throws SQLException {
         String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
 
@@ -71,5 +71,49 @@ public final class SQLiteProvider {
         }
 
         return cachedRowSet;
+    }
+
+    public static CachedRowSet executePreparedStatement(PreparedStatement preparedStatement, boolean needResult)
+            throws SQLException {
+        return executePreparedStatementWithDatabase(AIBO.Configuration.get("aibo.database_name"),
+                preparedStatement, needResult);
+    }
+
+    public static CachedRowSet executePreparedStatementWithDatabase(String databaseName,
+                                                                    PreparedStatement preparedStatement,
+                                                                    boolean needResult)
+            throws SQLException {
+
+        String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
+
+        CachedRowSet cachedRowSet = null;
+        Connection sqlConnection = getConnection(formattedDatabaseName);
+
+        if (sqlConnection != null && preparedStatement != null) {
+            if (needResult) {
+                cachedRowSet = new CachedRowSetImpl();
+                cachedRowSet.populate(preparedStatement.executeQuery());
+            } else {
+                preparedStatement.executeUpdate();
+            }
+
+            preparedStatement.close();
+            sqlConnection.close();
+        }
+
+        return cachedRowSet;
+    }
+
+    public static PreparedStatement createPreparedStatement(String databaseName, String query) {
+        String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
+        PreparedStatement preparedStatement = null;
+
+        try {
+            preparedStatement = getConnection(formattedDatabaseName).prepareStatement(query);
+        } catch (SQLException e) {
+            System.out.println("Exception occured while creating prepared statement: " + e.getMessage());
+        }
+
+        return preparedStatement;
     }
 }
