@@ -5,6 +5,7 @@ import aibo.extensions.Command;
 import aibo.extensions.Extension;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
 import ircnetwork.MessageListener;
 
 /**
@@ -43,9 +44,13 @@ public final class UpdateConfiguration extends Command implements MessageListene
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage())) {
-            this.receiver = message.getUser();
+            IrcUser ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
-            this.execute();
+            if (ircUser != null && this.object.isAdminHost(ircUser.getHost())) {
+                this.receiver = ircUser.getNick();
+
+                this.execute();
+            }
         }
     }
 

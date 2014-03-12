@@ -4,6 +4,7 @@ import aibo.extensions.Command;
 import aibo.extensions.core.Object;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
 import ircnetwork.MessageListener;
 
 import java.util.regex.Matcher;
@@ -44,7 +45,13 @@ public final class Motd extends Command implements MessageListener {
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage) {
-            this.checkAndExecute(message.getMessage().trim());
+            if (this.check(message.getMessage().trim())) {
+                IrcUser ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
+
+                if (ircUser != null && this.object.isAdminHost(ircUser.getHost())) {
+                    this.execute();
+                }
+            }
         }
     }
 

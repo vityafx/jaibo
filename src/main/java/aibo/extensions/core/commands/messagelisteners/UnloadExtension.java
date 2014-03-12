@@ -5,6 +5,7 @@ import errors.ExtensionError;
 import errors.ExtensionManagerError;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
 import ircnetwork.MessageListener;
 
 import java.util.regex.Matcher;
@@ -46,9 +47,13 @@ public final class UnloadExtension extends Command implements MessageListener {
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage())) {
-            this.receiver = message.getUser();
+            IrcUser ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
-            this.execute();
+            if (ircUser != null && this.object.isAdminHost(ircUser.getHost())) {
+                this.receiver = ircUser.getNick();
+
+                this.execute();
+            }
         }
     }
 

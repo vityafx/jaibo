@@ -6,6 +6,7 @@ import aibo.extensions.other.advertisement.errors.AdvertisementError;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
 import ircnetwork.MessageListener;
 
 import java.util.regex.Matcher;
@@ -60,9 +61,13 @@ public final class SetAd extends Command implements MessageListener, Configurati
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage().trim())) {
-            this.receiver = message.getUser();
+            IrcUser ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
-            this.execute();
+            if (ircUser != null && this.object.isAdminHost(ircUser.getHost())) {
+                this.receiver = ircUser.getNick();
+
+                this.execute();
+            }
         }
     }
 

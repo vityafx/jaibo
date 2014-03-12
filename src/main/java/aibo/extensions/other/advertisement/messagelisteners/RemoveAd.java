@@ -6,6 +6,7 @@ import aibo.extensions.other.advertisement.errors.AdvertisementError;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
 import ircnetwork.MessageListener;
 
 /**
@@ -55,9 +56,13 @@ public final class RemoveAd extends Command implements MessageListener, Configur
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.PrivateMessage && this.checkExact(message.getMessage().trim())) {
-            this.receiver = message.getUser();
+            IrcUser ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
-            this.execute();
+            if (ircUser != null && this.object.isAdminHost(ircUser.getHost())) {
+                this.receiver = ircUser.getNick();
+
+                this.execute();
+            }
         }
     }
 
