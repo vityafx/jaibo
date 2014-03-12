@@ -70,6 +70,8 @@ public class Object extends Extension {
         this.addMessageListener(new UpdateConfiguration(this));
         this.addMessageListener(new Shutdown(this));
         this.addMessageListener(new GetOp(this));
+        this.addMessageListener(new AddAdmin(this));
+        this.addMessageListener(new RemoveAdmin(this));
 
         this.addServerListener(new ConnectedToServerEvent(new JoinChannels(this), new Auth(this)));
     }

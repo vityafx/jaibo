@@ -159,7 +159,7 @@ public final class DatabaseTests extends TestCase {
         String createString = String.format("CREATE TABLE IF NOT EXISTS %s(%s text)",
                 this.testTableName, this.testFieldName);
 
-        PreparedStatement preparedInsertStatement = SQLiteProvider.createPreparedStatement(this.testDatabaseName,
+        PreparedStatement preparedInsertStatement = SQLiteProvider.createPreparedStatementWithDatabase(this.testDatabaseName,
                 String.format("INSERT INTO %s(%s) VALUES (?)", this.testTableName, this.testFieldName));
 
         String selectString = String.format("SELECT t.%s from %s t", this.testFieldName, this.testTableName);
@@ -193,7 +193,7 @@ public final class DatabaseTests extends TestCase {
         String insertString = String.format("INSERT INTO %s(%s) VALUES (\"%s\")",
                 this.testTableName, this.testFieldName, this.testFieldValue);
 
-        PreparedStatement preparedSelectStatement = SQLiteProvider.createPreparedStatement(this.testDatabaseName,
+        PreparedStatement preparedSelectStatement = SQLiteProvider.createPreparedStatementWithDatabase(this.testDatabaseName,
                 String.format("SELECT * from %s t", this.testTableName));
 
         try {

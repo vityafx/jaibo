@@ -110,6 +110,20 @@ public final class ExtensionManager {
         }
     }
 
+    public static boolean IsExtensionObjectExists(String extensionName) {
+        boolean extensionExists;
+
+        try {
+            Class.forName("aibo.extensions." + extensionName + ".Object");
+
+            extensionExists = true;
+        } catch (ClassNotFoundException e) {
+            extensionExists = false;
+        }
+
+        return extensionExists;
+    }
+
     public Extension getCurrentlyRunningExtensionByName(String extensionName) {
         for(Extension extension : this.extensions) {
             if (extension.getExtensionName().equalsIgnoreCase(extensionName)) {

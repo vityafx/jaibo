@@ -54,7 +54,7 @@ public final class RemoveAd extends Command implements MessageListener, Configur
 
     @Override
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage().trim())) {
+        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.checkExact(message.getMessage().trim())) {
             this.receiver = message.getUser();
 
             this.execute();

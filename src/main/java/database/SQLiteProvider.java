@@ -104,7 +104,11 @@ public final class SQLiteProvider {
         return cachedRowSet;
     }
 
-    public static PreparedStatement createPreparedStatement(String databaseName, String query) {
+    public static PreparedStatement createPreparedStatement(String query) {
+        return createPreparedStatementWithDatabase(AIBO.Configuration.get("aibo.database_name"), query);
+    }
+
+    public static PreparedStatement createPreparedStatementWithDatabase(String databaseName, String query) {
         String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
         PreparedStatement preparedStatement = null;
 

@@ -1,6 +1,5 @@
 package aibo.extensions.core.commands.messagelisteners;
 
-import aibo.AIBO;
 import aibo.extensions.Command;
 import aibo.extensions.core.Object;
 import ircnetwork.IrcMessage;
@@ -44,17 +43,17 @@ public final class GetOp extends Command implements MessageListener {
         if (this.check(message.getMessage())) {
             this.ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
-            this.execute();
+            if (this.ircUser != null && this.object.isAdminHost(this.ircUser.getHost())) {
+                this.execute();
+            }
         }
     }
 
     @Override
     protected void action() {
-        if (AIBO.Configuration.get("aibo.root_admin_host").equalsIgnoreCase(this.ircUser.getHost())) {
-            for(String channel : this.object.getChannels()) {
-                this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("MODE",
-                        String.format("%s +o %s", channel, this.ircUser.getNick()));
-            }
+        for(String channel : this.object.getChannels()) {
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("MODE",
+                    String.format("%s +o %s", channel, this.ircUser.getNick()));
         }
     }
 }

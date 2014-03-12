@@ -61,6 +61,20 @@ public abstract class Command {
         return checkPassed;
     }
 
+    public boolean checkExact(String message) {
+        boolean checkPassed = false;
+
+        for(String name : this.getNames()) {
+            if(message.equalsIgnoreCase(name)) {
+                checkPassed = true;
+
+                break;
+            }
+        }
+
+        return checkPassed;
+    }
+
     public void checkAndExecute(String message) {
         if (this.check(message)) {
             this.execute();

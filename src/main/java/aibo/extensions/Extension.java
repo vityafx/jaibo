@@ -1,6 +1,7 @@
 package aibo.extensions;
 
 import aibo.AIBO;
+import aibo.extensions.core.MainDatabaseManager;
 import helpers.ConfigurationListener;
 import ircnetwork.EventListener;
 import ircnetwork.IrcMessage;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
  */
 
 public abstract class Extension extends Thread implements ConfigurationListener {
+    public final static MainDatabaseManager MainDatabaseManager = new MainDatabaseManager();
 
     private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
     private ArrayList<EventListener> eventListeners = new ArrayList<EventListener>();
@@ -150,6 +152,13 @@ public abstract class Extension extends Thread implements ConfigurationListener 
     }
 
     public abstract String getHelpPage();
+
+    public boolean isAdminHost(String host) {
+        String rootAdminHost = AIBO.Configuration.get("aibo.root_admin_host");
+
+        return rootAdminHost.equalsIgnoreCase(host)
+                || MainDatabaseManager.isAdminExists(this.getExtensionName(), host);
+    }
 
     @Override
     public boolean equals(Object obj) {

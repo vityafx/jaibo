@@ -4,6 +4,7 @@ import aibo.extensions.Command;
 import aibo.extensions.Extension;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
 import ircnetwork.MessageListener;
 
 /**
@@ -41,9 +42,13 @@ public final class Shutdown extends Command implements MessageListener {
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage())) {
-            this.receiver = message.getUser();
+            IrcUser user = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
-            this.execute();
+            if (user != null && this.object.isAdminHost(user.getHost())) {
+                this.receiver = message.getUser();
+
+                this.execute();
+            }
         }
     }
 

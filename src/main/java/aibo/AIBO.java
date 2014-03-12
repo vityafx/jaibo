@@ -1,11 +1,14 @@
 package aibo;
 
 import aibo.extensions.TaskManager;
+import database.SQLiteProvider;
 import helpers.Configuration;
 import ircnetwork.ircevent.IrcEvent;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcNetwork;
 import ircnetwork.IrcNetworkListener;
+
+import java.sql.SQLException;
 
 
 /**
