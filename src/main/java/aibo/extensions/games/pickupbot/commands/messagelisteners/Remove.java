@@ -60,7 +60,7 @@ public final class Remove extends Command implements MessageListener, Configurat
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
-            this.player = new Player(message.getUser(), message.getHost());
+            this.player = new Player(message.getUser(), null);
 
             this.execute();
         }

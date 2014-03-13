@@ -73,7 +73,7 @@ public final class AutoRemovablePlayer extends Player {
 
     @Override
     public String getFormattedNickName() {
-        return String.format("%s(%dm)", this.nick, this.autoRemovalTask.getMinutesAdded());
+        return String.format("%s(%dm)", this.gameProfile, this.autoRemovalTask.getMinutesAdded());
     }
 }
 

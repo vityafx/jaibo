@@ -1,20 +1,18 @@
 package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
 import aibo.extensions.Command;
-import aibo.extensions.games.pickupbot.errors.GameError;
-import aibo.extensions.games.pickupbot.errors.PickupBotError;
 import aibo.extensions.games.pickupbot.Object;
-import aibo.extensions.games.pickupbot.Player;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
 import ircnetwork.MessageListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Promotes a game type
+ * Remove game profile binding
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,17 +29,17 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Promote extends Command implements MessageListener, ConfigurationListener {
+public final class RemoveAllGameProfileBindings extends Command implements MessageListener, ConfigurationListener {
     private Object object;
 
-    private Player player;
-    private String gameType;
+    private String receiver;
+    private String host;
 
-    public Promote() {
+    public RemoveAllGameProfileBindings() {
         this.configurationChanged();
     }
 
-    public Promote(Object object) {
+    public RemoveAllGameProfileBindings(Object object) {
         this();
 
         this.object = object;
@@ -52,7 +50,7 @@ public final class Promote extends Command implements MessageListener, Configura
     public void configurationChanged() {
         this.clearNames();
 
-        String[] names = Object.Configuration.get("commands.promote").split(" ");
+        String[] names = Object.Configuration.get("commands.remove_game_profiles_binding").split(" ");
 
         this.addNames(names);
     }
@@ -60,9 +58,13 @@ public final class Promote extends Command implements MessageListener, Configura
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
-            this.player = new Player(message.getUser(), null);
+            String receiverHost = IrcUser.tryParse(message.getUser() + "!" + message.getHost()).getHost();
 
-            this.execute();
+            if (this.object.isAdminHost(receiverHost)) {
+                this.receiver = message.getUser();
+
+                this.execute();
+            }
         }
     }
 
@@ -70,24 +72,16 @@ public final class Promote extends Command implements MessageListener, Configura
     public boolean check(String message) {
         boolean checkPassed = false;
 
-        for (String name : this.getNames()) {
-            Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
-
-            CharSequence sequence = message.subSequence(0, message.length());
-            Matcher matcher = p.matcher(sequence);
-
-            if (matcher.matches()) {
-                this.gameType = matcher.group(1);
-
-                checkPassed = true;
-
-                break;
-            }
-        }
-
-        if (!checkPassed) {
+        if (super.check(message)) {
             for (String name : this.getNames()) {
-                if (message.equalsIgnoreCase(name)) {
+                Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
+
+                CharSequence sequence = message.subSequence(0, message.length());
+                Matcher matcher = p.matcher(sequence);
+
+                if (matcher.matches()) {
+                    this.host = matcher.group(1);
+
                     checkPassed = true;
 
                     break;
@@ -100,15 +94,15 @@ public final class Promote extends Command implements MessageListener, Configura
 
     @Override
     protected void action() {
-        try {
-            this.object.promote(this.player, this.gameType);
-        } catch (PickupBotError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
-        } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.player.getNick(), e.getMessage());
-        } finally {
-            this.player = null;
-            this.gameType = null;
+        if (Object.DatabaseManager.isGameProfileExistsForHost(this.host)) {
+            Object.DatabaseManager.removeAllHostBindingsForGameProfiles(this.host);
+
+            this.object.getExtensionMessenger().sendNotice(this.receiver,
+                    String.format("All bindings for game profiles with host=[%s] has been removed successfully",
+                            this.host));
+        } else {
+            this.object.getExtensionMessenger().sendNotice(this.receiver,
+                    String.format("No associated game profile records exists for host=[%s]", this.host));
         }
     }
 }

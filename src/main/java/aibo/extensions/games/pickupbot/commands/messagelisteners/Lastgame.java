@@ -1,12 +1,12 @@
 package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
 import aibo.extensions.Command;
-import aibo.extensions.games.pickupbot.*;
 import aibo.extensions.games.pickupbot.errors.GameError;
 import aibo.extensions.games.pickupbot.Object;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
 import ircnetwork.MessageListener;
 
 import java.util.regex.Matcher;
@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 public final class Lastgame extends Command implements MessageListener, ConfigurationListener {
     private Object object;
 
-    private Player receiver;
+    private IrcUser ircUser;
     private String gameType;
 
     public Lastgame() {
@@ -59,7 +59,7 @@ public final class Lastgame extends Command implements MessageListener, Configur
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
-            this.receiver = new Player(message.getUser(), message.getHost());
+            this.ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
             this.execute();
         }
@@ -106,9 +106,9 @@ public final class Lastgame extends Command implements MessageListener, Configur
 
             this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), lastGameString);
         } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.receiver.getFormattedNickName(), e.getMessage());
+            this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(), e.getMessage());
         } finally {
-            this.receiver = null;
+            this.ircUser = null;
             this.gameType = null;
         }
     }

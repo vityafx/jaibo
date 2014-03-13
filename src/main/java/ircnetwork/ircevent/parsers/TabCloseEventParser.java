@@ -30,6 +30,41 @@ public final class TabCloseEventParser implements IrcEventParser {
     public IrcEvent tryParse(String message) {
         IrcEvent ircEvent = null;
 
+        ircEvent = defaultPatternParser(message);
+
+        if (ircEvent == null) {
+            ircEvent = simplePatternParser(message);
+        }
+
+        return ircEvent;
+    }
+
+    private IrcEvent simplePatternParser(String message) {
+        IrcEvent ircEvent = null;
+
+        if (message != null) {
+            Pattern p = Pattern.compile("^:(.*)!(.*) PART (.*)$");
+
+            CharSequence sequence = message.subSequence(0, message.length());
+            Matcher matcher = p.matcher(sequence);
+
+            if (matcher.matches()) {
+                ircEvent = new IrcEvent();
+
+                ircEvent.setUser(matcher.group(1));
+                ircEvent.setHost(matcher.group(2));
+                ircEvent.setChannel(matcher.group(3));
+                ircEvent.setArgument("CloseMessage", "");
+                ircEvent.setEventType(IrcEventType.Part);
+            }
+        }
+
+        return ircEvent;
+    }
+
+    private IrcEvent defaultPatternParser(String message) {
+        IrcEvent ircEvent = null;
+
         if (message != null) {
             Pattern p = Pattern.compile("^:(.*)!(.*) PART (.*) :(.*)$");
 

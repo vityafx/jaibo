@@ -31,6 +31,7 @@ import java.util.ArrayList;
  */
 
 public final class Object extends Extension implements GameListener, ConfigurationListener {
+    public final static PickupBotDatabaseManager DatabaseManager = new PickupBotDatabaseManager();
     private final ArrayList<Game> games = new ArrayList<Game>();
 
     public final static Configuration Configuration = new Configuration("Games.PickupBot.ini");
@@ -58,6 +59,11 @@ public final class Object extends Extension implements GameListener, Configurati
         this.addMessageListener(new Who(this));
         this.addMessageListener(new Lastgame(this));
         this.addMessageListener(new Reset(this));
+        this.addMessageListener(new Iam(this));
+        this.addMessageListener(new SetGameProfileBinding(this));
+        this.addMessageListener(new RemoveAllGameProfileBindings(this));
+        this.addMessageListener(new RemoveGameProfileBinding(this));
+        this.addMessageListener(new Rules(this));
 
         this.addEventListener(new KickPartQuit(this));
         this.addEventListener(new NickChange(this));
@@ -183,11 +189,19 @@ public final class Object extends Extension implements GameListener, Configurati
         Game game = this.getGameByType(gameType);
 
         registeredPlayersListBuilder.append(String.format(
-                "[%s] %s",
+                "[%s %d/%d] %s",
                 IrcMessageTextModifier.makeBold(game.getGameType()),
+                game.addedPlayersCount(),
+                game.getMaxPlayers(),
                 playersList));
 
         return registeredPlayersListBuilder.toString();
+    }
+
+    public String getGameProfilesAndNicksMapString(String gameType) {
+        Game game = this.getGameByType(gameType);
+
+        return game.getGameProfilesAndNicksMapString(", ");
     }
 
     private Game getGameByType(String gameType) {
@@ -239,6 +253,12 @@ public final class Object extends Extension implements GameListener, Configurati
         }
     }
 
+    public void handleNickChanged(String oldNick, String newNick) {
+        for (Game game : this.games) {
+            game.handleNickChanged(oldNick, newNick);
+        }
+    }
+
     public String lastGame(String gameType) {
         Game game = this.getGameByType(gameType);
 
@@ -253,7 +273,7 @@ public final class Object extends Extension implements GameListener, Configurati
                 String.format(
                         notifyPattern,
                         IrcMessageTextModifier.makeBold(game.getGameType()),
-                        game.getPlayerNicknamesAsString(", ", true, false)));
+                        game.getGameProfilesAndNicksMapString(", ")));
 
         for (String playerNickName : game.getPlayerNicknames()) {
             this.getExtensionMessenger().sendPrivateMessage(playerNickName,

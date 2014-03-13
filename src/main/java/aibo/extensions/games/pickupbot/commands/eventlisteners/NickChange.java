@@ -2,7 +2,6 @@ package aibo.extensions.games.pickupbot.commands.eventlisteners;
 
 import aibo.extensions.Command;
 import aibo.extensions.games.pickupbot.Object;
-import aibo.extensions.games.pickupbot.Player;
 import aibo.extensions.games.pickupbot.errors.GameError;
 import ircnetwork.EventListener;
 import ircnetwork.ircevent.IrcEvent;
@@ -28,8 +27,8 @@ import ircnetwork.ircevent.IrcEventType;
 
 public final class NickChange extends Command implements EventListener {
     private Object object;
-    private Player oldPlayer;
-    private Player newPlayer;
+    private String oldPlayerNick;
+    private String newPlayerNick;
 
     public NickChange(Object object) {
         this.object = object;
@@ -38,8 +37,8 @@ public final class NickChange extends Command implements EventListener {
     @Override
     public void eventReceived(IrcEvent ircEvent) {
         if (ircEvent.getEventType() == IrcEventType.Nick) {
-            this.oldPlayer = new Player(ircEvent.getUser(), null);
-            this.newPlayer = new Player(ircEvent.getArgument("NewNickName"), null);
+            this.oldPlayerNick = ircEvent.getUser();
+            this.newPlayerNick = ircEvent.getArgument("NewNickName");
 
             this.execute();
         }
@@ -48,9 +47,9 @@ public final class NickChange extends Command implements EventListener {
     @Override
     protected void action() {
         try {
-            this.object.substitutePlayer(this.oldPlayer, this.newPlayer);
+            this.object.handleNickChanged(this.oldPlayerNick, this.newPlayerNick);
         } catch (GameError e) {
-            System.out.println("Error while substituting players: " + e.getMessage());
+            System.out.println("Error while handling nickname change of the player: " + e.getMessage());
         }
     }
 }

@@ -1,7 +1,12 @@
 package aibo.extensions.games.pickupbot;
 
+import aibo.extensions.games.pickupbot.errors.PlayerError;
+
 import java.lang.*;
-import java.lang.Object;
+import java.util.GregorianCalendar;
+
+import aibo.extensions.games.pickupbot.Object;
+import helpers.GregorianCalendarDifference;
 
 /**
  * Class describes a person in pickup
@@ -24,6 +29,7 @@ import java.lang.Object;
 public class Player {
     protected String nick;
     protected String host;
+    protected String gameProfile;
 
     public Player() {
 
@@ -32,6 +38,16 @@ public class Player {
     public Player(String nick, String host) {
         this.setNick(nick);
         this.setHost(host);
+    }
+
+    public Player(String nick, String host, String gameProfile) {
+        this.setNick(nick);
+        this.host = host;
+        this.gameProfile = gameProfile;
+    }
+
+    public String getGameProfile() {
+        return gameProfile;
     }
 
     public String getNick() {
@@ -52,6 +68,31 @@ public class Player {
 
     public void setHost(String host) {
         this.host = host;
+
+        this.checkAndSetGameProfile();
+        this.checkLocked();
+    }
+
+    public void checkLocked() {
+        if (this.gameProfile != null && !this.gameProfile.isEmpty()
+                && Object.DatabaseManager.isPlayerLocked(this.gameProfile)) {
+            GregorianCalendar lockedDateTimeStamp = Object.DatabaseManager.getPlayerLockedTime(this.gameProfile);
+            String timeDifference = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(lockedDateTimeStamp,
+                    new GregorianCalendar());
+
+            String lockedErrorString = String.format("Player is locked [%s remaining]", timeDifference);
+            throw new PlayerError(lockedErrorString);
+        }
+    }
+
+    public void checkAndSetGameProfile() {
+        if (this.host != null && !this.host.isEmpty()) {
+            if (Object.DatabaseManager.isGameProfileExistsForHost(this.host)) {
+                this.gameProfile = Object.DatabaseManager.getGameProfileForHost(this.host);
+            } else {
+                throw new PlayerError("No game profile has been set. Ask admins for the help.");
+            }
+        }
     }
 
     // This method will be called before player will be removed from list
@@ -65,11 +106,12 @@ public class Player {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(java.lang.Object obj) {
         if(obj instanceof Player){
             Player toCompare = (Player) obj;
 
-            return this.getNick().equals(toCompare.getNick());
+            return this.getNick().equals(toCompare.getNick())
+                    || (this.gameProfile != null && this.gameProfile.equalsIgnoreCase(toCompare.gameProfile));
         }
 
         return false;

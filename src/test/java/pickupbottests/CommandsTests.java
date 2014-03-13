@@ -1,5 +1,6 @@
 package pickupbottests;
 
+import aibo.AIBO;
 import aibo.extensions.ExtensionMessenger;
 import aibo.extensions.games.pickupbot.*;
 import ircnetwork.DebugIrcMessageSender;
@@ -37,6 +38,17 @@ public final class CommandsTests extends TestCase {
             "test/2",
             "test2/4"
     };
+
+    private String testGameAccount1 = "_test_aibo_game_account_1_";
+    private String testGameAccount2 = "_test_aibo_game_account_2_";
+
+    private String testIam1 =
+            String.format(":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!iam %s",
+                    this.testGameAccount1);
+
+    private String testIam2 =
+            String.format(":testNickName2!testUser2@test2.users.quakenet.org PRIVMSG #test-channel :!iam %s",
+                    this.testGameAccount2);
 
     private String testAdd1Message =
     ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG #test-channel :!add test";
@@ -83,8 +95,12 @@ public final class CommandsTests extends TestCase {
     private String testPlayer1NickCaseChangeMessage =
             ":testNickName1!testUser1@test1.users.quakenet.org NICK :TeStNIcKNAME1";
 
-    private String testResetMessage =
+    private String testNotAdminResetMessage =
             ":testNickName1!testUser1@test1.users.quakenet.org PRIVMSG fgd :!reset";
+
+    private String testAdminResetMessage =
+            String.format(":testNickName1!testUser1@%s PRIVMSG fgd :!reset",
+                    AIBO.Configuration.get("aibo.root_admin_host"));
 
 
     @Override
@@ -100,13 +116,18 @@ public final class CommandsTests extends TestCase {
         }
 
         object.setExtensionMessenger(this.messenger);
+
+        this.object.processTask(IrcMessage.tryParse(testIam1));
+        this.object.processTask(IrcMessage.tryParse(testIam2));
     }
 
     public void testPickupBotAddPlayer() {
         this.object.processTask(IrcMessage.tryParse(testAdd1Message));
-        this.object.processTask(IrcMessage.tryParse(testAdd1Message));
 
         assertEquals(this.messageSender.isSetTopicEvent(), true);
+        this.object.processTask(IrcMessage.tryParse(testAdd1Message));
+
+        assertEquals(this.messageSender.isSetTopicEvent(), false);
 
         this.object.processTask(IrcMessage.tryParse(this.testWrongAddMessage));
         assertEquals(this.messageSender.isSendNoticeEvent(), true);
@@ -191,7 +212,6 @@ public final class CommandsTests extends TestCase {
 
         this.object.processTask(IrcEvent.tryParse(testPlayerNickChangeMessage));
         assertEquals(this.messageSender.isSetTopicEvent(), false);
-        assertTrue(this.object.getPlayers(null, false).startsWith("testNickName2"));
     }
 
     public void testPlayerCaseNickChange() {
@@ -200,14 +220,15 @@ public final class CommandsTests extends TestCase {
 
         this.object.processTask(IrcEvent.tryParse(testPlayer1NickCaseChangeMessage));
         assertEquals(this.messageSender.isSetTopicEvent(), false);
-        assertTrue(this.object.getPlayers(null, false).startsWith("TeStNIcKNAME1"));
     }
 
     public void testPickupBotReset() {
         this.object.processTask(IrcMessage.tryParse(testAdd3Message));
         this.object.processTask(IrcMessage.tryParse(testAdd1Message));
 
-        this.object.processTask(IrcMessage.tryParse(testResetMessage));
+        this.object.processTask(IrcMessage.tryParse(testNotAdminResetMessage));
+        assertFalse(this.object.getPlayers(null, false).length() == 0);
+        this.object.processTask(IrcMessage.tryParse(testAdminResetMessage));
         assertEquals(this.object.getPlayers(null, false).length(), 0);
         assertEquals(this.object.getPlayers(Game.tryParse(this.games[2]).getGameType(), false).length(), 0);
     }

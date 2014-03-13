@@ -57,8 +57,12 @@ public final class RemoveGreetingMessage extends Command implements MessageListe
 
     @Override
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.PrivateMessage) {
-            this.checkAndExecute(message.getMessage().trim());
+        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage().trim())) {
+            this.ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
+
+            if (this.ircUser != null && this.object.isAdminHost(this.ircUser.getHost())) {
+                this.execute();
+            }
         }
     }
 

@@ -4,7 +4,6 @@ import aibo.extensions.games.pickupbot.errors.GameError;
 import ircnetwork.IrcMessageTextModifier;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +29,7 @@ import java.util.regex.Pattern;
 public class Game {
     protected String gameType;
     protected int maxPlayers;
-    protected GregorianCalendar lastGameDate;
+    protected LastGameStamp lastGameStamp;
     protected final ArrayList<Player> playerList = new ArrayList<Player>();
 
     private final ArrayList<GameListener> listeners = new ArrayList<GameListener>();
@@ -117,6 +116,8 @@ public class Game {
 
     protected void checkPickupFormed() {
         if (playerList.size() == this.maxPlayers) {
+            this.lastGameStamp = new LastGameStamp(this);
+
             this.pickupFormed();
         }
     }
@@ -125,58 +126,13 @@ public class Game {
         this.notifyPickupFormedUpListeners();
 
         this.clearPlayerList();
-
-        this.lastGameDate = new GregorianCalendar();
-    }
-
-    protected String getTimeDifferenceFromLastGame() {
-        long difference = new GregorianCalendar().getTimeInMillis() - this.lastGameDate.getTimeInMillis();
-
-        long secondInMillis = 1000;
-        long minuteInMillis = secondInMillis * 60;
-        long hourInMillis = minuteInMillis * 60;
-        long dayInMillis = hourInMillis * 24;
-
-        long elapsedDays = difference / dayInMillis;
-        difference = difference % dayInMillis;
-        long elapsedHours = difference / hourInMillis;
-        difference = difference % hourInMillis;
-        long elapsedMinutes = difference / minuteInMillis;
-        difference = difference % minuteInMillis;
-        long elapsedSeconds = difference / secondInMillis;
-
-        StringBuilder lastGameStringBuilder = new StringBuilder();
-
-        if (elapsedDays > 0) {
-            lastGameStringBuilder.append(String.format("%d days ", elapsedDays));
-        }
-
-        if (elapsedHours > 0) {
-            lastGameStringBuilder.append(String.format("%d hours ", elapsedHours));
-        }
-
-        if (elapsedMinutes > 0) {
-            lastGameStringBuilder.append(String.format("%d minutes ", elapsedMinutes));
-        }
-
-        if (elapsedSeconds > 0) {
-            lastGameStringBuilder.append(String.format("%d seconds ", elapsedSeconds));
-        }
-
-        if (lastGameStringBuilder.length() > 0) {
-            lastGameStringBuilder.append("ago");
-        } else {
-            lastGameStringBuilder.append("Just a moment ago");
-        }
-
-        return lastGameStringBuilder.toString();
     }
 
     public String lastGame() {
-        if (this.lastGameDate == null) {
+        if (this.lastGameStamp == null) {
             return "No games was played yet";
         } else {
-            return this.getTimeDifferenceFromLastGame();
+            return this.lastGameStamp.getStamp();
         }
     }
 
@@ -227,6 +183,47 @@ public class Game {
         }
 
         return allAddedPlayerNickNames.toArray(nickNames);
+    }
+
+    public String getGameProfilesAsString(String separator) {
+        StringBuilder allGameProfiles = new StringBuilder();
+
+        for(Iterator iterator = playerList.iterator(); iterator.hasNext();) {
+            Player player = (Player)iterator.next();
+
+            if (!iterator.hasNext())
+                separator = "";
+
+            allGameProfiles.append(String.format("%s%s", player.getGameProfile(), separator));
+        }
+
+        return allGameProfiles.toString();
+    }
+
+    public String[] getGameProfiles() {
+        ArrayList<String> allAddedPlayerNickNames = new ArrayList<String>();
+        String[] nickNames = new String[]{};
+
+        for (Player player : this.playerList) {
+            allAddedPlayerNickNames.add(player.getGameProfile());
+        }
+
+        return allAddedPlayerNickNames.toArray(nickNames);
+    }
+
+    public String getGameProfilesAndNicksMapString(String separator) {
+        String playersString = "";
+
+        for(int i = 0; i < this.playerList.size(); i++) {
+            playersString += String.format("%s(%s)", this.playerList.get(i).getNick(),
+                    this.playerList.get(i).getGameProfile());
+
+            if (i < this.playerList.size() - 1) {
+                playersString += separator;
+            }
+        }
+
+        return playersString;
     }
 
     private void notifyPickupFormedUpListeners() {
@@ -292,6 +289,19 @@ public class Game {
             } else {
                 throw new GameError(String.format("Player %s is already added in %s",
                         IrcMessageTextModifier.makeBold(newPlayer.getNick()),
+                        IrcMessageTextModifier.makeBold(this.getGameType())));
+            }
+        }
+    }
+
+    public void handleNickChanged(String oldNick, String newNick) {
+        if (this.isPlayerAdded(new Player(oldNick, null))) {
+            if (!this.isPlayerAdded(new Player(newNick, null))) {
+                Player player = this.getPlayerByNick(oldNick);
+                player.setNick(newNick);
+            } else {
+                throw new GameError(String.format("Player %s is already added in %s",
+                        IrcMessageTextModifier.makeBold(newNick),
                         IrcMessageTextModifier.makeBold(this.getGameType())));
             }
         }

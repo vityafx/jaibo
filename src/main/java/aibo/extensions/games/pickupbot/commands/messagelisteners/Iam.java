@@ -1,8 +1,6 @@
 package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
 import aibo.extensions.Command;
-import aibo.extensions.games.pickupbot.errors.GameError;
-import aibo.extensions.games.pickupbot.errors.PickupBotError;
 import aibo.extensions.games.pickupbot.Object;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
@@ -14,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Outputs a player list registered to play
+ * Sets binding to game profile
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,17 +29,17 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Who extends Command implements MessageListener, ConfigurationListener {
-    private aibo.extensions.games.pickupbot.Object object;
+public final class Iam extends Command implements MessageListener, ConfigurationListener {
+    private Object object;
 
     private IrcUser ircUser;
-    private String gameType;
+    private String gameProfile;
 
-    public Who() {
+    public Iam() {
         this.configurationChanged();
     }
 
-    public Who(aibo.extensions.games.pickupbot.Object object) {
+    public Iam(Object object) {
         this();
 
         this.object = object;
@@ -52,7 +50,7 @@ public final class Who extends Command implements MessageListener, Configuration
     public void configurationChanged() {
         this.clearNames();
 
-        String[] names = Object.Configuration.get("commands.who").split(" ");
+        String[] names = Object.Configuration.get("commands.iam").split(" ");
 
         this.addNames(names);
     }
@@ -78,13 +76,13 @@ public final class Who extends Command implements MessageListener, Configuration
                 Matcher matcher = p.matcher(sequence);
 
                 if (matcher.matches()) {
-                    this.gameType = matcher.group(1);
+                    this.gameProfile = matcher.group(1);
+
+                    checkPassed = true;
 
                     break;
                 }
             }
-
-            checkPassed = true;
         }
 
         return checkPassed;
@@ -92,17 +90,25 @@ public final class Who extends Command implements MessageListener, Configuration
 
     @Override
     protected void action() {
-        try {
-            String registeredPlayers = this.object.getRegisteredPlayers(this.gameType);
+        String userAndHost = this.ircUser.getName() + "@" + this.ircUser.getHost();
 
-            this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), registeredPlayers);
-        } catch (PickupBotError e) {
-            this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(), e.getMessage());
-        } catch (GameError e) {
-            this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(), e.getMessage());
-        } finally {
-            this.ircUser = null;
-            this.gameType = null;
+        if (Object.DatabaseManager.isGameProfileExists(this.gameProfile)) {
+            this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(),
+                    "Association already exists for this game profile. Ask admin to add a new one.");
+        } else {
+            if (!Object.DatabaseManager.isGameProfileExistsForHost(userAndHost)) {
+                Object.DatabaseManager.addGameProfile(userAndHost, this.gameProfile);
+
+                this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(),
+                        "Game profile has been set successfully");
+            } else {
+                String gameProfile = Object.DatabaseManager.getGameProfileForHost(userAndHost);
+
+                this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(),
+                        String.format("You already have associated account=[%s]. " +
+                                "If you want to add new association or correct this one, please contact an admin",
+                                gameProfile));
+            }
         }
     }
 }

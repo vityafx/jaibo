@@ -5,6 +5,7 @@ import aibo.extensions.games.pickupbot.errors.GameError;
 import aibo.extensions.games.pickupbot.errors.PickupBotError;
 import aibo.extensions.games.pickupbot.Object;
 import aibo.extensions.games.pickupbot.Player;
+import aibo.extensions.games.pickupbot.errors.PlayerError;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
@@ -60,9 +61,13 @@ public final class Add extends Command implements MessageListener, Configuration
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
-            this.player = new Player(message.getUser(), message.getHost());
+            try {
+                this.player = new Player(message.getUser(), message.getHost());
 
-            this.execute();
+                this.execute();
+            } catch (PlayerError e) {
+                this.object.getExtensionMessenger().sendNotice(message.getUser(), e.getMessage());
+            }
         }
     }
 
@@ -96,7 +101,6 @@ public final class Add extends Command implements MessageListener, Configuration
                 }
             }
         }
-
         return checkPassed;
     }
 

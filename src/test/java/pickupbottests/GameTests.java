@@ -31,8 +31,11 @@ public final class GameTests extends TestCase {
         "test/2"
     };
 
-    private Player testPlayer1 = new Player("testPlayerNick1", "host.org");
-    private Player testPlayer2 = new Player("testPlayerNick2", "host.org");
+    private String testGameAccount1 = "_test_aibo_game_account_1_";
+    private String testGameAccount2 = "_test_aibo_game_account_2_";
+
+    private Player testPlayer1 = new Player("testPlayerNick1", "user1@host.org", testGameAccount1);
+    private Player testPlayer2 = new Player("testPlayerNick2", "user2@host.org", testGameAccount2);
 
     public void testGameParser() {
         Game game = Game.tryParse(this.games[0]);

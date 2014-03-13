@@ -56,7 +56,7 @@ public final class IrcUser {
     public static IrcUser tryParse(String user) {
         IrcUser ircUser = null;
 
-        Pattern p = Pattern.compile("^[:](.*)!(.*)@(.*)$");
+        Pattern p = Pattern.compile("^:?(.*)!(.*)@(.*)$");
 
         CharSequence sequence = user.subSequence(0, user.length());
         Matcher matcher = p.matcher(sequence);

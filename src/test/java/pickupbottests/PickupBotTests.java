@@ -39,8 +39,11 @@ public final class PickupBotTests extends TestCase {
             "test2/4"
     };
 
-    private Player testPlayer1 = new Player("testPlayerNick1", "host.org");
-    private Player testPlayer2 = new Player("testPlayerNick2", "host.org");
+    private String testGameAccount1 = "_test_aibo_game_account_1_";
+    private String testGameAccount2 = "_test_aibo_game_account_2_";
+
+    private Player testPlayer1 = new Player("testPlayerNick1", "user1@host.org", testGameAccount1);
+    private Player testPlayer2 = new Player("testPlayerNick2", "user2@host.org", testGameAccount2);
 
 
     @Override
@@ -56,6 +59,9 @@ public final class PickupBotTests extends TestCase {
         }
 
         object.setExtensionMessenger(this.messenger);
+
+        Object.DatabaseManager.addGameProfile(this.testPlayer1.getHost(), this.testGameAccount1);
+        Object.DatabaseManager.addGameProfile(this.testPlayer2.getHost(), this.testGameAccount2);
     }
 
     public void testPickupBotAddPlayer() {
@@ -104,12 +110,12 @@ public final class PickupBotTests extends TestCase {
 
 
         String players = this.object.getPlayers(Game.tryParse(this.games[3]).getGameType(), false);
-        assertTrue(players.startsWith(this.testPlayer1.getFormattedNickName()));
+        assertTrue(players.startsWith(this.testPlayer1.getGameProfile()));
 
         this.object.addPlayer(this.testPlayer2, Game.tryParse(this.games[3]).getGameType());
 
         players = this.object.getPlayers(Game.tryParse(this.games[3]).getGameType(), false);
-        assertEquals(players, this.testPlayer1.getFormattedNickName() + "(0m), " + this.testPlayer2.getFormattedNickName() + "(0m)");
+        assertEquals(players, this.testPlayer1.getGameProfile() + "(0m), " + this.testPlayer2.getGameProfile() + "(0m)");
     }
 
     public void testPickupBotReset() {

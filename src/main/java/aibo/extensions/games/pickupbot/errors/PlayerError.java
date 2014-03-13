@@ -1,7 +1,7 @@
-package aibo.extensions.games.pickupbot.commands.messagelisteners;
+package aibo.extensions.games.pickupbot.errors;
 
 /**
- * Locks player to add in pickup game
+ * Player error
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,5 +18,13 @@ package aibo.extensions.games.pickupbot.commands.messagelisteners;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Lock {
+public final class PlayerError extends Error {
+    public PlayerError(String errorText) {
+        super(errorText);
+    }
+
+    @Override
+    public String getMessage() {
+        return String.format("Player error: %s", super.getMessage());
+    }
 }
