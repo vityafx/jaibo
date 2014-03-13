@@ -37,7 +37,7 @@ public final class SQLiteProvider {
                 return connection;
             }
         } catch (Exception e) {
-            System.out.println("Exception occured during connecting to the database: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return null;
