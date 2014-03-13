@@ -110,7 +110,7 @@ public class Player {
         if(obj instanceof Player){
             Player toCompare = (Player) obj;
 
-            return this.getNick().equals(toCompare.getNick())
+            return this.getNick() != null && this.getNick().equals(toCompare.getNick())
                     || (this.gameProfile != null && this.gameProfile.equalsIgnoreCase(toCompare.gameProfile));
         }
 

@@ -32,8 +32,6 @@ public final class SQLiteProvider {
 
                 Connection connection = DriverManager.getConnection(databaseName);
 
-                System.out.println("Opened database file successfully");
-
                 return connection;
             }
         } catch (Exception e) {

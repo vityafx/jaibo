@@ -304,6 +304,25 @@ public final class PickupBotDatabaseManager {
         }
     }
 
+    public void changeGameProfile(String oldGameProfile, String newGameProfile) {
+        if (oldGameProfile != null && !oldGameProfile.isEmpty()
+                && newGameProfile != null && !newGameProfile.isEmpty()) {
+            String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.gameProfilesTableName,
+                    this.gameProfilesGameProfileFieldName, this.gameProfilesGameProfileFieldName);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+
+            try {
+                preparedStatement.setString(1, newGameProfile);
+                preparedStatement.setString(2, oldGameProfile);
+
+                SQLiteProvider.executePreparedStatement(preparedStatement, false);
+            } catch (SQLException e) {
+                System.out.println(String.format("Failed to change game profile (game_profile=' %s ' to ' %s '): %s",
+                        oldGameProfile, newGameProfile, e.getMessage()));
+            }
+        }
+    }
+
     public void addGameProfile(String host, String gameProfile) {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("INSERT INTO %s(%s, %s) VALUES(?, ?)", this.gameProfilesTableName,

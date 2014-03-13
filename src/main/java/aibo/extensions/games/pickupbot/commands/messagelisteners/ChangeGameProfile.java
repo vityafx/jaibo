@@ -1,8 +1,8 @@
 package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
 import aibo.extensions.Command;
+import aibo.extensions.games.pickupbot.*;
 import aibo.extensions.games.pickupbot.Object;
-import aibo.extensions.games.pickupbot.Player;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Remove game profile binding
+ * Change game profile
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,17 +30,18 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class RemoveAllGameProfileBindings extends Command implements MessageListener, ConfigurationListener {
-    private Object object;
+public final class ChangeGameProfile extends Command implements MessageListener, ConfigurationListener {
+    private aibo.extensions.games.pickupbot.Object object;
 
     private String receiver;
-    private String host;
+    private String oldGameProfile;
+    private String newGameProfile;
 
-    public RemoveAllGameProfileBindings() {
+    public ChangeGameProfile() {
         this.configurationChanged();
     }
 
-    public RemoveAllGameProfileBindings(Object object) {
+    public ChangeGameProfile(Object object) {
         this();
 
         this.object = object;
@@ -51,7 +52,7 @@ public final class RemoveAllGameProfileBindings extends Command implements Messa
     public void configurationChanged() {
         this.clearNames();
 
-        String[] names = Object.Configuration.get("commands.remove_game_profiles_binding").split(" ");
+        String[] names = Object.Configuration.get("commands.change_game_profile_binding").split(" ");
 
         this.addNames(names);
     }
@@ -75,13 +76,14 @@ public final class RemoveAllGameProfileBindings extends Command implements Messa
 
         if (super.check(message)) {
             for (String name : this.getNames()) {
-                Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
+                Pattern p = Pattern.compile(String.format("^%s (.*) (.*)$", name), Pattern.CASE_INSENSITIVE);
 
                 CharSequence sequence = message.subSequence(0, message.length());
                 Matcher matcher = p.matcher(sequence);
 
                 if (matcher.matches()) {
-                    this.host = matcher.group(1);
+                    this.oldGameProfile = matcher.group(1);
+                    this.newGameProfile = matcher.group(2);
 
                     checkPassed = true;
 
@@ -95,19 +97,15 @@ public final class RemoveAllGameProfileBindings extends Command implements Messa
 
     @Override
     protected void action() {
-        if (Object.DatabaseManager.isGameProfileExistsForHost(this.host)) {
-            String gameProfile = Object.DatabaseManager.getGameProfileForHost(this.host);
-
-            Object.DatabaseManager.removeAllHostBindingsForGameProfiles(this.host);
-
-            this.object.removePlayerFromEachGameType(new Player(null, null, gameProfile), true);
+        if (Object.DatabaseManager.isGameProfileExists(this.oldGameProfile)) {
+            Object.DatabaseManager.changeGameProfile(this.oldGameProfile, this.newGameProfile);
 
             this.object.getExtensionMessenger().sendNotice(this.receiver,
-                    String.format("All bindings for game profiles with host=[%s] has been removed successfully",
-                            this.host));
+                    String.format("Game profile has been changed from [%s] to [%s]",
+                            this.oldGameProfile, this.newGameProfile));
         } else {
             this.object.getExtensionMessenger().sendNotice(this.receiver,
-                    String.format("No associated game profile records exists for host=[%s]", this.host));
+                    String.format("Game profile=[%s] does not exists", this.oldGameProfile));
         }
     }
 }

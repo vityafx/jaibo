@@ -96,9 +96,23 @@ public class Game {
         return null;
     }
 
+    public Player getPlayerByGameProfile(String gameProfile) {
+        for (Player player : this.playerList) {
+            if (player.getGameProfile().equalsIgnoreCase(gameProfile)) {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
     public void removePlayer(Player player) {
         if (this.isPlayerAdded(player)) {
-            this.getPlayerByNick(player.getNick()).beforeRemove();
+            if (player.getNick() != null) {
+                this.getPlayerByNick(player.getNick()).beforeRemove();
+            } else if (player.getGameProfile() != null) {
+                    this.getPlayerByGameProfile(player.getGameProfile()).beforeRemove();
+            }
 
             this.playerList.remove(player);
         }

@@ -1,7 +1,18 @@
 package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
+import aibo.extensions.Command;
+import aibo.extensions.games.pickupbot.Object;
+import helpers.ConfigurationListener;
+import ircnetwork.IrcMessage;
+import ircnetwork.IrcMessageType;
+import ircnetwork.IrcUser;
+import ircnetwork.MessageListener;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- *
+ * Gets game profile
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,5 +29,81 @@ package aibo.extensions.games.pickupbot.commands.messagelisteners;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class GetGameProfile {
+
+public final class GetGameProfile extends Command implements MessageListener, ConfigurationListener {
+    private aibo.extensions.games.pickupbot.Object object;
+
+    private String receiver;
+    private String host;
+
+    public GetGameProfile() {
+        this.configurationChanged();
+    }
+
+    public GetGameProfile(aibo.extensions.games.pickupbot.Object object) {
+        this();
+
+        this.object = object;
+    }
+
+
+    @Override
+    public void configurationChanged() {
+        this.clearNames();
+
+        String[] names = Object.Configuration.get("commands.get_game_profile_binding").split(" ");
+
+        this.addNames(names);
+    }
+
+    @Override
+    public void messageReceived(IrcMessage message) {
+        if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
+            String receiverHost = IrcUser.tryParse(message.getUser() + "!" + message.getHost()).getHost();
+
+            if (this.object.isAdminHost(receiverHost)) {
+                this.receiver = message.getUser();
+
+                this.execute();
+            }
+        }
+    }
+
+    @Override
+    public boolean check(String message) {
+        boolean checkPassed = false;
+
+        if (super.check(message)) {
+            for (String name : this.getNames()) {
+                Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
+
+                CharSequence sequence = message.subSequence(0, message.length());
+                Matcher matcher = p.matcher(sequence);
+
+                if (matcher.matches()) {
+                    this.host = matcher.group(1);
+
+                    checkPassed = true;
+
+                    break;
+                }
+            }
+        }
+
+        return checkPassed;
+    }
+
+    @Override
+    protected void action() {
+        if (Object.DatabaseManager.isGameProfileExistsForHost(this.host)) {
+            String gameProfile = Object.DatabaseManager.getGameProfileForHost(this.host);
+
+            this.object.getExtensionMessenger().sendNotice(this.receiver,
+                    String.format("Host=[%s] is bound to game profile=[%s]",
+                            this.host, gameProfile));
+        } else {
+            this.object.getExtensionMessenger().sendNotice(this.receiver,
+                    String.format("No associated game profile records exists for host=[%s]", this.host));
+        }
+    }
 }

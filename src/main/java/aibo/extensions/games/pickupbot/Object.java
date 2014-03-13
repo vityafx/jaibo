@@ -63,6 +63,8 @@ public final class Object extends Extension implements GameListener, Configurati
         this.addMessageListener(new SetGameProfileBinding(this));
         this.addMessageListener(new RemoveAllGameProfileBindings(this));
         this.addMessageListener(new RemoveGameProfileBinding(this));
+        this.addMessageListener(new ChangeGameProfile(this));
+        this.addMessageListener(new GetGameProfile(this));
         this.addMessageListener(new Rules(this));
 
         this.addEventListener(new KickPartQuit(this));
