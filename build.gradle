@@ -4,7 +4,7 @@ apply plugin: 'idea'
 apply plugin: 'application'
 
 group = 'jaibo'
-version = '0.2'
+version = '0.3'
 
 description = """Java Advanced IRC BOt"""
 

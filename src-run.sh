@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export dist_package=jaibo
-export version=0.2
+export version=0.3
 export target_directory=target
 
 ls $target_directory
