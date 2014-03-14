@@ -28,11 +28,11 @@ import java.util.GregorianCalendar;
 public final class PickupBotDatabaseManager {
     private String databaseFileName = Object.Configuration.get("database");
 
-    private String lockedPlayersTableName = "pickupbot_locked";
+    private String lockedPlayersTableName = "locked_players";
     private String lockedPlayersGameProfileField = "game_profile";
     private String lockedPlayersUnlockDateField = "unlock_datetime_stamp";
 
-    private String gameProfilesTableName = "pickupbot_game_profiles";
+    private String gameProfilesTableName = "game_profiles";
     private String gameProfilesHostFieldName = "host";
     private String gameProfilesGameProfileFieldName = "game_profile";
 

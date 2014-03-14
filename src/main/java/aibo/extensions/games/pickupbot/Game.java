@@ -240,6 +240,16 @@ public class Game {
         return playersString;
     }
 
+    public String getFormattedPlayersString(String separator) {
+        String gameProfileRequired = Object.Configuration.get("player.game_profile_required");
+
+        if (gameProfileRequired.equalsIgnoreCase("yes")) {
+            return this.getGameProfilesAndNicksMapString(separator);
+        } else {
+            return this.getPlayerNicknamesAsString(separator, false, false);
+        }
+    }
+
     private void notifyPickupFormedUpListeners() {
         for (GameListener listener : this.listeners) {
             listener.pickupFormed(this);

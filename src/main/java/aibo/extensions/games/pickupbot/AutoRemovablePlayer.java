@@ -73,7 +73,17 @@ public final class AutoRemovablePlayer extends Player {
 
     @Override
     public String getFormattedNickName() {
-        return String.format("%s(%dm)", this.gameProfile, this.autoRemovalTask.getMinutesAdded());
+        String gameProfileRequired = Object.Configuration.get("player.game_profile_required");
+
+        String playerName;
+
+        if (gameProfileRequired.equalsIgnoreCase("yes")) {
+            playerName = this.gameProfile;
+        } else {
+            playerName = this.nick;
+        }
+
+        return String.format("%s(%dm)", playerName, this.autoRemovalTask.getMinutesAdded());
     }
 }
 

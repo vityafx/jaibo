@@ -271,11 +271,19 @@ public final class Object extends Extension implements GameListener, Configurati
     public void pickupFormed(Game game) {
         String notifyPattern = "%s pickup game is ready to play! Players are [%s]";
 
+        String players;
+
+        if (Object.Configuration.get("player.game_profile_required").equalsIgnoreCase("yes")) {
+            players = game.getGameProfilesAndNicksMapString(", ");
+        } else {
+            players = game.getPlayerNicknamesAsString(", ", false, false);
+        }
+
         this.getExtensionMessenger().sendBroadcastMessage(this.getChannels(),
                 String.format(
                         notifyPattern,
                         IrcMessageTextModifier.makeBold(game.getGameType()),
-                        game.getGameProfilesAndNicksMapString(", ")));
+                        players));
 
         for (String playerNickName : game.getPlayerNicknames()) {
             this.getExtensionMessenger().sendPrivateMessage(playerNickName,

@@ -86,7 +86,9 @@ public class Player {
     }
 
     public void checkAndSetGameProfile() {
-        if (this.host != null && !this.host.isEmpty()) {
+        String gameProfileRequired = Object.Configuration.get("player.game_profile_required");
+
+        if (this.host != null && !this.host.isEmpty() && gameProfileRequired.equalsIgnoreCase("yes")) {
             if (Object.DatabaseManager.isGameProfileExistsForHost(this.host)) {
                 this.gameProfile = Object.DatabaseManager.getGameProfileForHost(this.host);
             } else {

@@ -29,7 +29,7 @@ public final class LastGameStamp {
     protected GregorianCalendar lastGameDate;
 
     public LastGameStamp(Game game) {
-        this.playersList = game.getGameProfilesAndNicksMapString(", ");
+        this.playersList = game.getFormattedPlayersString(", ");
 
         this.gameType = game.getGameType();
 
