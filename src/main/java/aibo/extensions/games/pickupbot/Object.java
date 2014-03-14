@@ -31,10 +31,10 @@ import java.util.ArrayList;
  */
 
 public final class Object extends Extension implements GameListener, ConfigurationListener {
+    public final static Configuration Configuration = new Configuration("Games.PickupBot.ini");
+
     public final static PickupBotDatabaseManager DatabaseManager = new PickupBotDatabaseManager();
     private final ArrayList<Game> games = new ArrayList<Game>();
-
-    public final static Configuration Configuration = new Configuration("Games.PickupBot.ini");
 
 
     public Object() {

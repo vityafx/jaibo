@@ -26,6 +26,8 @@ import java.util.GregorianCalendar;
  */
 
 public final class PickupBotDatabaseManager {
+    private String databaseFileName = Object.Configuration.get("database");
+
     private String lockedPlayersTableName = "pickupbot_locked";
     private String lockedPlayersGameProfileField = "game_profile";
     private String lockedPlayersUnlockDateField = "unlock_datetime_stamp";
@@ -48,7 +50,7 @@ public final class PickupBotDatabaseManager {
                 this.lockedPlayersTableName, this.lockedPlayersGameProfileField, this.lockedPlayersUnlockDateField);
 
         try {
-            SQLiteProvider.executeStatement(query, false);
+            SQLiteProvider.executeStatementWithDatabase(databaseFileName, query, false);
         } catch (SQLException e) {
             System.out.println("Failed to create locked players table: " + e.getMessage());
         }
@@ -59,7 +61,7 @@ public final class PickupBotDatabaseManager {
                 this.gameProfilesTableName, this.gameProfilesHostFieldName, this.gameProfilesGameProfileFieldName);
 
         try {
-            SQLiteProvider.executeStatement(query, false);
+            SQLiteProvider.executeStatementWithDatabase(databaseFileName, query, false);
         } catch (SQLException e) {
             System.out.println("Failed to create game profiles table: " + e.getMessage());
         }
@@ -69,12 +71,14 @@ public final class PickupBotDatabaseManager {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("SELECT COUNT(1) as lockedPlayersCount FROM %s WHERE %s=?",
                     this.lockedPlayersTableName, this.lockedPlayersGameProfileField);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, gameProfile);
 
-                CachedRowSet rowSet = SQLiteProvider.executePreparedStatement(preparedStatement, true);
+                CachedRowSet rowSet = SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName,
+                        preparedStatement, true);
 
                 if (rowSet != null) {
                     if (rowSet.next()) {
@@ -95,12 +99,14 @@ public final class PickupBotDatabaseManager {
         if (gameProfile != null && !gameProfile.isEmpty() && this.isPlayerLocked(gameProfile)) {
             String query = String.format("SELECT %s as unlockDateTimeStamp FROM %s WHERE %s=?",
                     this.lockedPlayersUnlockDateField, this.lockedPlayersTableName, this.lockedPlayersGameProfileField);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, gameProfile);
 
-                CachedRowSet rowSet = SQLiteProvider.executePreparedStatement(preparedStatement, true);
+                CachedRowSet rowSet = SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName,
+                        preparedStatement, true);
 
                 if (rowSet != null) {
                     if (rowSet.next()) {
@@ -125,12 +131,13 @@ public final class PickupBotDatabaseManager {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("DELETE FROM %s WHERE %s=?", this.lockedPlayersTableName,
                     this.lockedPlayersGameProfileField);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, gameProfile);
 
-                SQLiteProvider.executePreparedStatement(preparedStatement, false);
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
             } catch (SQLException e) {
                 System.out.println(String.format("Failed to remove locked player (game_profile=%s): %s",
                         gameProfile, e.getMessage()));
@@ -142,13 +149,14 @@ public final class PickupBotDatabaseManager {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("INSERT INTO %s(%s, %s) VALUES(?, ?)", this.lockedPlayersTableName,
                     this.lockedPlayersGameProfileField, this.lockedPlayersUnlockDateField);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, gameProfile);
                 preparedStatement.setLong(2, timeStampInMillis);
 
-                SQLiteProvider.executePreparedStatement(preparedStatement, false);
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
             } catch (SQLException e) {
                 System.out.println(String.format("Failed to add locked player (game_profile=%s): %s",
                         gameProfile, e.getMessage()));
@@ -160,13 +168,14 @@ public final class PickupBotDatabaseManager {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("INSERT INTO %s(%s, %s) VALUES(?, ?)", this.lockedPlayersTableName,
                     this.lockedPlayersGameProfileField, this.lockedPlayersUnlockDateField);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, gameProfile);
                 preparedStatement.setLong(2, 0);                // locked forever
 
-                SQLiteProvider.executePreparedStatement(preparedStatement, false);
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
             } catch (SQLException e) {
                 System.out.println(String.format("Failed to add locked player (game_profile=%s): %s",
                         gameProfile, e.getMessage()));
@@ -178,12 +187,14 @@ public final class PickupBotDatabaseManager {
         if (host != null && !host.isEmpty()) {
             String query = String.format("SELECT COUNT(1) as gameProfiles FROM %s WHERE %s=?",
                     this.gameProfilesTableName, this.gameProfilesHostFieldName);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, host);
 
-                CachedRowSet rowSet = SQLiteProvider.executePreparedStatement(preparedStatement, true);
+                CachedRowSet rowSet = SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName,
+                        preparedStatement, true);
 
                 if (rowSet != null) {
                     if (rowSet.next()) {
@@ -204,12 +215,14 @@ public final class PickupBotDatabaseManager {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("SELECT COUNT(1) as gameProfiles FROM %s WHERE %s=?",
                     this.gameProfilesTableName, this.gameProfilesGameProfileFieldName);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, gameProfile);
 
-                CachedRowSet rowSet = SQLiteProvider.executePreparedStatement(preparedStatement, true);
+                CachedRowSet rowSet = SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName,
+                        preparedStatement, true);
 
                 if (rowSet != null) {
                     if (rowSet.next()) {
@@ -230,12 +243,14 @@ public final class PickupBotDatabaseManager {
         if (host != null && !host.isEmpty()) {
             String query = String.format("SELECT %s as gameProfile FROM %s WHERE %s=?",
                     this.gameProfilesGameProfileFieldName, this.gameProfilesTableName, this.gameProfilesHostFieldName);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, host);
 
-                CachedRowSet rowSet = SQLiteProvider.executePreparedStatement(preparedStatement, true);
+                CachedRowSet rowSet = SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName,
+                        preparedStatement, true);
 
                 if (rowSet != null) {
                     if (rowSet.next()) {
@@ -256,13 +271,14 @@ public final class PickupBotDatabaseManager {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("DELETE FROM %s WHERE %s=? and %s=?", this.gameProfilesTableName,
                     this.gameProfilesGameProfileFieldName, this.gameProfilesHostFieldName);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, gameProfile);
                 preparedStatement.setString(2, host);
 
-                SQLiteProvider.executePreparedStatement(preparedStatement, false);
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
             } catch (SQLException e) {
                 System.out.println(String.format("Failed to remove game profile (game_profile=%s): %s",
                         gameProfile, e.getMessage()));
@@ -274,12 +290,13 @@ public final class PickupBotDatabaseManager {
         if (host != null && !host.isEmpty()) {
             String query = String.format("DELETE FROM %s WHERE %s=?", this.gameProfilesTableName,
                     this.gameProfilesHostFieldName);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, host);
 
-                SQLiteProvider.executePreparedStatement(preparedStatement, false);
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
             } catch (SQLException e) {
                 System.out.println(String.format("Failed to remove host binding for game profile (host=%s): %s",
                         host, e.getMessage()));
@@ -291,12 +308,13 @@ public final class PickupBotDatabaseManager {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("DELETE FROM %s WHERE %s=?", this.gameProfilesTableName,
                     this.gameProfilesGameProfileFieldName);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, gameProfile);
 
-                SQLiteProvider.executePreparedStatement(preparedStatement, false);
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
             } catch (SQLException e) {
                 System.out.println(String.format("Failed to remove game profile (game_profile=%s): %s",
                         gameProfile, e.getMessage()));
@@ -309,13 +327,14 @@ public final class PickupBotDatabaseManager {
                 && newGameProfile != null && !newGameProfile.isEmpty()) {
             String query = String.format("UPDATE %s SET %s=? WHERE %s=?", this.gameProfilesTableName,
                     this.gameProfilesGameProfileFieldName, this.gameProfilesGameProfileFieldName);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, newGameProfile);
                 preparedStatement.setString(2, oldGameProfile);
 
-                SQLiteProvider.executePreparedStatement(preparedStatement, false);
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
             } catch (SQLException e) {
                 System.out.println(String.format("Failed to change game profile (game_profile=' %s ' to ' %s '): %s",
                         oldGameProfile, newGameProfile, e.getMessage()));
@@ -327,13 +346,14 @@ public final class PickupBotDatabaseManager {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("INSERT INTO %s(%s, %s) VALUES(?, ?)", this.gameProfilesTableName,
                     this.gameProfilesHostFieldName, gameProfilesGameProfileFieldName);
-            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatement(query);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
 
             try {
                 preparedStatement.setString(1, host);
                 preparedStatement.setString(2, gameProfile);
 
-                SQLiteProvider.executePreparedStatement(preparedStatement, false);
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
             } catch (SQLException e) {
                 System.out.println(String.format("Failed to add game profile (game_profile=%s): %s",
                         gameProfile, e.getMessage()));
