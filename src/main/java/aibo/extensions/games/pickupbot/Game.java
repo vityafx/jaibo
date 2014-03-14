@@ -205,11 +205,13 @@ public class Game {
 
         for(Iterator iterator = playerList.iterator(); iterator.hasNext();) {
             Player player = (Player)iterator.next();
+            StringBuilder gameProfile = new StringBuilder(player.getGameProfile());
+            gameProfile.insert(1, "\u200B");
 
             if (!iterator.hasNext())
                 separator = "";
 
-            allGameProfiles.append(String.format("%s%s", player.getGameProfile(), separator));
+            allGameProfiles.append(String.format("%s%s", gameProfile, separator));
         }
 
         return allGameProfiles.toString();
@@ -245,7 +247,7 @@ public class Game {
 
     public String getFormattedPlayersString(String separator) {
         if (Object.Configuration.getBoolean("player.game_profile_required")) {
-            return this.getGameProfilesAndNicksMapString(separator);
+            return this.getGameProfilesAsString(separator);
         } else {
             return this.getPlayerNicknamesAsString(separator, false, false);
         }

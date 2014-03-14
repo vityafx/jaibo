@@ -277,7 +277,7 @@ public final class Object extends Extension implements GameListener, Configurati
         String players;
 
         if (Object.Configuration.getBoolean("player.game_profile_required")) {
-            players = game.getGameProfilesAndNicksMapString(", ");
+            players = game.getGameProfilesAsString(", ");
         } else {
             players = game.getPlayerNicknamesAsString(", ", false, false);
         }

@@ -34,7 +34,7 @@ public final class IrcMessage {
         IrcMessage channelMessage = null;
 
         if(message != null) {
-            Pattern p = Pattern.compile("^:(.*)!(.*) PRIVMSG (.*) :(.*)$", Pattern.DOTALL);
+            Pattern p = Pattern.compile("^:(.*)!(.*) PRIVMSG ([#\\-\\w+]+) :(.*)$", Pattern.DOTALL);
 
             CharSequence sequence = message.subSequence(0, message.length());
             Matcher matcher = p.matcher(sequence);

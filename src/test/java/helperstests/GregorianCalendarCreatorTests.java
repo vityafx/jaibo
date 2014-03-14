@@ -57,6 +57,6 @@ public final class GregorianCalendarCreatorTests extends TestCase {
         GregorianCalendar createdCalendar = GregorianCalendarCreator.createFromCurrentDateByAppendingTimeString("1w");
         realCalendar.add(GregorianCalendar.HOUR, 7 * 24);
 
-        assertEquals(createdCalendar.compareTo(realCalendar), 0);
+        assertEquals(createdCalendar.get(GregorianCalendar.DAY_OF_YEAR), realCalendar.get(GregorianCalendar.DAY_OF_YEAR));
     }
 }

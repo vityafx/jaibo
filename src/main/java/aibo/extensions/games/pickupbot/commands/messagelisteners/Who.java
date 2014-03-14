@@ -70,7 +70,7 @@ public final class Who extends Command implements MessageListener, Configuration
     public boolean check(String message) {
         boolean checkPassed = false;
 
-        if (super.check(message)) {
+        if (super.checkExact(message)) {
             for (String name : this.getNames()) {
                 Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
 

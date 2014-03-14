@@ -44,7 +44,8 @@ public final class LastGameStamp {
     }
 
     private String getTimeDifferenceFromLastGame() {
-        String difference = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(new GregorianCalendar(), this.lastGameDate);
+        String difference = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(new GregorianCalendar(),
+                this.lastGameDate);
 
         if (difference.length() > 0) {
             difference += "ago";
