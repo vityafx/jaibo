@@ -38,7 +38,7 @@ public final class KickPartQuit extends Command implements EventListener {
         if (ircEvent.getEventType() == IrcEventType.Kick) {
             this.player = new Player(ircEvent.getArgument("UserKicked"), null);
         } else if (ircEvent.getEventType() == IrcEventType.Part || ircEvent.getEventType() == IrcEventType.Quit) {
-            this.player = new Player(ircEvent.getUser(), ircEvent.getHost());
+            this.player = new Player(ircEvent.getUser(), null);
         }
 
         if (this.player != null) {

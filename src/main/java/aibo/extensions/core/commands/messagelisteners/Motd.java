@@ -46,9 +46,9 @@ public final class Motd extends Command implements MessageListener {
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage) {
             if (this.check(message.getMessage().trim())) {
-                IrcUser ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
+                String receiverHost = IrcUser.tryParse(message.getNick() + "!" + message.getHost()).getHost();
 
-                if (ircUser != null && this.object.isAdminHost(ircUser.getHost())) {
+                if (receiverHost != null && this.object.isAdminHost(receiverHost)) {
                     this.execute();
                 }
             }
