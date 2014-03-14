@@ -145,7 +145,7 @@ public class Game {
 
     public String lastGame() {
         if (this.lastGameStamp == null) {
-            return "No games was played yet";
+            return "No games were played yet";
         } else {
             return this.lastGameStamp.getStamp();
         }
