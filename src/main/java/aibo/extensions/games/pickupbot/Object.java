@@ -303,14 +303,6 @@ public final class Object extends Extension implements GameListener, Configurati
         this.updateTopic();
     }
 
-    public void lockPlayer(Player player) {
-
-    }
-
-    public void unlockPlayer(Player player) {
-
-    }
-
     public void reset() {
         for (Game game : this.games) {
             game.clearPlayerList();

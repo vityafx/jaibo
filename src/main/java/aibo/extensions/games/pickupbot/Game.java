@@ -30,6 +30,7 @@ public class Game {
     protected String gameType;
     protected int maxPlayers;
     protected LastGameStamp lastGameStamp;
+    protected int gameId;
     protected final ArrayList<Player> playerList = new ArrayList<Player>();
 
     private final ArrayList<GameListener> listeners = new ArrayList<GameListener>();
@@ -288,6 +289,14 @@ public class Game {
 
     public void setMaxPlayers(int maxPlayers) {
         this.maxPlayers = maxPlayers;
+    }
+
+    public int getGameId() {
+        return this.gameId;
+    }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
     }
 
     public static Game tryParse(String gameString) {
