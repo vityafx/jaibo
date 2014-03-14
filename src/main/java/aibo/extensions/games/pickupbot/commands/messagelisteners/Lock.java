@@ -6,8 +6,7 @@ import aibo.extensions.games.pickupbot.Object;
 import aibo.extensions.games.pickupbot.errors.GameError;
 import aibo.extensions.games.pickupbot.errors.PickupBotError;
 import helpers.ConfigurationListener;
-import helpers.GregorianCalendarCreator;
-import helpers.GregorianCalendarDifference;
+import helpers.GregorianCalendarHelper;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
 import ircnetwork.IrcUser;
@@ -92,7 +91,7 @@ public final class Lock extends Command implements MessageListener, Configuratio
 
             if (matcher.matches()) {
                 this.gameProfile = matcher.group(1);
-                this.unlockDate = GregorianCalendarCreator.createFromCurrentDateByAppendingTimeString(matcher.group(2));
+                this.unlockDate = GregorianCalendarHelper.createFromCurrentDateByAppendingTimeString(matcher.group(2));
 
                 if (this.unlockDate != null) {
                     checkPassed = true;
@@ -113,7 +112,7 @@ public final class Lock extends Command implements MessageListener, Configuratio
 
                 GregorianCalendar lockedDateTimeStamp = Object.DatabaseManager.getPlayerLockedTime(this.gameProfile);
 
-                String timeDifference = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(lockedDateTimeStamp,
+                String timeDifference = GregorianCalendarHelper.GetDifferenceAsHumanReadableString(lockedDateTimeStamp,
                         new GregorianCalendar());
 
                 this.object.getExtensionMessenger().sendNotice(this.receiver,
@@ -125,6 +124,12 @@ public final class Lock extends Command implements MessageListener, Configuratio
                 long unlockDateInMillis = this.unlockDate.getTimeInMillis();
 
                 Object.DatabaseManager.addLockedPlayer(this.gameProfile, unlockDateInMillis);
+
+                String timeDifference = GregorianCalendarHelper.GetHumanReadableDateAsString(this.unlockDate.getTimeInMillis());
+
+                this.object.getExtensionMessenger().sendNotice(this.receiver,
+                        String.format("Player with game profile=[%s] has been locked for [%s]", this.gameProfile,
+                                timeDifference));
             }
         } catch (PickupBotError e) {
             this.object.getExtensionMessenger().sendNotice(this.receiver, e.getMessage());

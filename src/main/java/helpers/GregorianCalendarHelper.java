@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class GregorianCalendarCreator {
+public final class GregorianCalendarHelper {
     public static GregorianCalendar createFromCurrentDateByAppendingTimeString(String humanReadableTimeStamp) {
         GregorianCalendar calendar = null;
 
@@ -51,5 +51,46 @@ public final class GregorianCalendarCreator {
         }
 
         return calendar;
+    }
+
+    public static String GetDifferenceAsHumanReadableString(GregorianCalendar calendar1, GregorianCalendar calendar2) {
+        long difference = calendar1.getTimeInMillis() - calendar2.getTimeInMillis();
+
+        return GetHumanReadableDateAsString(difference);
+    }
+
+    public static String GetHumanReadableDateAsString(long timeInMillis) {
+        long secondInMillis = 1000;
+        long minuteInMillis = secondInMillis * 60;
+        long hourInMillis = minuteInMillis * 60;
+        long dayInMillis = hourInMillis * 24;
+
+        long elapsedDays = timeInMillis / dayInMillis;
+        timeInMillis = timeInMillis % dayInMillis;
+        long elapsedHours = timeInMillis / hourInMillis;
+        timeInMillis = timeInMillis % hourInMillis;
+        long elapsedMinutes = timeInMillis / minuteInMillis;
+        timeInMillis = timeInMillis % minuteInMillis;
+        long elapsedSeconds = timeInMillis / secondInMillis;
+
+        StringBuilder lastGameStringBuilder = new StringBuilder();
+
+        if (elapsedDays > 0) {
+            lastGameStringBuilder.append(String.format("%d days ", elapsedDays));
+        }
+
+        if (elapsedHours > 0) {
+            lastGameStringBuilder.append(String.format("%d hours ", elapsedHours));
+        }
+
+        if (elapsedMinutes > 0) {
+            lastGameStringBuilder.append(String.format("%d minutes ", elapsedMinutes));
+        }
+
+        if (elapsedSeconds > 0) {
+            lastGameStringBuilder.append(String.format("%d seconds ", elapsedSeconds));
+        }
+
+        return lastGameStringBuilder.toString();
     }
 }

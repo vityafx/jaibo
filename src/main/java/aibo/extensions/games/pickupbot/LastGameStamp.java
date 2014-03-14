@@ -1,6 +1,6 @@
 package aibo.extensions.games.pickupbot;
 
-import helpers.GregorianCalendarDifference;
+import helpers.GregorianCalendarHelper;
 import ircnetwork.IrcMessageTextModifier;
 
 import java.util.GregorianCalendar;
@@ -44,7 +44,7 @@ public final class LastGameStamp {
     }
 
     private String getTimeDifferenceFromLastGame() {
-        String difference = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(new GregorianCalendar(),
+        String difference = GregorianCalendarHelper.GetDifferenceAsHumanReadableString(new GregorianCalendar(),
                 this.lastGameDate);
 
         if (difference.length() > 0) {

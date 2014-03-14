@@ -1,12 +1,12 @@
 package helperstests;
 
-import helpers.GregorianCalendarCreator;
+import helpers.GregorianCalendarHelper;
 import junit.framework.TestCase;
 
 import java.util.GregorianCalendar;
 
 /**
- * Tests of GregorianCalendarCreator class
+ * Tests of GregorianCalendarHelper class
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ public final class GregorianCalendarCreatorTests extends TestCase {
     public void testCreatorAppendingByMinutes() {
         GregorianCalendar realCalendar = new GregorianCalendar();
 
-        GregorianCalendar createdCalendar = GregorianCalendarCreator.createFromCurrentDateByAppendingTimeString("1m");
+        GregorianCalendar createdCalendar = GregorianCalendarHelper.createFromCurrentDateByAppendingTimeString("1m");
         realCalendar.add(GregorianCalendar.MINUTE, 1);
 
         assertEquals(createdCalendar.get(GregorianCalendar.MINUTE), realCalendar.get(GregorianCalendar.MINUTE));
@@ -36,7 +36,7 @@ public final class GregorianCalendarCreatorTests extends TestCase {
     public void testCreatorAppendingByHours() {
         GregorianCalendar realCalendar = new GregorianCalendar();
 
-        GregorianCalendar createdCalendar = GregorianCalendarCreator.createFromCurrentDateByAppendingTimeString("1h");
+        GregorianCalendar createdCalendar = GregorianCalendarHelper.createFromCurrentDateByAppendingTimeString("1h");
         realCalendar.add(GregorianCalendar.HOUR, 1);
 
         assertEquals(createdCalendar.get(GregorianCalendar.HOUR), realCalendar.get(GregorianCalendar.HOUR));
@@ -45,7 +45,7 @@ public final class GregorianCalendarCreatorTests extends TestCase {
     public void testCreatorAppendingByDays() {
         GregorianCalendar realCalendar = new GregorianCalendar();
 
-        GregorianCalendar createdCalendar = GregorianCalendarCreator.createFromCurrentDateByAppendingTimeString("2d");
+        GregorianCalendar createdCalendar = GregorianCalendarHelper.createFromCurrentDateByAppendingTimeString("2d");
         realCalendar.add(GregorianCalendar.DAY_OF_YEAR, 2);
 
         assertEquals(createdCalendar.get(GregorianCalendar.DAY_OF_YEAR), realCalendar.get(GregorianCalendar.DAY_OF_YEAR));
@@ -54,7 +54,7 @@ public final class GregorianCalendarCreatorTests extends TestCase {
     public void testCreatorAppendingByWeeks() {
         GregorianCalendar realCalendar = new GregorianCalendar();
 
-        GregorianCalendar createdCalendar = GregorianCalendarCreator.createFromCurrentDateByAppendingTimeString("1w");
+        GregorianCalendar createdCalendar = GregorianCalendarHelper.createFromCurrentDateByAppendingTimeString("1w");
         realCalendar.add(GregorianCalendar.HOUR, 7 * 24);
 
         assertEquals(createdCalendar.get(GregorianCalendar.DAY_OF_YEAR), realCalendar.get(GregorianCalendar.DAY_OF_YEAR));

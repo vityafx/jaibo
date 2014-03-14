@@ -5,7 +5,7 @@ import aibo.extensions.games.pickupbot.errors.PlayerError;
 import java.lang.*;
 import java.util.GregorianCalendar;
 
-import helpers.GregorianCalendarDifference;
+import helpers.GregorianCalendarHelper;
 
 /**
  * Class describes a person in pickup
@@ -80,7 +80,7 @@ public class Player {
             if (lockedDateTimeStamp.compareTo(new GregorianCalendar()) <= 0) {
                 Object.DatabaseManager.removeLockedPlayer(this.gameProfile);
             } else {
-                String timeDifference = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(lockedDateTimeStamp,
+                String timeDifference = GregorianCalendarHelper.GetDifferenceAsHumanReadableString(lockedDateTimeStamp,
                         new GregorianCalendar());
 
                 String lockedErrorString = String.format("Player is locked [%s remaining]", timeDifference);
