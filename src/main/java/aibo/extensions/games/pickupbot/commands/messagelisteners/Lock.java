@@ -111,12 +111,14 @@ public final class Lock extends Command implements MessageListener, Configuratio
             if (Object.DatabaseManager.isPlayerLocked(this.gameProfile)) {
                 this.object.removePlayerFromEachGameType(new Player(null, null, this.gameProfile), true);
 
-                String unlockDateTimeString = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(this.unlockDate,
+                GregorianCalendar lockedDateTimeStamp = Object.DatabaseManager.getPlayerLockedTime(this.gameProfile);
+
+                String timeDifference = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(lockedDateTimeStamp,
                         new GregorianCalendar());
 
                 this.object.getExtensionMessenger().sendNotice(this.receiver,
                         String.format("Player with game profile=[%s] is already locked for next [%s]", this.gameProfile,
-                                unlockDateTimeString));
+                                timeDifference));
             } else {
                 this.object.removePlayerFromEachGameType(new Player(null, null, this.gameProfile), true);
 
