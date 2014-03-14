@@ -30,9 +30,9 @@ task copyTask(type: Copy) {
 
     println 'Copying configuration files and distribution files...'
 
-    ['target/classes/', 'target/libs'].each { dest ->
+    ['target/classes/settings/', 'target/libs/settings/'].each { dest ->
         copy {
-            with from ('src/main/java/') {
+            with from ('src/main/java/settings/') {
                 include '*.ini'
             }
             into dest
@@ -50,14 +50,14 @@ task copyTask(type: Copy) {
 }
 
 task copyDependenciesToTarget(type: Copy) {
-    println 'Copying dependencies to target files...'
+    println 'Copying dependencies to target...'
 
     configurations.compile.collect().each { compileDependency ->
         copy {
             with from (compileDependency.getPath()) {
                 include '*'
             }
-            into 'target/libs'
+            into 'target/libs/libs'
         }
     }
 }
@@ -68,7 +68,7 @@ build.dependsOn(copyDependenciesToTarget)
 jar {
     manifest.attributes(
             "Main-Class": "Main",
-            "Class-Path": configurations.compile.collect { it.getName()}.join(' ')
+            "Class-Path": configurations.compile.collect { 'libs/' + it.getName()}.join(' ')
     )
 }
 

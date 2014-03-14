@@ -50,7 +50,7 @@ public final class Configuration {
 
             File jarPath = new File(Configuration.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             String propertiesPath = jarPath.getParentFile().getAbsolutePath();
-            InputStream settingsFileInputStream = new FileInputStream(propertiesPath + "/" + this.configurationFileName);
+            InputStream settingsFileInputStream = new FileInputStream(propertiesPath + "/settings/" + this.configurationFileName);
 
             try {
                 properties.load(settingsFileInputStream);
