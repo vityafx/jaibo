@@ -1,7 +1,6 @@
 package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
 import aibo.extensions.Command;
-import aibo.extensions.games.pickupbot.*;
 import aibo.extensions.games.pickupbot.Object;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
@@ -60,10 +59,10 @@ public final class ChangeGameProfile extends Command implements MessageListener,
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
-            String receiverHost = IrcUser.tryParse(message.getUser() + "!" + message.getHost()).getHost();
+            String receiverHost = IrcUser.tryParse(message.getNick() + "!" + message.getHost()).getHost();
 
             if (this.object.isAdminHost(receiverHost)) {
-                this.receiver = message.getUser();
+                this.receiver = message.getNick();
 
                 this.execute();
             }

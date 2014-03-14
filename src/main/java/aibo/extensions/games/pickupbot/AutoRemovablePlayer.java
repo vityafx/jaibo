@@ -25,7 +25,7 @@ import java.util.TimerTask;
 
 public final class AutoRemovablePlayer extends Player {
     private final Timer timer = new Timer();
-    private final AutoRemovablePlayerTask autoRemovalTask = new AutoRemovablePlayerTask(this);
+    private final AutoUnlockTask autoRemovalTask = new AutoUnlockTask(this);
     private final static int TimerDelay = 1 * 60 * 1000;
     private Game game;
 
@@ -73,11 +73,9 @@ public final class AutoRemovablePlayer extends Player {
 
     @Override
     public String getFormattedNickName() {
-        String gameProfileRequired = Object.Configuration.get("player.game_profile_required");
-
         String playerName;
 
-        if (gameProfileRequired.equalsIgnoreCase("yes")) {
+        if (Object.Configuration.getBoolean("player.game_profile_required")) {
             playerName = this.gameProfile;
         } else {
             playerName = this.nick;
@@ -88,13 +86,13 @@ public final class AutoRemovablePlayer extends Player {
 }
 
 
-class AutoRemovablePlayerTask extends TimerTask implements ConfigurationListener {
+class AutoUnlockTask extends TimerTask implements ConfigurationListener {
 
     private AutoRemovablePlayer player;
     private int minutesAdded = 0;
     private static int MaximumAddedTime;
 
-    public AutoRemovablePlayerTask(AutoRemovablePlayer player) {
+    public AutoUnlockTask(AutoRemovablePlayer player) {
         this.player = player;
 
         this.configurationChanged();

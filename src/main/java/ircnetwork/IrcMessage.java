@@ -58,7 +58,7 @@ public final class IrcMessage {
         this.user = user;
     }
 
-    public String getUser() {
+    public String getNick() {
         return this.user;
     }
 
@@ -110,7 +110,7 @@ public final class IrcMessage {
 
     public String toString() {
         return String.format("User: %s\nHost: %s\nChannel: %s\nMessage: %s\n",
-                this.getUser(),
+                this.getNick(),
                 this.getHost(),
                 this.getReceiver(),
                 this.getMessage());

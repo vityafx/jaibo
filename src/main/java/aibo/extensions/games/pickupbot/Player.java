@@ -5,7 +5,6 @@ import aibo.extensions.games.pickupbot.errors.PlayerError;
 import java.lang.*;
 import java.util.GregorianCalendar;
 
-import aibo.extensions.games.pickupbot.Object;
 import helpers.GregorianCalendarDifference;
 
 /**
@@ -77,18 +76,22 @@ public class Player {
         if (this.gameProfile != null && !this.gameProfile.isEmpty()
                 && Object.DatabaseManager.isPlayerLocked(this.gameProfile)) {
             GregorianCalendar lockedDateTimeStamp = Object.DatabaseManager.getPlayerLockedTime(this.gameProfile);
-            String timeDifference = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(lockedDateTimeStamp,
-                    new GregorianCalendar());
 
-            String lockedErrorString = String.format("Player is locked [%s remaining]", timeDifference);
-            throw new PlayerError(lockedErrorString);
+            if (lockedDateTimeStamp.compareTo(new GregorianCalendar()) <= 0) {
+                Object.DatabaseManager.removeLockedPlayer(this.gameProfile);
+            } else {
+                String timeDifference = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(lockedDateTimeStamp,
+                        new GregorianCalendar());
+
+                String lockedErrorString = String.format("Player is locked [%s remaining]", timeDifference);
+                throw new PlayerError(lockedErrorString);
+            }
         }
     }
 
     public void checkAndSetGameProfile() {
-        String gameProfileRequired = Object.Configuration.get("player.game_profile_required");
-
-        if (this.host != null && !this.host.isEmpty() && gameProfileRequired.equalsIgnoreCase("yes")) {
+        if (this.host != null && !this.host.isEmpty()
+                && Object.Configuration.getBoolean("player.game_profile_required")) {
             if (Object.DatabaseManager.isGameProfileExistsForHost(this.host)) {
                 this.gameProfile = Object.DatabaseManager.getGameProfileForHost(this.host);
             } else {

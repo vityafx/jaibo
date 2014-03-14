@@ -44,7 +44,6 @@ public final class PickupBotDatabaseManager {
         this.createLockedPlayersTable();
         this.createGameProfilesTable();
     }
-
     private void createLockedPlayersTable() {
         String query = String.format("CREATE TABLE IF NOT EXISTS %s(%s text, %s integer)",
                 this.lockedPlayersTableName, this.lockedPlayersGameProfileField, this.lockedPlayersUnlockDateField);
@@ -254,9 +253,7 @@ public final class PickupBotDatabaseManager {
 
                 if (rowSet != null) {
                     if (rowSet.next()) {
-                        String gameProfile = rowSet.getString("gameProfile");
-
-                        return gameProfile;
+                        return rowSet.getString("gameProfile");
                     }
                 }
             } catch (SQLException e) {

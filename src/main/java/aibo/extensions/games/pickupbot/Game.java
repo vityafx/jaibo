@@ -229,8 +229,10 @@ public class Game {
         String playersString = "";
 
         for(int i = 0; i < this.playerList.size(); i++) {
-            playersString += String.format("%s(%s)", this.playerList.get(i).getNick(),
-                    this.playerList.get(i).getGameProfile());
+            StringBuilder gameProfile = new StringBuilder(this.playerList.get(i).getGameProfile());
+            gameProfile.insert(1, "\u200B");
+
+            playersString += String.format("%s(%s)", this.playerList.get(i).getNick(), gameProfile);
 
             if (i < this.playerList.size() - 1) {
                 playersString += separator;
@@ -241,9 +243,7 @@ public class Game {
     }
 
     public String getFormattedPlayersString(String separator) {
-        String gameProfileRequired = Object.Configuration.get("player.game_profile_required");
-
-        if (gameProfileRequired.equalsIgnoreCase("yes")) {
+        if (Object.Configuration.getBoolean("player.game_profile_required")) {
             return this.getGameProfilesAndNicksMapString(separator);
         } else {
             return this.getPlayerNicknamesAsString(separator, false, false);

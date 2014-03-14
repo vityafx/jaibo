@@ -62,11 +62,11 @@ public final class Add extends Command implements MessageListener, Configuration
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
             try {
-                this.player = new Player(message.getUser(), message.getHost());
+                this.player = new Player(message.getNick(), message.getHost());
 
                 this.execute();
             } catch (PlayerError e) {
-                this.object.getExtensionMessenger().sendNotice(message.getUser(), e.getMessage());
+                this.object.getExtensionMessenger().sendNotice(message.getNick(), e.getMessage());
             }
         }
     }

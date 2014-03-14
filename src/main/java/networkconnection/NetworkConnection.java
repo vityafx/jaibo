@@ -176,8 +176,6 @@ public class NetworkConnection implements ConfigurationListener {
 
     @Override
     public void configurationChanged() {
-        String isDebugMode = AIBO.Configuration.get("Network.debug");
-
-        this.isDebug = isDebugMode != null && isDebugMode.equalsIgnoreCase("yes");
+        this.isDebug = AIBO.Configuration.getBoolean("Network.debug");
     }
 }

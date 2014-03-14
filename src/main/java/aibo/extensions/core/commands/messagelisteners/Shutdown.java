@@ -45,7 +45,7 @@ public final class Shutdown extends Command implements MessageListener {
             IrcUser user = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
             if (user != null && this.object.isAdminHost(user.getHost())) {
-                this.receiver = message.getUser();
+                this.receiver = message.getNick();
 
                 this.execute();
             }

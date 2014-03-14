@@ -35,7 +35,7 @@ public final class IrcChannelTests extends TestCase {
 
         assertNotNull(message1);
 
-        assertEquals(message1.getUser(), "nick");
+        assertEquals(message1.getNick(), "nick");
         assertEquals(message1.getHost(), "~user@host.org");
         assertEquals(message1.getMessageType(), IrcMessageType.ChannelMessage);
         assertEquals(message1.getReceiver(), "#ircbottest");
@@ -43,7 +43,7 @@ public final class IrcChannelTests extends TestCase {
 
         assertNotNull(message2);
 
-        assertEquals(message2.getUser(), "nick");
+        assertEquals(message2.getNick(), "nick");
         assertEquals(message2.getHost(), "~user@host.org");
         assertEquals(message2.getMessageType(), IrcMessageType.PrivateMessage);
         assertEquals(message2.getReceiver(), "botNickName");

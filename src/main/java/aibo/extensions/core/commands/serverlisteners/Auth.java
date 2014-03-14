@@ -1,8 +1,8 @@
 package aibo.extensions.core.commands.serverlisteners;
 
 import aibo.AIBO;
-import aibo.extensions.Extension;
 import aibo.extensions.SimpleCommand;
+import aibo.extensions.core.Object;
 import helpers.ConfigurationListener;
 
 /**
@@ -27,11 +27,12 @@ public final class Auth extends SimpleCommand implements ConfigurationListener {
     private boolean authenticationNeed;
     private String username;
     private String password;
+    private boolean setHiddenHostNeeded;
 
     private boolean authenticated;
 
 
-    public Auth(Extension object) {
+    public Auth(Object object) {
         super(object);
 
         AIBO.Configuration.addListener(this);
@@ -40,13 +41,13 @@ public final class Auth extends SimpleCommand implements ConfigurationListener {
     }
 
     private void readAuthenticationSettings() {
-        String authenticationNeed = AIBO.Configuration.get("Authentication.authentication");
-
-        if (authenticationNeed != null && authenticationNeed.equalsIgnoreCase("yes")) {
+        if (AIBO.Configuration.getBoolean("Authentication.authentication")) {
             this.authenticationNeed = true;
 
             this.username = AIBO.Configuration.get("Authentication.username");
             this.password = AIBO.Configuration.get("Authentication.password");
+
+            this.setHiddenHostNeeded = AIBO.Configuration.getBoolean("ircconnection.hide_host");
         }
     }
 
@@ -58,8 +59,16 @@ public final class Auth extends SimpleCommand implements ConfigurationListener {
     @Override
     public void execute() {
         if (!this.authenticated && this.authenticationNeed) {
+
             this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("AUTH",
                     String.format("%s %s", this.username, this.password));
+
+            if (this.setHiddenHostNeeded) {
+                Object coreObject = (Object)this.object;
+
+                this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("MODE",
+                        String.format("%s +x", coreObject.getCurrentNickName()));
+            }
 
             this.authenticated = true;
         }

@@ -82,7 +82,10 @@ public final class Login extends Command implements ServerListener {
 
     @Override
     protected void action() {
-        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("nick", this.getNickName());
+        String nickName = this.getNickName();
+
+        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("nick", nickName);
+        this.object.setCurrentNickName(nickName);
 
         if (!loggedIn) {
             this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("user",

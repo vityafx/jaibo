@@ -41,7 +41,7 @@ public final class Hello extends Command implements MessageListener {
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage())) {
-            this.receiver = message.getUser();
+            this.receiver = message.getNick();
 
             this.execute();
         }

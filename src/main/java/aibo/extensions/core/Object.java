@@ -27,6 +27,7 @@ import errors.ExtensionError;
 
 public class Object extends Extension {
     private ExtensionManager extensionManager;
+    private String currentNickName;
 
     private static int ObjectCount = 0;
     private final static int MaxObjectCount = 1;
@@ -94,5 +95,14 @@ public class Object extends Extension {
 
     public ExtensionManager getExtensionManager() {
         return this.extensionManager;
+    }
+
+
+    public String getCurrentNickName() {
+        return currentNickName;
+    }
+
+    public void setCurrentNickName(String currentNickName) {
+        this.currentNickName = currentNickName;
     }
 }

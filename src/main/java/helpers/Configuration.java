@@ -118,6 +118,18 @@ public final class Configuration {
         return null;
     }
 
+    public boolean getBoolean(String key) {
+        if (this.configurationHashMap != null) {
+            String value = this.configurationHashMap.get(key.toLowerCase());
+
+            if (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true")) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     protected void finalize() throws Throwable {
         _Configurations.remove(this);

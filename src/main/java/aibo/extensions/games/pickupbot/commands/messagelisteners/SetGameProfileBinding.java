@@ -59,10 +59,10 @@ public final class SetGameProfileBinding extends Command implements MessageListe
     @Override
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage && this.check(message.getMessage().trim())) {
-            String receiverHost = IrcUser.tryParse(message.getUser() + "!" + message.getHost()).getHost();
+            String receiverHost = IrcUser.tryParse(message.getNick() + "!" + message.getHost()).getHost();
 
             if (this.object.isAdminHost(receiverHost)) {
-                this.receiver = message.getUser();
+                this.receiver = message.getNick();
 
                 this.execute();
             }

@@ -55,12 +55,6 @@ public final class GregorianCalendarDifference {
             lastGameStringBuilder.append(String.format("%d seconds ", elapsedSeconds));
         }
 
-        if (lastGameStringBuilder.length() > 0) {
-            lastGameStringBuilder.append("ago");
-        } else {
-            lastGameStringBuilder.append("Just a moment ago");
-        }
-
         return lastGameStringBuilder.toString();
     }
 }

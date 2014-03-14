@@ -57,6 +57,7 @@ public final class Object extends Extension implements GameListener, Configurati
         this.addMessageListener(new Promote(this));
         this.addMessageListener(new Remove(this));
         this.addMessageListener(new Who(this));
+        this.addMessageListener(new Pull(this));
         this.addMessageListener(new Lastgame(this));
         this.addMessageListener(new Reset(this));
         this.addMessageListener(new Iam(this));
@@ -66,6 +67,8 @@ public final class Object extends Extension implements GameListener, Configurati
         this.addMessageListener(new ChangeGameProfile(this));
         this.addMessageListener(new GetGameProfile(this));
         this.addMessageListener(new Rules(this));
+        this.addMessageListener(new Lock(this));
+        this.addMessageListener(new Unlock(this));
 
         this.addEventListener(new KickPartQuit(this));
         this.addEventListener(new NickChange(this));
@@ -273,7 +276,7 @@ public final class Object extends Extension implements GameListener, Configurati
 
         String players;
 
-        if (Object.Configuration.get("player.game_profile_required").equalsIgnoreCase("yes")) {
+        if (Object.Configuration.getBoolean("player.game_profile_required")) {
             players = game.getGameProfilesAndNicksMapString(", ");
         } else {
             players = game.getPlayerNicknamesAsString(", ", false, false);
@@ -298,6 +301,14 @@ public final class Object extends Extension implements GameListener, Configurati
         }
 
         this.updateTopic();
+    }
+
+    public void lockPlayer(Player player) {
+
+    }
+
+    public void unlockPlayer(Player player) {
+
     }
 
     public void reset() {
