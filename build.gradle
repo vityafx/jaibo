@@ -49,12 +49,26 @@ task copyTask(type: Copy) {
     into 'target/libs'
 }
 
+task copyDependenciesToTarget(type: Copy) {
+    println 'Copying dependencies to target files...'
+
+    configurations.compile.collect().each { compileDependency ->
+        copy {
+            with from (compileDependency.getPath()) {
+                include '*'
+            }
+            into 'target/libs'
+        }
+    }
+}
+
 compileJava.dependsOn(copyTask)
+build.dependsOn(copyDependenciesToTarget)
 
 jar {
     manifest.attributes(
             "Main-Class": "Main",
-            "Class-Path": configurations.compile.collect { it.getPath() }.join(' ')
+            "Class-Path": configurations.compile.collect { it.getName()}.join(' ')
     )
 }
 
