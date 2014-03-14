@@ -40,7 +40,7 @@ public final class Lock extends Command implements MessageListener, Configuratio
 
     private String receiver;
     private String gameProfile;
-    private String timeLocked;
+    private GregorianCalendar unlockDate;
 
     public Lock() {
         this.configurationChanged();
@@ -92,11 +92,13 @@ public final class Lock extends Command implements MessageListener, Configuratio
 
             if (matcher.matches()) {
                 this.gameProfile = matcher.group(1);
-                this.timeLocked = matcher.group(2);
+                this.unlockDate = GregorianCalendarCreator.createFromCurrentDateByAppendingTimeString(matcher.group(2));
 
-                checkPassed = true;
+                if (this.unlockDate != null) {
+                    checkPassed = true;
 
-                break;
+                    break;
+                }
             }
         }
 
@@ -109,8 +111,7 @@ public final class Lock extends Command implements MessageListener, Configuratio
             if (Object.DatabaseManager.isPlayerLocked(this.gameProfile)) {
                 this.object.removePlayerFromEachGameType(new Player(null, null, this.gameProfile), true);
 
-                GregorianCalendar unlockDateTime = GregorianCalendarCreator.createFromCurrentDateByAppendingTimeString(this.timeLocked);
-                String unlockDateTimeString = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(unlockDateTime,
+                String unlockDateTimeString = GregorianCalendarDifference.GetDifferenceAsHumanReadableString(this.unlockDate,
                         new GregorianCalendar());
 
                 this.object.getExtensionMessenger().sendNotice(this.receiver,
@@ -119,7 +120,7 @@ public final class Lock extends Command implements MessageListener, Configuratio
             } else {
                 this.object.removePlayerFromEachGameType(new Player(null, null, this.gameProfile), true);
 
-                long unlockDateInMillis = GregorianCalendarCreator.createFromCurrentDateByAppendingTimeString(this.timeLocked).getTimeInMillis();
+                long unlockDateInMillis = this.unlockDate.getTimeInMillis();
 
                 Object.DatabaseManager.addLockedPlayer(this.gameProfile, unlockDateInMillis);
             }
