@@ -77,7 +77,7 @@ public final class IrcUser {
     public static IrcUser tryParseFromIrcMessage(String message) {
         IrcUser ircUser = null;
 
-        Pattern p = Pattern.compile("^[:](.*)!(.*)@([\\.|\\w+]*) (.*)$");
+        Pattern p = Pattern.compile("^[:](.*)!(.*)@([-.|\\w+]*) (.*)$");
 
         CharSequence sequence = message.subSequence(0, message.length());
         Matcher matcher = p.matcher(sequence);
