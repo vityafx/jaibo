@@ -2,6 +2,7 @@ package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
 import aibo.extensions.Command;
 import aibo.extensions.games.pickupbot.Object;
+import aibo.extensions.games.pickupbot.errors.PlayerError;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
@@ -96,16 +97,13 @@ public final class SetGameProfileBinding extends Command implements MessageListe
 
     @Override
     protected void action() {
-        if (!Object.DatabaseManager.isGameProfileExistsForHost(this.host)) {
-            Object.DatabaseManager.addGameProfile(this.host, this.gameProfile);
+        try {
+            this.object.addGameProfile(this.host, this.gameProfile);
 
             this.object.getExtensionMessenger().sendNotice(this.receiver,
                     String.format("Game profile=[%s] has been set successfully", this.gameProfile));
-        } else {
-            String gameProfile = Object.DatabaseManager.getGameProfileForHost(this.host);
-
-            this.object.getExtensionMessenger().sendNotice(this.receiver,
-                    String.format("Host=[%s] already has associated account=[%s]", this.host, gameProfile));
+        } catch (PlayerError e) {
+            this.object.getExtensionMessenger().sendNotice(this.receiver, e.getMessage());
         }
     }
 }

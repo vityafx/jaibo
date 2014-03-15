@@ -99,6 +99,10 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         this.messageListeners.remove(listener);
     }
 
+    public void deleteAllMessageListeners() {
+        this.messageListeners.clear();
+    }
+
     public void addEventListener(EventListener listener) {
         if(!this.eventListeners.contains(listener)) {
             this.eventListeners.add(listener);
@@ -109,6 +113,10 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         this.eventListeners.remove(listener);
     }
 
+    public void deleteAllEventListeners() {
+        this.eventListeners.clear();
+    }
+
     public void addServerListener(ServerListener listener) {
         if(!this.serverListeners.contains(listener)) {
             this.serverListeners.add(listener);
@@ -117,6 +125,10 @@ public abstract class Extension extends Thread implements ConfigurationListener 
 
     public void removeServerListener(ServerListener listener) {
         this.serverListeners.remove(listener);
+    }
+
+    public void deleteAllServerListeners() {
+        this.serverListeners.clear();
     }
 
     public ExtensionMessenger getExtensionMessenger() {

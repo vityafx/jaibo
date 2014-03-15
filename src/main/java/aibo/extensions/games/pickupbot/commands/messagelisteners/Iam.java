@@ -2,6 +2,7 @@ package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
 import aibo.extensions.Command;
 import aibo.extensions.games.pickupbot.Object;
+import aibo.extensions.games.pickupbot.errors.PlayerError;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
@@ -96,12 +97,12 @@ public final class Iam extends Command implements MessageListener, Configuration
             this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(),
                     "Association already exists for this game profile. Ask admin to add a new one.");
         } else {
-            if (!Object.DatabaseManager.isGameProfileExistsForHost(userAndHost)) {
-                Object.DatabaseManager.addGameProfile(userAndHost, this.gameProfile);
+            try {
+                this.object.addGameProfile(userAndHost, this.gameProfile);
 
                 this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(),
-                        "Game profile has been set successfully");
-            } else {
+                        String.format("Game profile=[%s] has been set successfully", this.gameProfile));
+            } catch (PlayerError e) {
                 String gameProfile = Object.DatabaseManager.getGameProfileForHost(userAndHost);
 
                 this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(),

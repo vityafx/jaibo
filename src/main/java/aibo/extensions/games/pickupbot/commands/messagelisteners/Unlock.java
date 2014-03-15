@@ -62,10 +62,7 @@ public final class Unlock extends Command implements MessageListener, Configurat
         if (message.getMessageType() == IrcMessageType.ChannelMessage) {
             this.receiver = message.getNick();
 
-            if (!Object.Configuration.getBoolean("player.game_profile_required")) {
-                this.object.getExtensionMessenger().sendNotice(this.receiver,
-                        "You have to enable game profile feature first");
-            } else if (this.check(message.getMessage().trim())) {
+            if (this.check(message.getMessage().trim())) {
                 String receiverHost = IrcUser.tryParse(message.getNick() + "!" + message.getHost()).getHost();
 
                 if (this.object.isAdminHost(receiverHost)) {

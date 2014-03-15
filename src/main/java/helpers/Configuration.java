@@ -39,6 +39,8 @@ public final class Configuration {
         this();
 
         this.loadFromFile(configurationFileName);
+
+        this.notifyListeners();
     }
 
 
@@ -50,24 +52,22 @@ public final class Configuration {
 
             File jarPath = new File(Configuration.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             String propertiesPath = jarPath.getParentFile().getAbsolutePath();
-            InputStream settingsFileInputStream = new FileInputStream(propertiesPath + "/settings/" + this.configurationFileName);
+            InputStream settingsFileInputStream = new FileInputStream(propertiesPath +
+                    "/settings/" + this.configurationFileName);
 
             try {
                 properties.load(settingsFileInputStream);
 
-                this.configurationHashMap = new HashMap<String, String>();
-
-                for (final String name: properties.stringPropertyNames())
-                    this.configurationHashMap.put(name, properties.getProperty(name));
-
-                this.notifyListeners();
-
-
                 settingsFileInputStream.close();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            this.configurationHashMap = new HashMap<String, String>();
+
+            for (final String name: properties.stringPropertyNames())
+                this.configurationHashMap.put(name, properties.getProperty(name));
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -80,6 +80,8 @@ public final class Configuration {
         for (Configuration configuration : Configuration._Configurations) {
             configuration.loadFromFile(configuration.configurationFileName);
         }
+
+        this.notifyListeners();
     }
 
     public ArrayList<ConfigurationListener> getListeners() {
