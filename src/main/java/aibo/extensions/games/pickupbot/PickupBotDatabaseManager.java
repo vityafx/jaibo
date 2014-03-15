@@ -5,6 +5,7 @@ import database.SQLiteProvider;
 import javax.sql.rowset.CachedRowSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 /**
@@ -26,6 +27,8 @@ import java.util.GregorianCalendar;
  */
 
 public final class PickupBotDatabaseManager {
+    private final ArrayList<PickupBotDatabaseManagerListener> listeners = new ArrayList<PickupBotDatabaseManagerListener>();
+
     private String databaseFileName = Object.Configuration.get("database");
 
     private String lockedPlayersTableName = "locked_players";
@@ -40,10 +43,35 @@ public final class PickupBotDatabaseManager {
         this.syncTables();
     }
 
+    public PickupBotDatabaseManager(PickupBotDatabaseManagerListener listener) {
+        this();
+
+        this.addListener(listener);
+    }
+
     public void syncTables() {
         this.createLockedPlayersTable();
         this.createGameProfilesTable();
     }
+
+    public void addListener(PickupBotDatabaseManagerListener listener) {
+        if (!this.listeners.contains(listener)) {
+            this.listeners.add(listener);
+        }
+    }
+
+    public void removeListener(PickupBotDatabaseManagerListener listener) {
+        if (this.listeners.contains(listener)) {
+            this.listeners.remove(listener);
+        }
+    }
+
+    private void notifyListenersProfileChanged(String oldProfile, String newProfile) {
+        for (PickupBotDatabaseManagerListener listener : this.listeners) {
+            listener.playerProfileChanged(oldProfile, newProfile);
+        }
+    }
+
     private void createLockedPlayersTable() {
         String query = String.format("CREATE TABLE IF NOT EXISTS %s(%s text, %s integer)",
                 this.lockedPlayersTableName, this.lockedPlayersGameProfileField, this.lockedPlayersUnlockDateField);
@@ -332,6 +360,8 @@ public final class PickupBotDatabaseManager {
                 preparedStatement.setString(2, oldGameProfile);
 
                 SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
+
+                this.notifyListenersProfileChanged(oldGameProfile, newGameProfile);
             } catch (SQLException e) {
                 System.out.println(String.format("Failed to change game profile (game_profile=' %s ' to ' %s '): %s",
                         oldGameProfile, newGameProfile, e.getMessage()));

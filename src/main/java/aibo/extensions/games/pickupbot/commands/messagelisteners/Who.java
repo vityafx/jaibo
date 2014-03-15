@@ -70,7 +70,7 @@ public final class Who extends Command implements MessageListener, Configuration
     public boolean check(String message) {
         boolean checkPassed = false;
 
-        if (super.checkExact(message)) {
+        if (super.check(message)) {
             for (String name : this.getNames()) {
                 Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
 
@@ -80,11 +80,15 @@ public final class Who extends Command implements MessageListener, Configuration
                 if (matcher.matches()) {
                     this.gameType = matcher.group(1);
 
+                    checkPassed = true;
+
                     break;
                 }
             }
 
-            checkPassed = true;
+            if (!checkPassed) {
+                checkPassed = super.checkExact(message);
+            }
         }
 
         return checkPassed;

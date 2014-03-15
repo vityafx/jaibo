@@ -11,6 +11,7 @@ import helpers.ConfigurationListener;
 import ircnetwork.IrcMessageTextModifier;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * PickupBot gathers people to play games
@@ -69,6 +70,7 @@ public final class Object extends Extension implements GameListener, Configurati
         this.addMessageListener(new Rules(this));
         this.addMessageListener(new Lock(this));
         this.addMessageListener(new Unlock(this));
+        this.addMessageListener(new GameTypes(this));
 
         this.addEventListener(new KickPartQuit(this));
         this.addEventListener(new NickChange(this));
@@ -250,6 +252,22 @@ public final class Object extends Extension implements GameListener, Configurati
         }
 
         this.setTopic(topicBuilder.toString());
+    }
+
+    public String getGameTypesAsString(String separator) {
+        StringBuilder gameTypeStringBuilder = new StringBuilder();
+
+        for(Iterator iterator = this.games.iterator(); iterator.hasNext();) {
+            Game game= (Game)iterator.next();
+
+            if (!iterator.hasNext())
+                separator = "";
+
+            gameTypeStringBuilder.append(game.getGameType());
+            gameTypeStringBuilder.append(separator);
+        }
+
+        return gameTypeStringBuilder.toString();
     }
 
     public void substitutePlayer(Player oldPlayer, Player newPlayer) {

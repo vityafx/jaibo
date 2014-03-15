@@ -25,21 +25,27 @@ import helpers.GregorianCalendarHelper;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Player {
+public class Player implements PickupBotDatabaseManagerListener {
     protected String nick;
     protected String host;
     protected String gameProfile;
 
     public Player() {
-
+        if (Object.Configuration.getBoolean("player.game_profile_required")) {
+            Object.DatabaseManager.addListener(this);
+        }
     }
 
     public Player(String nick, String host) {
+        this();
+
         this.setNick(nick);
         this.setHost(host);
     }
 
     public Player(String nick, String host, String gameProfile) {
+        this();
+
         this.setNick(nick);
         this.host = host;
         this.gameProfile = gameProfile;
@@ -120,5 +126,12 @@ public class Player {
         }
 
         return false;
+    }
+
+    @Override
+    public void playerProfileChanged(String oldProfile, String newProfile) {
+        if (this.gameProfile != null && !this.gameProfile.isEmpty() && this.gameProfile.equalsIgnoreCase(oldProfile)) {
+            this.gameProfile = newProfile;
+        }
     }
 }

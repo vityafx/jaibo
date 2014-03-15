@@ -15,6 +15,7 @@ Code is licensed to GPL v3. See 'LICENSE' file.
 ## Compile
 * Maven 3 (jaibo-0.1), Gradle (jaibo-0.2+)
 * JUnit 3.8.1
+* SQLite 3.7.2
 
 # Available extensions at this moment
 1. Game Pickup Bot
