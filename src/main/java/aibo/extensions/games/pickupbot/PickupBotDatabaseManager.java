@@ -39,6 +39,10 @@ public final class PickupBotDatabaseManager {
     private String gameProfilesHostFieldName = "host";
     private String gameProfilesGameProfileFieldName = "game_profile";
 
+    private String tournamentsTableName = "tournaments";
+    private String tournamentsGameProfileFieldName = "game_profile";
+    private String tournamentsTournamentFieldName = "tournament";
+
     public PickupBotDatabaseManager() {
         this.syncTables();
     }
@@ -52,6 +56,7 @@ public final class PickupBotDatabaseManager {
     public void syncTables() {
         this.createLockedPlayersTable();
         this.createGameProfilesTable();
+        this.createTournamentsTable();
     }
 
     public void addListener(PickupBotDatabaseManagerListener listener) {
@@ -91,6 +96,99 @@ public final class PickupBotDatabaseManager {
             SQLiteProvider.executeStatementWithDatabase(databaseFileName, query, false);
         } catch (SQLException e) {
             System.out.println("Failed to create game profiles table: " + e.getMessage());
+        }
+    }
+
+    private void createTournamentsTable() {
+        String query = String.format("CREATE TABLE IF NOT EXISTS %s(%s text, %s text)",
+                this.tournamentsTableName, this.tournamentsGameProfileFieldName, this.tournamentsTournamentFieldName);
+
+        try {
+            SQLiteProvider.executeStatementWithDatabase(databaseFileName, query, false);
+        } catch (SQLException e) {
+            System.out.println("Failed to create tournaments table: " + e.getMessage());
+        }
+    }
+
+    public boolean isPlayerRegisteredInTournament(String tournament, String gameProfile) {
+        if (gameProfile != null && !gameProfile.isEmpty()) {
+            String query = String.format("SELECT COUNT(1) as registeredPlayersCount FROM %s WHERE %s=?",
+                    this.tournamentsTableName, this.tournamentsGameProfileFieldName);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
+
+            try {
+                preparedStatement.setString(1, gameProfile);
+
+                CachedRowSet rowSet = SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName,
+                        preparedStatement, true);
+
+                if (rowSet != null) {
+                    if (rowSet.next()) {
+                        return rowSet.getInt("registeredPlayersCount") == 1;
+                    }
+                }
+            } catch (SQLException e) {
+                System.out.println("Failed to fetch locked players list: " + e.getMessage());
+            }
+        }
+
+        return false;
+    }
+
+    public void deleteTournament(String tournament) {
+        if (tournament != null && !tournament.isEmpty()) {
+            String query = String.format("DELETE FROM %s WHERE %s=?", this.tournamentsTableName,
+                    this.tournamentsTournamentFieldName);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
+
+            try {
+                preparedStatement.setString(1, tournament);
+
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
+            } catch (SQLException e) {
+                System.out.println(String.format("Failed to delete tournament (tournament=%s): %s",
+                        tournament, e.getMessage()));
+            }
+        }
+    }
+
+    public void removePlayerFromTournament(String tournament, String gameProfile) {
+        if (gameProfile != null && !gameProfile.isEmpty()) {
+            String query = String.format("DELETE FROM %s WHERE %s=? and %s=?", this.tournamentsTableName,
+                    this.lockedPlayersGameProfileField, this.tournamentsTournamentFieldName);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
+
+            try {
+                preparedStatement.setString(1, gameProfile);
+                preparedStatement.setString(2, tournament);
+
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
+            } catch (SQLException e) {
+                System.out.println(String.format("Failed to remove player from tournament (game_profile=%s): %s",
+                        gameProfile, e.getMessage()));
+            }
+        }
+    }
+
+    public void addPlayerInTournament(String tournament, String gameProfile) {
+        if (gameProfile != null && !gameProfile.isEmpty()) {
+            String query = String.format("INSERT INTO %s(%s, %s) VALUES(?, ?)", this.tournamentsTableName,
+                    this.lockedPlayersGameProfileField, this.tournamentsTournamentFieldName);
+            PreparedStatement preparedStatement = SQLiteProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
+
+            try {
+                preparedStatement.setString(1, gameProfile);
+                preparedStatement.setString(2, tournament);
+
+                SQLiteProvider.executePreparedStatementWithDatabase(databaseFileName, preparedStatement, false);
+            } catch (SQLException e) {
+                System.out.println(String.format("Failed to add player in tournament (game_profile=%s): %s",
+                        gameProfile, e.getMessage()));
+            }
         }
     }
 

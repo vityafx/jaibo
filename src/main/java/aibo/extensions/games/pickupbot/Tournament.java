@@ -37,19 +37,11 @@ public final class Tournament extends Game {
 
     @Override
     public void addPlayer(Player player) {
-        if (!this.isPlayerAddedByHost(player)) {
-            this.checkOverflow();
+        if (!Object.DatabaseManager.isPlayerRegisteredInTournament(player)) {
 
-            this.playerList.add(player);
+            Object.DatabaseManager.addPlayerInTournament(this.getGameType(), player.gameProfile);
         } else {
             throw new GameError(String.format("You have been already added to play %s tournament",
-                    IrcMessageTextModifier.makeBold(this.getGameType())));
-        }
-    }
-
-    private void checkOverflow() {
-        if (remainingPlayersCount() == 0) {
-            throw new GameError(String.format("Maximum players registered to play %s tournament ",
                     IrcMessageTextModifier.makeBold(this.getGameType())));
         }
     }
