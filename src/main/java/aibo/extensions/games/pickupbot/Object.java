@@ -6,6 +6,7 @@ import aibo.extensions.games.pickupbot.commands.eventlisteners.NickChange;
 import aibo.extensions.games.pickupbot.commands.messagelisteners.*;
 import aibo.extensions.games.pickupbot.errors.GameError;
 import aibo.extensions.games.pickupbot.errors.PickupBotError;
+import aibo.extensions.games.pickupbot.errors.PlayerError;
 import helpers.Configuration;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessageTextModifier;
@@ -54,6 +55,9 @@ public final class Object extends Extension implements GameListener, Configurati
 
     @Override
     public void setCommands() {
+        this.deleteAllMessageListeners();
+        this.deleteAllEventListeners();
+
         this.addMessageListener(new Add(this));
         this.addMessageListener(new Promote(this));
         this.addMessageListener(new Remove(this));
@@ -61,16 +65,19 @@ public final class Object extends Extension implements GameListener, Configurati
         this.addMessageListener(new Pull(this));
         this.addMessageListener(new Lastgame(this));
         this.addMessageListener(new Reset(this));
-        this.addMessageListener(new Iam(this));
-        this.addMessageListener(new SetGameProfileBinding(this));
-        this.addMessageListener(new RemoveAllGameProfileBindings(this));
-        this.addMessageListener(new RemoveGameProfileBinding(this));
-        this.addMessageListener(new ChangeGameProfile(this));
-        this.addMessageListener(new GetGameProfile(this));
-        this.addMessageListener(new Rules(this));
-        this.addMessageListener(new Lock(this));
-        this.addMessageListener(new Unlock(this));
         this.addMessageListener(new GameTypes(this));
+
+        if (Configuration.getBoolean("player.game_profile_required")) {
+            this.addMessageListener(new Iam(this));
+            this.addMessageListener(new SetGameProfileBinding(this));
+            this.addMessageListener(new RemoveAllGameProfileBindings(this));
+            this.addMessageListener(new RemoveGameProfileBinding(this));
+            this.addMessageListener(new ChangeGameProfile(this));
+            this.addMessageListener(new GetGameProfile(this));
+            this.addMessageListener(new Rules(this));
+            this.addMessageListener(new Lock(this));
+            this.addMessageListener(new Unlock(this));
+        }
 
         this.addEventListener(new KickPartQuit(this));
         this.addEventListener(new NickChange(this));
@@ -95,6 +102,7 @@ public final class Object extends Extension implements GameListener, Configurati
         super.configurationChanged();
 
         this.setGamesData();
+        this.setCommands();
     }
 
     private void setGamesData() {
@@ -327,6 +335,58 @@ public final class Object extends Extension implements GameListener, Configurati
         }
 
         this.updateTopic();
+    }
+
+    public void addGameProfile(String host, String gameProfile) {
+        if (!Object.DatabaseManager.isGameProfileExistsForHost(host)) {
+            Object.DatabaseManager.addGameProfile(host, gameProfile);
+
+        } else {
+            String boundGameProfile = Object.DatabaseManager.getGameProfileForHost(host);
+
+            throw new PlayerError(String.format("Host=[%s] already has associated account=[%s]", host, boundGameProfile));
+        }
+    }
+
+    public String getGameProfile(String host) {
+        if (Object.DatabaseManager.isGameProfileExistsForHost(host)) {
+            return Object.DatabaseManager.getGameProfileForHost(host);
+        } else {
+            throw new PlayerError(String.format("No associated game profile records exists for host=[%s]", host));
+        }
+    }
+
+    public void changeGameProfile(String oldGameProfile, String newGameProfile) {
+        if (Object.DatabaseManager.isGameProfileExists(oldGameProfile)) {
+            Object.DatabaseManager.changeGameProfile(oldGameProfile, newGameProfile);
+        } else {
+            throw new PlayerError(String.format("Game profile=[%s] does not exists", oldGameProfile));
+        }
+    }
+
+    public void removeGameProfile(String host, String gameProfile) {
+        if (Object.DatabaseManager.isGameProfileExistsForHost(host)
+                && Object.DatabaseManager.getGameProfileForHost(host).equals(gameProfile)) {
+
+            Object.DatabaseManager.removeHostBindingForGameProfile(host, gameProfile);
+
+            this.removePlayerFromEachGameType(new Player(null, null, gameProfile), true);
+        } else {
+            throw new PlayerError(String.format("No associated game profile records exists for host=[%s]" +
+                    " and game profile=[%s]", host, gameProfile));
+        }
+    }
+
+    public void removeAllGameProfilesForHost(String host) {
+        if (Object.DatabaseManager.isGameProfileExistsForHost(host)) {
+            String gameProfile = Object.DatabaseManager.getGameProfileForHost(host);
+
+            Object.DatabaseManager.removeAllHostBindingsForGameProfiles(host);
+
+            this.removePlayerFromEachGameType(new Player(null, null, gameProfile), true);
+        } else {
+            throw new PlayerError(String.format("No associated game profile records exists for host=[%s]", host));
+        }
     }
 
     @Override

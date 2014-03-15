@@ -101,15 +101,6 @@ public final class ExtensionMessenger implements ExtensionMessengerInterface {
         }
     }
 
-    @Override
-    public void sendExtensionMessage(String extensionName, ExtensionMessage message) {
-        Extension extension = this.manager.getCurrentlyRunningExtensionByName(extensionName);
-
-        if (extension != null) {
-            extension.processTask(message);
-        }
-    }
-
     public IrcCommandSender getCommandSender() {
         return this.sender.getCommandSender();
     }

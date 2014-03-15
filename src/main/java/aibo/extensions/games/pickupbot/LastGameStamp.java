@@ -48,7 +48,7 @@ public final class LastGameStamp {
                 this.lastGameDate);
 
         if (difference.length() > 0) {
-            difference += "ago";
+            difference += " ago";
         } else {
             difference = "Just a moment ago";
         }

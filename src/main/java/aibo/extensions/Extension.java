@@ -85,10 +85,6 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         }
     }
 
-    public void processTask(ExtensionMessage extensionMessage) {
-        // currently a placeholder
-    }
-
     public void addMessageListener(MessageListener listener) {
         if(!this.messageListeners.contains(listener)) {
             this.messageListeners.add(listener);
@@ -97,6 +93,10 @@ public abstract class Extension extends Thread implements ConfigurationListener 
 
     public void removeMessageListener(MessageListener listener) {
         this.messageListeners.remove(listener);
+    }
+
+    public void deleteAllMessageListeners() {
+        this.messageListeners.clear();
     }
 
     public void addEventListener(EventListener listener) {
@@ -109,6 +109,10 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         this.eventListeners.remove(listener);
     }
 
+    public void deleteAllEventListeners() {
+        this.eventListeners.clear();
+    }
+
     public void addServerListener(ServerListener listener) {
         if(!this.serverListeners.contains(listener)) {
             this.serverListeners.add(listener);
@@ -117,6 +121,10 @@ public abstract class Extension extends Thread implements ConfigurationListener 
 
     public void removeServerListener(ServerListener listener) {
         this.serverListeners.remove(listener);
+    }
+
+    public void deleteAllServerListeners() {
+        this.serverListeners.clear();
     }
 
     public ExtensionMessenger getExtensionMessenger() {
@@ -162,11 +170,13 @@ public abstract class Extension extends Thread implements ConfigurationListener 
 
     @Override
     public boolean equals(Object obj) {
-        if (this != obj) {
-            Extension extensionObject = (Extension)obj;
+        if (getClass() == obj.getClass()) {
+            if (this != obj) {
+                Extension extensionObject = (Extension)obj;
 
-            if (extensionObject != null) {
-                return extensionObject.getExtensionName().equalsIgnoreCase(this.getExtensionName());
+                if (extensionObject != null) {
+                    return extensionObject.getExtensionName().equalsIgnoreCase(this.getExtensionName());
+                }
             }
         }
 

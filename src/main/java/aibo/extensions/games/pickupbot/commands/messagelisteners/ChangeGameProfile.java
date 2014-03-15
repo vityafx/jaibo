@@ -2,6 +2,7 @@ package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
 import aibo.extensions.Command;
 import aibo.extensions.games.pickupbot.Object;
+import aibo.extensions.games.pickupbot.errors.PlayerError;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
@@ -96,15 +97,14 @@ public final class ChangeGameProfile extends Command implements MessageListener,
 
     @Override
     protected void action() {
-        if (Object.DatabaseManager.isGameProfileExists(this.oldGameProfile)) {
-            Object.DatabaseManager.changeGameProfile(this.oldGameProfile, this.newGameProfile);
+        try {
+            this.object.changeGameProfile(this.oldGameProfile, this.newGameProfile);
 
             this.object.getExtensionMessenger().sendNotice(this.receiver,
                     String.format("Game profile has been changed from [%s] to [%s]",
                             this.oldGameProfile, this.newGameProfile));
-        } else {
-            this.object.getExtensionMessenger().sendNotice(this.receiver,
-                    String.format("Game profile=[%s] does not exists", this.oldGameProfile));
+        } catch (PlayerError e) {
+            this.object.getExtensionMessenger().sendNotice(this.receiver, e.getMessage());
         }
     }
 }

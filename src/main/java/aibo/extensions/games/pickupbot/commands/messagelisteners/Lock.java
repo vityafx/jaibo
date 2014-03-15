@@ -39,7 +39,7 @@ public final class Lock extends Command implements MessageListener, Configuratio
 
     private String receiver;
     private String gameProfile;
-    private GregorianCalendar unlockDate;
+    private String lockDuration;
 
     public Lock() {
         this.configurationChanged();
@@ -66,10 +66,7 @@ public final class Lock extends Command implements MessageListener, Configuratio
         if (message.getMessageType() == IrcMessageType.ChannelMessage) {
             this.receiver = message.getNick();
 
-            if (!Object.Configuration.getBoolean("player.game_profile_required")) {
-                this.object.getExtensionMessenger().sendNotice(this.receiver,
-                        "You have to enable game profile feature first");
-            } else if (this.check(message.getMessage().trim())) {
+            if (this.check(message.getMessage().trim())) {
                 String receiverHost = IrcUser.tryParse(message.getNick() + "!" + message.getHost()).getHost();
 
                 if (this.object.isAdminHost(receiverHost)) {
@@ -91,9 +88,9 @@ public final class Lock extends Command implements MessageListener, Configuratio
 
             if (matcher.matches()) {
                 this.gameProfile = matcher.group(1);
-                this.unlockDate = GregorianCalendarHelper.createFromCurrentDateByAppendingTimeString(matcher.group(2));
+                this.lockDuration = matcher.group(2);
 
-                if (this.unlockDate != null) {
+                if (this.lockDuration != null) {
                     checkPassed = true;
 
                     break;
@@ -121,11 +118,12 @@ public final class Lock extends Command implements MessageListener, Configuratio
             } else {
                 this.object.removePlayerFromEachGameType(new Player(null, null, this.gameProfile), true);
 
-                long unlockDateInMillis = this.unlockDate.getTimeInMillis();
+                GregorianCalendar unlockDate = GregorianCalendarHelper.createFromCurrentDateByAppendingTimeString(this.lockDuration);
+                long unlockDateInMillis = unlockDate.getTimeInMillis();
 
                 Object.DatabaseManager.addLockedPlayer(this.gameProfile, unlockDateInMillis);
 
-                String timeDifference = GregorianCalendarHelper.GetHumanReadableDateAsString(this.unlockDate.getTimeInMillis());
+                String timeDifference = GregorianCalendarHelper.GetHumanReadableDateFromString(this.lockDuration);
 
                 this.object.getExtensionMessenger().sendNotice(this.receiver,
                         String.format("Player with game profile=[%s] has been locked for [%s]", this.gameProfile,

@@ -91,6 +91,34 @@ public final class GregorianCalendarHelper {
             lastGameStringBuilder.append(String.format("%d seconds ", elapsedSeconds));
         }
 
-        return lastGameStringBuilder.toString();
+        return lastGameStringBuilder.toString().trim();
+    }
+
+    public static String GetHumanReadableDateFromString(String dateString) {
+        String resultString = null;
+
+        if (dateString != null && !dateString.isEmpty()) {
+            Pattern p = Pattern.compile("^(\\d+)([mhdw]{1})$", Pattern.CASE_INSENSITIVE);
+
+            CharSequence sequence = dateString.trim().subSequence(0, dateString.length());
+            Matcher matcher = p.matcher(sequence);
+
+            if (matcher.matches()) {
+                int amount = Integer.parseInt(matcher.group(1));
+                String typeOfAmount = matcher.group(2);
+
+                if (typeOfAmount.equalsIgnoreCase("m")) {
+                    resultString = String.format("%d minutes", amount);
+                } else if (typeOfAmount.equalsIgnoreCase("h")) {
+                    resultString = String.format("%d hours", amount);
+                } else if (typeOfAmount.equalsIgnoreCase("d")) {
+                    resultString = String.format("%d days", amount);
+                } else if (typeOfAmount.equalsIgnoreCase("w")) {
+                    resultString = String.format("%d weeks", amount);
+                }
+            }
+        }
+
+        return resultString;
     }
 }

@@ -2,7 +2,7 @@ package aibo.extensions.games.pickupbot.commands.messagelisteners;
 
 import aibo.extensions.Command;
 import aibo.extensions.games.pickupbot.Object;
-import aibo.extensions.games.pickupbot.Player;
+import aibo.extensions.games.pickupbot.errors.PlayerError;
 import helpers.ConfigurationListener;
 import ircnetwork.IrcMessage;
 import ircnetwork.IrcMessageType;
@@ -97,20 +97,14 @@ public final class RemoveGameProfileBinding extends Command implements MessageLi
 
     @Override
     protected void action() {
-        if (Object.DatabaseManager.isGameProfileExistsForHost(this.host)
-                && Object.DatabaseManager.getGameProfileForHost(host).equals(this.gameProfile)) {
-
-            Object.DatabaseManager.removeHostBindingForGameProfile(this.host, this.gameProfile);
-
-            this.object.removePlayerFromEachGameType(new Player(null, null, gameProfile), true);
+        try {
+            this.object.removeGameProfile(this.host, this.gameProfile);
 
             this.object.getExtensionMessenger().sendNotice(this.receiver,
                     String.format("Binding with host=[%s] and game profile=[%s] has been removed successfully",
                             this.host, this.gameProfile));
-        } else {
-            this.object.getExtensionMessenger().sendNotice(this.receiver,
-                    String.format("No associated game profile records exists for host=[%s] and game profile=[%s]",
-                            this.host, this.gameProfile));
+        } catch (PlayerError e) {
+            this.object.getExtensionMessenger().sendNotice(this.receiver, e.getMessage());
         }
     }
 }
