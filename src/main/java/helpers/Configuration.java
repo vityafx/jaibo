@@ -84,10 +84,6 @@ public final class Configuration {
         this.notifyListeners();
     }
 
-    public ArrayList<ConfigurationListener> getListeners() {
-        return listeners;
-    }
-
     public void addListener(ConfigurationListener listener) {
         this.listeners.add(listener);
     }
@@ -102,14 +98,6 @@ public final class Configuration {
         for (ConfigurationListener listener : this.listeners) {
             listener.configurationChanged();
         }
-    }
-
-    public String getConfigurationFileName() {
-        return this.configurationFileName;
-    }
-
-    public HashMap<String, String> getConfigurationHashMap() {
-        return configurationHashMap;
     }
 
     public String get(String key) {

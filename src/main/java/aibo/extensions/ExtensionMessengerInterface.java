@@ -21,8 +21,6 @@ import ircnetwork.IrcMessageSenderInterface;
  */
 
 public interface ExtensionMessengerInterface extends IrcMessageSenderInterface {
-    public void sendExtensionMessage(String extensionName, ExtensionMessage message);
-
     public void setTopicForExtension(String[] channels, String extensionName, String topic);
 
     public void setMessageOfTheDay(String[] channels, String messageOfTheDay);

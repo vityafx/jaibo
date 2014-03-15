@@ -85,10 +85,6 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         }
     }
 
-    public void processTask(ExtensionMessage extensionMessage) {
-        // currently a placeholder
-    }
-
     public void addMessageListener(MessageListener listener) {
         if(!this.messageListeners.contains(listener)) {
             this.messageListeners.add(listener);
@@ -174,11 +170,13 @@ public abstract class Extension extends Thread implements ConfigurationListener 
 
     @Override
     public boolean equals(Object obj) {
-        if (this != obj) {
-            Extension extensionObject = (Extension)obj;
+        if (getClass() == obj.getClass()) {
+            if (this != obj) {
+                Extension extensionObject = (Extension)obj;
 
-            if (extensionObject != null) {
-                return extensionObject.getExtensionName().equalsIgnoreCase(this.getExtensionName());
+                if (extensionObject != null) {
+                    return extensionObject.getExtensionName().equalsIgnoreCase(this.getExtensionName());
+                }
             }
         }
 
