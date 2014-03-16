@@ -46,6 +46,10 @@ public final class Object extends Extension {
     }
 
     public void setAdvertisement(String advertisementText, short timePeriod) {
+        if (this.advertisement != null) {
+            throw new AdvertisementError("Advertisement is already set");
+        }
+
         this.advertisement = new Advertisement(advertisementText, timePeriod, this);
     }
 
