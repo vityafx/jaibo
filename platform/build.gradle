@@ -31,7 +31,7 @@ task copyTask(type: Copy) {
 
     ['target/classes/settings/', 'target/libs/settings/'].each { dest ->
         copy {
-            with from ('src/main/java/settings/') {
+            with from ('settings/') {
                 include '*.ini'
             }
             into dest
