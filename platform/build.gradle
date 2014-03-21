@@ -38,7 +38,7 @@ task copyTask(type: Copy) {
         }
     }
 
-    from (rootProject.rootDir + "..") {
+    from ('../') {
         include 'README.md'
         include 'LICENSE'
         include 'CHANGELOG'
