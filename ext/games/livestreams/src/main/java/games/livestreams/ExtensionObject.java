@@ -63,20 +63,22 @@ public final class ExtensionObject extends Extension implements ConfigurationLis
         this.providers.clear();
 
         for (String providerName : providerNames) {
-            try {
-                Class<?> providerClass = Class.forName(this.getExtensionName() +
-                        ".providers." +
-                        providerName);
-
+            if (!providerName.isEmpty()) {
                 try {
-                    Provider provider = (Provider)providerClass.newInstance();
+                    Class<?> providerClass = Class.forName(this.getExtensionName() +
+                            ".providers." +
+                            providerName);
 
-                    this.providers.add(provider);
-                } catch (Exception e) {
-                    throw new ProviderError(String.format("Can't create an instance of \"%s\" provider", providerName));
+                    try {
+                        Provider provider = (Provider) providerClass.newInstance();
+
+                        this.providers.add(provider);
+                    } catch (Exception e) {
+                        throw new ProviderError(String.format("Can't create an instance of \"%s\" provider", providerName));
+                    }
+                } catch (ClassNotFoundException e) {
+                    throw new ProviderError(String.format("No such provider \"%s\"", providerName));
                 }
-            } catch (ClassNotFoundException e) {
-                throw new ProviderError(String.format("No such provider \"%s\"", providerName));
             }
         }
     }
