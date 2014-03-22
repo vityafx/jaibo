@@ -2,9 +2,9 @@ package aibo.systemextensions;
 
 
 import aibo.ExtensionManager;
+import aibo.ircnetwork.IrcMessageSender;
 import org.jaibo.api.ExtensionMessengerInterface;
 import org.jaibo.api.IrcCommandSenderInterface;
-import aibo.ircnetwork.IrcMessageSender;
 
 import java.util.HashMap;
 
