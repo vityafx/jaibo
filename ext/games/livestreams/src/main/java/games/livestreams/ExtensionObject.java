@@ -64,8 +64,7 @@ public final class ExtensionObject extends Extension implements ConfigurationLis
 
         for (String providerName : providerNames) {
             try {
-                Class<?> providerClass = Class.forName("aibo.extensions." +
-                        this.getExtensionName() +
+                Class<?> providerClass = Class.forName(this.getExtensionName() +
                         ".providers." +
                         providerName);
 
