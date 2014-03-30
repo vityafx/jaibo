@@ -46,7 +46,7 @@ task copyDependenciesToTarget(type: Copy) {
 
 
 compileJava.dependsOn(copyTask)
-build.dependsOn(copyDependenciesToTarget)
+//build.dependsOn(copyDependenciesToTarget)
 
 jar {
     archiveName = "$project.group" + '.jar'

@@ -1,7 +1,7 @@
 package aibo.ircnetwork;
 
-import aibo.networkconnection.NetworkConnection;
-import org.jaibo.api.NetworkConnectionListener;
+import aibo.networkconnection.AIBONetworkConnection;
+import aibo.networkconnection.AIBONetworkConnectionListener;
 import org.jaibo.api.IrcChannel;
 import org.jaibo.api.IrcNetworkListener;
 
@@ -26,7 +26,7 @@ import java.util.Arrays;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class IrcNetwork implements NetworkConnectionListener {
+public final class IrcNetwork implements AIBONetworkConnectionListener {
     private ArrayList<IrcChannel> channels = new ArrayList<IrcChannel>();
     private ArrayList<String> servers = new ArrayList<String>();
     private static int CurrentServerIndex = 0;
@@ -34,7 +34,7 @@ public final class IrcNetwork implements NetworkConnectionListener {
     private IrcNetworkListener ircNetworkListener;
 
     private IrcMessageSender sender;
-    private NetworkConnection connection = NetworkConnection.sharedInstance;
+    private AIBONetworkConnection connection;
 
 
     public IrcNetwork(String[] servers, int port, IrcNetworkListener ircNetworkListener) {
@@ -44,9 +44,9 @@ public final class IrcNetwork implements NetworkConnectionListener {
 
         this.ircNetworkListener = ircNetworkListener;
 
+        this.connection = new AIBONetworkConnection(this.getServer(), port);
+
         this.connection.addListener(this);
-        this.connection.setAddress(this.getServer());
-        this.connection.setPort(port);
     }
 
     public void connect() {
@@ -58,8 +58,8 @@ public final class IrcNetwork implements NetworkConnectionListener {
     }
 
     @Override
-    public void dataReceived(String data) {
-        this.ircNetworkListener.ircMessageReceived(data.replace("\r\n",""));
+    public void ircDataReceived(String ircData) {
+        this.ircNetworkListener.ircMessageReceived(ircData);
     }
 
     private void setServers(String[] servers) {

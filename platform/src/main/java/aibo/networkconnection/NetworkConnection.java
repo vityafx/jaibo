@@ -1,6 +1,5 @@
 package aibo.networkconnection;
 
-import aibo.AIBO;
 import org.jaibo.api.NetworkConnectionInterface;
 import org.jaibo.api.helpers.ConfigurationListener;
 import org.jaibo.api.NetworkConnectionListener;
@@ -31,11 +30,8 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class NetworkConnection implements ConfigurationListener, NetworkConnectionInterface {
+public class NetworkConnection implements NetworkConnectionInterface {
     private boolean isDebug;
-
-    public static final NetworkConnection sharedInstance = new NetworkConnection();
-
     private int port;
     private String address;
 
@@ -44,10 +40,7 @@ public class NetworkConnection implements ConfigurationListener, NetworkConnecti
     private ArrayList<NetworkConnectionListener> listeners = new ArrayList<NetworkConnectionListener>();
 
 
-    private NetworkConnection() {
-        AIBO.Configuration.addListener(this);
-
-        this.configurationChanged();
+    public NetworkConnection() {
     }
 
 
@@ -57,6 +50,14 @@ public class NetworkConnection implements ConfigurationListener, NetworkConnecti
 
     public String getAddress() {
         return this.address;
+    }
+
+    public boolean isDebug() {
+        return isDebug;
+    }
+
+    public void setDebug(boolean isDebug) {
+        this.isDebug = isDebug;
     }
 
     public void setPort(int port) {
@@ -109,6 +110,7 @@ public class NetworkConnection implements ConfigurationListener, NetworkConnecti
         }
     }
 
+    @Override
     public void send(String data) {
         try {
             PrintWriter writer = new PrintWriter(this.socket.getOutputStream(), true);
@@ -176,8 +178,4 @@ public class NetworkConnection implements ConfigurationListener, NetworkConnecti
         }
     }
 
-    @Override
-    public void configurationChanged() {
-        this.isDebug = AIBO.Configuration.getBoolean("Network.debug");
-    }
 }

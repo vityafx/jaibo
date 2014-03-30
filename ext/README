@@ -4,3 +4,9 @@ Extensions directory divided into categories - games, life, other.
 Games is goodly explain by it's name.
 Life - this category should contain extensions that helps people in life. Weather forecast, news etc.
 Other - cvs-hooks, link handlers, polling bots, i.e. non-games and non-life extensions.
+
+Each extension has a dependency - jaibo-api.jar. With jaibo-api jar it may use database services through jaibo-api, so
+extensions may need also sqlite-jdbc-3.8.1.jar as dependency. Each dependency should be placed in in the root directory
+of extension, for example for games.pickupbot in "/ext/games/pickupbot/".
+
+After placing all the dependencies in correct directory it can be compiled by running 'gradle build'.

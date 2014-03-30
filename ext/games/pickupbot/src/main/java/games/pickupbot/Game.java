@@ -162,6 +162,25 @@ public class Game {
                 IrcMessageTextModifier.makeBold(this.getGameType()));
     }
 
+    public String getRegisteredPlayers() {
+        StringBuilder registeredPlayersListBuilder = new StringBuilder();
+
+        String playersList = this.getPlayerNicknamesAsString(", ", true, true);
+
+        if (playersList.equals("")) {
+            playersList = "No players";
+        }
+
+        registeredPlayersListBuilder.append(String.format(
+                "[%s %d/%d] %s",
+                IrcMessageTextModifier.makeBold(this.getGameType()),
+                this.addedPlayersCount(),
+                this.getMaxPlayers(),
+                playersList));
+
+        return registeredPlayersListBuilder.toString();
+    }
+
     public String getPlayerNicknamesAsString(String separator, boolean usingZeroWidthSpace, boolean formattedNickNames) {
         StringBuilder allAddedPlayerNickNames = new StringBuilder();
 

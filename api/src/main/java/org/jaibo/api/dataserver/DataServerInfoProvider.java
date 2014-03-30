@@ -1,11 +1,7 @@
-package aibo.ircnetwork;
-
-import aibo.networkconnection.NetworkConnection;
-import org.jaibo.api.IrcCommandSenderInterface;
-import org.jaibo.api.NetworkConnectionInterface;
+package org.jaibo.api.dataserver;
 
 /**
- * Realization of simple commands sender to irc network
+ * Data server information provider
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,23 +18,29 @@ import org.jaibo.api.NetworkConnectionInterface;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class IrcCommandSender implements IrcCommandSenderInterface {
-    private NetworkConnectionInterface connection;
+public abstract class DataServerInfoProvider {
+    private String infoPath;
 
 
-    public IrcCommandSender() {
-
+    public String getInfoPath() {
+        return infoPath;
     }
 
-    public IrcCommandSender(NetworkConnectionInterface connection) {
-        this.connection = connection;
+    public void setInfoPath(String infoPath) {
+        this.infoPath = infoPath;
     }
 
+    public boolean checkPath(String path) {
+        return path != null && !path.isEmpty() && path.equalsIgnoreCase(this.getInfoPath());
+    }
 
-    @Override
-    public void sendIrcCommand(String command, String arguments) {
-        if (this.connection != null) {
-            connection.send(String.format("%s %s", command, arguments));
+    public String checkAndExecute(String path) {
+        if (this.checkPath(path)) {
+            return this.action();
         }
+
+        return null;
     }
+
+    protected abstract String action(); // returns json string with answer
 }

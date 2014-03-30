@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../../api/api.iml" filepath="$PROJECT_DIR$/../../../api/api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../livestreams/ext_games_livestreams.iml" filepath="$PROJECT_DIR$/../livestreams/ext_games_livestreams.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ext_games_pickupbot.iml" filepath="$PROJECT_DIR$/ext_games_pickupbot.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../jaibo.iml" filepath="$PROJECT_DIR$/../../../jaibo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/pickupbot.iml" filepath="$PROJECT_DIR$/.idea/pickupbot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../platform/platform.iml" filepath="$PROJECT_DIR$/../../../platform/platform.iml" />
     </modules>
   </component>
 </project>

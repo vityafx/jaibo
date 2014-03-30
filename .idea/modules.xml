@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/api/api.iml" filepath="$PROJECT_DIR$/api/api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/api/api_.iml" filepath="$PROJECT_DIR$/api/api_.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ext/games/livestreams/ext_games_livestreams.iml" filepath="$PROJECT_DIR$/ext/games/livestreams/ext_games_livestreams.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ext/games/pickupbot/ext_games_pickupbot.iml" filepath="$PROJECT_DIR$/ext/games/pickupbot/ext_games_pickupbot.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaibo.iml" filepath="$PROJECT_DIR$/jaibo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platform/platform.iml" filepath="$PROJECT_DIR$/platform/platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platform/platform_.iml" filepath="$PROJECT_DIR$/platform/platform_.iml" />
     </modules>
   </component>
 </project>

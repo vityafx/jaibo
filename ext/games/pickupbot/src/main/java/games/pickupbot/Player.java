@@ -60,7 +60,15 @@ public class Player implements PickupBotDatabaseManagerListener {
     }
 
     public String getFormattedNickName() {
-        return nick;
+        String playerName;
+
+        if (ExtensionObject.Configuration.getBoolean("player.game_profile_required")) {
+            playerName = this.gameProfile;
+        } else {
+            playerName = this.nick;
+        }
+
+        return playerName;
     }
 
     public void setNick(String nick) {

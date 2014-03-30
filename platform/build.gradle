@@ -45,7 +45,7 @@ task copyTask(type: Copy) {
     }
     into 'target/libs'
 
-    from (rootProject.rootDir) {
+    from (project.rootDir) {
         include '*.sh'
     }
     into 'target/libs'
@@ -69,7 +69,7 @@ compileJava.dependsOn(copyTask)
 build.dependsOn(copyDependenciesToTarget)
 
 jar {
-    archiveName = "$project.name-$version" + '.jar'
+    archiveName = "$group-$version" + '.jar'
 
     manifest.attributes(
             "Main-Class": "Main",
@@ -78,11 +78,11 @@ jar {
 }
 /* Overwriting distribution tasks: */
 task distZip(type:Zip, overwrite:true) {
-    archiveName = "$project.name-$version" + '.zip'
+    archiveName = "$group-$version" + '.zip'
     from "target/libs"
 }
 
 task distTar(type:Tar, overwrite:true) {
-    archiveName = "$project.name-$version" + '.tar'
+    archiveName = "$group-$version" + '.tar'
     from "target/libs"
 }

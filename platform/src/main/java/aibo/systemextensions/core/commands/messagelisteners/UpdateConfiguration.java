@@ -43,7 +43,7 @@ public final class UpdateConfiguration extends Command implements MessageListene
 
     @Override
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage())) {
+        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.checkExact(message.getMessage())) {
             IrcUser ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
             if (ircUser != null && this.object.isAdminHost(ircUser.getHost())) {

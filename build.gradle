@@ -1,0 +1,109 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+group = 'jaibo-full'
+version = '0.4'
+
+description = """Java Advanced IRC BOt"""
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+buildDir = "target"
+
+mainClassName = "Main"
+
+repositories {
+    maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+//    compile project(path: ':api')
+//    compile project(path: ':platform')
+//    compile project(path: ':ext/games/livestreams')
+//    compile project(path: ':ext/games/pickupbot')
+}
+
+
+task evaluateSubprojects() {
+    println 'Evaluating subprojects...'
+
+    subprojects.each { subProject ->
+        evaluationDependsOn ":$subProject.name"
+    }
+}
+
+task copySubprojects() {
+    println 'Copying subprojects to target...'
+
+    subprojects.each { subProject ->
+        println 'Copying subproject(' + subProject.getProjectDir().getAbsolutePath() + '/target/libs/' + ') to target...'
+
+        copy {
+            with from (subProject.getProjectDir().getAbsolutePath() + '/target/libs/') {
+                include '**'
+            }
+            into 'target/libs/libs'
+        }
+    }
+}
+
+
+task getRunTask() {
+    subprojects.each { subProject ->
+        if (subProject.getName().equalsIgnoreCase('platform')) {
+            return subProject.run
+        }
+    }
+}
+//build.dependsOn(subprojects.build)
+//copySubprojects.dependsOn(buildDependents)
+//run.dependsOn(copySubprojects)
+
+
+build.dependsOn(evaluateSubprojects)
+run.dependsOn(subprojects.jar)
+run.dependsOn(copySubprojects)
+run.dependsOn(getRunTask)
+
+beforeEvaluate
+{
+    subprojects.each
+    { p->
+        dependencies.compile p
+    }
+}
+
+allprojects
+{ proj ->
+    // this is most important. This makes the root task depend on the subprojects getting built
+    run.dependsOn.add proj.tasks.getByPath("build")
+
+    // some code to read the dependencies
+//    proj.dependencies.compile project(otherProjectName)
+
+    // some code to read the source directories
+//    proj.sourceSets.main.resources.srcDir srcDir
+}
+
+
+task fullBuildAndRun() {
+    println 'Full build & run...'
+
+     evaluateSubprojects
+
+    configurations.compile.resolve()
+}
+
+/* Overwriting distribution tasks: */
+task distZip(type:Zip, overwrite:true) {
+    archiveName = "$project.name-$version" + '.zip'
+    from "target/libs"
+}
+
+task distTar(type:Tar, overwrite:true) {
+    archiveName = "$project.name-$version" + '.tar'
+    from "target/libs"
+}

@@ -1,5 +1,6 @@
 package aibo;
 
+import aibo.dataserver.DataServer;
 import aibo.systemextensions.TaskManager;
 import org.jaibo.api.database.DatabaseProvider;
 import org.jaibo.api.helpers.Configuration;
@@ -34,6 +35,8 @@ public final class AIBO implements IrcNetworkListener {
 
     private IrcNetwork ircNetwork;
 
+    private DataServer dataServer;
+
 
     public AIBO() {
         DatabaseProvider.setDefaultDatabase(Configuration.get("aibo.database_name"));
@@ -43,6 +46,8 @@ public final class AIBO implements IrcNetworkListener {
                 Integer.parseInt(Configuration.get("IrcConnection.port")), this);
 
         this.taskManager = new TaskManager(this.ircNetwork.getMessageSender());
+
+        this.setUpDataServer();
     }
 
     public AIBO(String... extensionNames) {
@@ -69,5 +74,18 @@ public final class AIBO implements IrcNetworkListener {
 
     public void run() {
         this.ircNetwork.connect();
+    }
+
+    public void setUpDataServer() {
+        if (Configuration.getBoolean("data_server")) {
+            try {
+                int listenPort = Integer.parseInt(Configuration.get("data_server.listen_port"));
+                String listenAddress = Configuration.get("data_server.listen_ip");
+
+                this.dataServer = new DataServer(listenAddress, listenPort);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

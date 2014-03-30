@@ -70,7 +70,6 @@ public final class ExtensionObject extends Extension implements GameListener, Co
         if (Configuration.getBoolean("player.game_profile_required")) {
             this.addMessageListener(new Iam(this));
             this.addMessageListener(new SetGameProfileBinding(this));
-            this.addMessageListener(new RemoveAllGameProfileBindings(this));
             this.addMessageListener(new RemoveGameProfileBinding(this));
             this.addMessageListener(new ChangeGameProfile(this));
             this.addMessageListener(new GetGameProfile(this));
@@ -123,12 +122,14 @@ public final class ExtensionObject extends Extension implements GameListener, Co
     }
 
     private void setTournaments() {
-        String[] tournaments = ExtensionObject.Configuration.get("Tournaments").split(" ");
+        if (ExtensionObject.Configuration.getBoolean("player.game_profile_required")) {
+            String[] tournaments = ExtensionObject.Configuration.get("Tournaments").split(" ");
 
-        for (String tournamentName : tournaments) {
-            Tournament tournament = Tournament.tryParse(tournamentName);
+            for (String tournamentName : tournaments) {
+                Tournament tournament = Tournament.tryParse(tournamentName);
 
-            this.addTournament(tournament);
+                this.addTournament(tournament);
+            }
         }
     }
 
@@ -193,24 +194,9 @@ public final class ExtensionObject extends Extension implements GameListener, Co
     }
 
     public String getRegisteredPlayers(String gameType) {
-        StringBuilder registeredPlayersListBuilder = new StringBuilder();
-
-        String playersList = this.getPlayers(gameType, true);
-
-        if (playersList.equals("")) {
-            playersList = "No players";
-        }
-
         Game game = this.getGameByType(gameType);
 
-        registeredPlayersListBuilder.append(String.format(
-                "[%s %d/%d] %s",
-                IrcMessageTextModifier.makeBold(game.getGameType()),
-                game.addedPlayersCount(),
-                game.getMaxPlayers(),
-                playersList));
-
-        return registeredPlayersListBuilder.toString();
+        return game.getRegisteredPlayers();
     }
 
     public String getGameProfilesAndNicksMapString(String gameType) {

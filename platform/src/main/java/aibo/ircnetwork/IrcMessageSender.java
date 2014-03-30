@@ -4,6 +4,7 @@ import aibo.networkconnection.NetworkConnection;
 
 import org.jaibo.api.IrcCommandSenderInterface;
 import org.jaibo.api.IrcMessageSenderInterface;
+import org.jaibo.api.NetworkConnectionInterface;
 
 /**
  * Message sender realization
@@ -31,7 +32,7 @@ public class IrcMessageSender implements IrcMessageSenderInterface {
 
     }
 
-    public IrcMessageSender(NetworkConnection connection) {
+    public IrcMessageSender(NetworkConnectionInterface connection) {
         this.sender = new IrcCommandSender(connection);
     }
 

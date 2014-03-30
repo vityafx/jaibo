@@ -157,7 +157,7 @@ public final class PickupBotDatabaseManager {
     public void removePlayerFromTournament(String tournament, String gameProfile) {
         if (gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("DELETE FROM %s WHERE %s=? and %s=?", this.tournamentsTableName,
-                    this.lockedPlayersGameProfileField, this.tournamentsTournamentFieldName);
+                    this.tournamentsGameProfileFieldName, this.tournamentsTournamentFieldName);
             PreparedStatement preparedStatement = DatabaseProvider.createPreparedStatementWithDatabase(databaseFileName,
                     query);
 
@@ -174,9 +174,9 @@ public final class PickupBotDatabaseManager {
     }
 
     public void addPlayerInTournament(String tournament, String gameProfile) {
-        if (gameProfile != null && !gameProfile.isEmpty()) {
+        if (tournament != null && !tournament.isEmpty() && gameProfile != null && !gameProfile.isEmpty()) {
             String query = String.format("INSERT INTO %s(%s, %s) VALUES(?, ?)", this.tournamentsTableName,
-                    this.lockedPlayersGameProfileField, this.tournamentsTournamentFieldName);
+                    this.tournamentsGameProfileFieldName, this.tournamentsTournamentFieldName);
             PreparedStatement preparedStatement = DatabaseProvider.createPreparedStatementWithDatabase(databaseFileName,
                     query);
 
@@ -191,6 +191,41 @@ public final class PickupBotDatabaseManager {
             }
         }
     }
+
+    public String[] getPlayersRegisteredInTournament(String tournament) {
+        String[] playersStringList = null;
+
+        if (tournament != null && !tournament.isEmpty()) {
+            String query = String.format("SELECT %s as player FROM %s WHERE %s=?", this.tournamentsGameProfileFieldName,
+                    this.tournamentsTableName, this.tournamentsTournamentFieldName);
+            PreparedStatement preparedStatement = DatabaseProvider.createPreparedStatementWithDatabase(databaseFileName,
+                    query);
+
+            try {
+                preparedStatement.setString(1, tournament);
+
+                CachedRowSet rowSet = DatabaseProvider.executePreparedStatementWithDatabase(databaseFileName,
+                        preparedStatement, true);
+
+                if (rowSet != null) {
+                    ArrayList<String> playersList = new ArrayList<String>();
+                    playersStringList = new String[]{};
+
+                    if (rowSet.next()) {
+                        playersList.add(rowSet.getString("player"));
+                    }
+
+                    playersStringList = playersList.toArray(playersStringList);
+                }
+            } catch (SQLException e) {
+                System.out.println(String.format("Failed to fetch players list from tournament (tournament=%s): %s",
+                        tournament, e.getMessage()));
+            }
+        }
+
+        return playersStringList;
+    }
+
 
     public boolean isPlayerLocked(String gameProfile) {
         if (gameProfile != null && !gameProfile.isEmpty()) {

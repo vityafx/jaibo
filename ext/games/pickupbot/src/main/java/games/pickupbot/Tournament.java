@@ -1,5 +1,6 @@
 package games.pickupbot;
 
+import games.pickupbot.errors.GameError;
 import org.jaibo.api.IrcMessageTextModifier;
 
 import java.util.regex.Matcher;
@@ -36,13 +37,51 @@ public final class Tournament extends Game {
 
     @Override
     public void addPlayer(Player player) {
-//        if (!games.pickupbot.ExtensionObject.DatabaseManager.isPlayerRegisteredInTournament(player)) {
-//
-//            games.pickupbot.ExtensionObject.DatabaseManager.addPlayerInTournament(this.getGameType(), player.gameProfile);
+        if (!ExtensionObject.DatabaseManager.isPlayerRegisteredInTournament(this.getGameType(),
+                player.getGameProfile())) {
+
+            ExtensionObject.DatabaseManager.addPlayerInTournament(this.getGameType(), player.getGameProfile());
+        } else {
+            throw new GameError(String.format("You have been already added to play %s tournament",
+                    IrcMessageTextModifier.makeBold(this.getGameType())));
+        }
+    }
+
+    @Override
+    public void removePlayer(Player player) {
+        if (ExtensionObject.DatabaseManager.isPlayerRegisteredInTournament(this.getGameType(),
+                player.getGameProfile())) {
+            ExtensionObject.DatabaseManager.removePlayerFromTournament(this.getGameType(), player.getGameProfile());
+        }
+    }
+
+    @Override
+    public String getRegisteredPlayers() {
+//        if (Object.Configuration.getBoolean("tournament.players_export")) {
+//            return this.getLinkToPlayersList();
 //        } else {
-//            throw new GameError(String.format("You have been already added to play %s tournament",
-//                    IrcMessageTextModifier.makeBold(this.getGameType())));
+        return this.getSimplePlayersList();
 //        }
+    }
+
+    private String getLinkToPlayersList() {
+        return null;
+    }
+
+    private String getSimplePlayersList() {
+        String[] playersList = ExtensionObject.DatabaseManager.getPlayersRegisteredInTournament(this.getGameType());
+        StringBuilder playersStringListBuilder = new StringBuilder();
+
+        if (playersList != null) {
+            for (String playerName : playersList) {
+                StringBuilder safePlayerNameBuilder = new StringBuilder(playerName);
+                safePlayerNameBuilder.insert(1, "\u200B");
+
+                playersStringListBuilder.append(safePlayerNameBuilder.toString());
+            }
+        }
+
+        return playersStringListBuilder.toString();
     }
 
     @Override

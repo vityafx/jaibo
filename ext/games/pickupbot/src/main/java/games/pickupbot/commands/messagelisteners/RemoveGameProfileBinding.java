@@ -36,7 +36,6 @@ public final class RemoveGameProfileBinding extends Command implements MessageLi
 
     private String receiver;
     private String host;
-    private String gameProfile;
 
     public RemoveGameProfileBinding() {
         this.configurationChanged();
@@ -77,14 +76,13 @@ public final class RemoveGameProfileBinding extends Command implements MessageLi
 
         if (super.check(message)) {
             for (String name : this.getNames()) {
-                Pattern p = Pattern.compile(String.format("^%s (.*) (.*)$", name), Pattern.CASE_INSENSITIVE);
+                Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
 
                 CharSequence sequence = message.subSequence(0, message.length());
                 Matcher matcher = p.matcher(sequence);
 
                 if (matcher.matches()) {
                     this.host = matcher.group(1);
-                    this.gameProfile = matcher.group(2);
 
                     checkPassed = true;
 
@@ -99,11 +97,11 @@ public final class RemoveGameProfileBinding extends Command implements MessageLi
     @Override
     protected void action() {
         try {
-            this.object.removeGameProfile(this.host, this.gameProfile);
+            this.object.removeAllGameProfilesForHost(this.host);
 
             this.object.getExtensionMessenger().sendNotice(this.receiver,
-                    String.format("Binding with host=[%s] and game profile=[%s] has been removed successfully",
-                            this.host, this.gameProfile));
+                    String.format("All bindings for game profiles with host=[%s] has been removed successfully",
+                            this.host));
         } catch (PlayerError e) {
             this.object.getExtensionMessenger().sendNotice(this.receiver, e.getMessage());
         }

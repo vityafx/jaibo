@@ -1,7 +1,7 @@
 package org.jaibo.api;
 
 /**
- * Network connection interface
+ * Network Connection Interface
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,4 +19,5 @@ package org.jaibo.api;
  */
 
 public interface NetworkConnectionInterface {
+    public void send(String data);
 }
