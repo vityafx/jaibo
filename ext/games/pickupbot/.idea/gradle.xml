@@ -4,29 +4,11 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/../../.." />
-        <option name="gradleHome" value="$USER_HOME$/gradle" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/../../.." />
-            <option value="$PROJECT_DIR$/../../../api" />
-            <option value="$PROJECT_DIR$/../livestreams" />
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/../../../platform" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="$USER_HOME$/gradle" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/../../.." />
-            <option value="$PROJECT_DIR$/../../../api" />
-            <option value="$PROJECT_DIR$/../livestreams" />
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/../../../platform" />
           </set>
         </option>
       </GradleProjectSettings>

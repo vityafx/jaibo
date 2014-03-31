@@ -54,10 +54,14 @@ public final class ExtensionManager {
 
     public void addExtensionByName(String extensionName) {
         if (!this.isExtensionAlreadyAdded(extensionName)) {
-            Extension extension = this.findAndCreateExtensionByName(extensionName);
+            try {
+                Extension extension = this.findAndCreateExtensionByName(extensionName);
 
-            if (extension != null) {
-                this.addExtension(extension);
+                if (extension != null) {
+                    this.addExtension(extension);
+                }
+            } catch (ExtensionManagerError e) {
+                System.out.println(e.getMessage());
             }
         } else {
             throw new ExtensionManagerError(

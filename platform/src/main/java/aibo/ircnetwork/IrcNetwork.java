@@ -40,11 +40,11 @@ public final class IrcNetwork implements AIBONetworkConnectionListener {
     public IrcNetwork(String[] servers, int port, IrcNetworkListener ircNetworkListener) {
         this.setServers(servers);
 
-        this.sender = new IrcMessageSender(this.connection);
-
         this.ircNetworkListener = ircNetworkListener;
 
         this.connection = new AIBONetworkConnection(this.getServer(), port);
+
+        this.sender = new IrcMessageSender(this.connection);
 
         this.connection.addListener(this);
     }

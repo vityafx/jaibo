@@ -1,8 +1,8 @@
-include 'api'
-include 'platform'
-
-include 'ext/games/livestreams'
-include 'ext/games/pickupbot'
+//include 'api'
+//include 'platform'
+//
+//include 'ext/games/livestreams'
+//include 'ext/games/pickupbot'
 
 //include 'ext/life/forecast'
 

@@ -112,8 +112,8 @@ public final class GameTests extends TestCase {
 
         assertEquals(nickNames,
                     String.format("%s, %s",
-                            this.testPlayer1.getFormattedNickName(),
-                            this.testPlayer2.getFormattedNickName()));
+                            this.testPlayer1.getNick(),
+                            this.testPlayer2.getNick()));
     }
 
     public void testPlayerSubstitution() {

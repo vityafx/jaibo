@@ -69,7 +69,7 @@ compileJava.dependsOn(copyTask)
 build.dependsOn(copyDependenciesToTarget)
 
 jar {
-    archiveName = "$group-$version" + '.jar'
+    archiveName = "$rootProject.name-$version" + '.jar'
 
     manifest.attributes(
             "Main-Class": "Main",
@@ -78,11 +78,11 @@ jar {
 }
 /* Overwriting distribution tasks: */
 task distZip(type:Zip, overwrite:true) {
-    archiveName = "$group-$version" + '.zip'
+    archiveName = "$rootProject.name-$version" + '.zip'
     from "target/libs"
 }
 
 task distTar(type:Tar, overwrite:true) {
-    archiveName = "$group-$version" + '.tar'
+    archiveName = "$rootProject.name-$version" + '.tar'
     from "target/libs"
 }

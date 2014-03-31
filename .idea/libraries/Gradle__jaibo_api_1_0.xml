@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Gradle: jaibo-api-1.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/ext/games/livestreams/jaibo-api-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/api/target/libs/jaibo-api-1.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

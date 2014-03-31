@@ -2,8 +2,10 @@ package aibo.dataserver;
 
 import aibo.networkconnection.DataServerNetworkConnection;
 import aibo.networkconnection.DataServerNetworkConnectionListener;
+
 import org.jaibo.api.dataserver.DataServerInfoProvider;
 
+import java.net.Socket;
 import java.util.ArrayList;
 
 /**
@@ -24,28 +26,27 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class DataServer extends Thread implements DataServerNetworkConnectionListener {
+public final class DataServer implements DataServerNetworkConnectionListener, Runnable {
     private final DataServerNetworkConnection networkConnection = new DataServerNetworkConnection();
     private final static ArrayList<DataServerInfoProvider> InfoProviders = new ArrayList<DataServerInfoProvider>();
 
-    public DataServer(String listenAddress, int port) {
-        this.networkConnection.startListenOn(listenAddress, port);
+    private Socket clientSocket = null;
+    private String listenAddress = null;
+    private int listenPort;
+
+    public DataServer(String listenAddress, int port, boolean isDebug) {
+        this.listenAddress = listenAddress;
+        this.listenPort = port;
+
+        this.networkConnection.setDebug(isDebug);
     }
 
     @Override
-    public void dataServerRequestReceived(String data) {
-        String infoPath = null;
-
-        // get path from data (parse GET /*)
-
+    public void dataServerRequestReceived(Socket clientSocket, String infoPath) {
         for (DataServerInfoProvider infoProvider : InfoProviders) {
-            String answer = infoProvider.checkAndExecute(infoPath);
+            String answer = infoProvider.checkAndGetInfo(infoPath);
 
-            if (answer != null) {
-                this.networkConnection.send(answer);
-
-                break;
-            }
+            this.send(answer);
         }
     }
 
@@ -63,5 +64,16 @@ public final class DataServer extends Thread implements DataServerNetworkConnect
         if (InfoProviders.contains(provider)) {
             InfoProviders.remove(provider);
         }
+    }
+
+    public void send(String jsonAnswer) {
+        if (this.clientSocket != null && jsonAnswer != null && !jsonAnswer.isEmpty()) {
+            this.networkConnection.send(this.clientSocket, jsonAnswer);
+        }
+    }
+
+    @Override
+    public void run() {
+        this.networkConnection.startListenOn(this.listenAddress, this.listenPort);
     }
 }

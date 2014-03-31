@@ -30,11 +30,12 @@ public abstract class DataServerInfoProvider {
         this.infoPath = infoPath;
     }
 
+
     public boolean checkPath(String path) {
         return path != null && !path.isEmpty() && path.equalsIgnoreCase(this.getInfoPath());
     }
 
-    public String checkAndExecute(String path) {
+    public String checkAndGetInfo(String path) {
         if (this.checkPath(path)) {
             return this.action();
         }

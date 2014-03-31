@@ -35,8 +35,6 @@ public final class AIBO implements IrcNetworkListener {
 
     private IrcNetwork ircNetwork;
 
-    private DataServer dataServer;
-
 
     public AIBO() {
         DatabaseProvider.setDefaultDatabase(Configuration.get("aibo.database_name"));
@@ -81,8 +79,9 @@ public final class AIBO implements IrcNetworkListener {
             try {
                 int listenPort = Integer.parseInt(Configuration.get("data_server.listen_port"));
                 String listenAddress = Configuration.get("data_server.listen_ip");
+                boolean isDebug = Configuration.getBoolean("network.debug");
 
-                this.dataServer = new DataServer(listenAddress, listenPort);
+                new Thread(new DataServer(listenAddress, listenPort, isDebug)).start();
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
