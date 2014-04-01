@@ -1,7 +1,7 @@
 package org.jaibo.api.dataserver;
 
 /**
- * Data server information provider
+ * Data Server Process Status Interface
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,32 +18,21 @@ package org.jaibo.api.dataserver;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public abstract class DataServerInfoProvider {
-    private String infoPath;
-
-
-    public String getInfoPath() {
-        return infoPath;
+public abstract class DataServerInfoStatus {
+    public String getSectionName() {
+        return "status";
     }
 
-    public void setInfoPath(String infoPath) {
-        this.infoPath = infoPath;
+    public DataServerInfoObject toInfoObject() {
+        DataServerInfoObject infoObject = new DataServerInfoObject();
+        infoObject.putData(this.getSectionName(), this.getMessage());
+
+        return infoObject;
     }
 
 
-    public boolean checkPath(String path) {
-        return path != null && !path.isEmpty() && path.equalsIgnoreCase(this.getInfoPath());
-    }
+    public abstract String getMessage();
+    public abstract void setMessage(String message);
 
-    public String checkAndGetInfo(String path) {
-        String answer = null;
-
-        if (this.checkPath(path)) {
-            answer = this.action();
-        }
-
-        return answer;
-    }
-
-    protected abstract String action(); // returns json string with answer
+    public abstract DataServerInfoStatusCode getStatus();
 }

@@ -1,10 +1,12 @@
 package org.jaibo.api;
 
 import org.jaibo.api.database.MainDatabaseManager;
+import org.jaibo.api.dataserver.DataServerInfoProvider;
 import org.jaibo.api.helpers.Configuration;
 import org.jaibo.api.helpers.ConfigurationListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Extension Interface
@@ -30,6 +32,7 @@ public abstract class Extension extends Thread implements ConfigurationListener 
     private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
     private ArrayList<EventListener> eventListeners = new ArrayList<EventListener>();
     private ArrayList<ServerListener> serverListeners = new ArrayList<ServerListener>();
+    private ArrayList<DataServerInfoProvider> infoProviders = new ArrayList<DataServerInfoProvider>();
 
     private ExtensionMessengerInterface messenger;
 
@@ -118,12 +121,32 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         }
     }
 
+    public void addInfoProvider(DataServerInfoProvider provider) {
+        if (!this.infoProviders.contains(provider)) {
+            this.infoProviders.add(provider);
+        }
+    }
+
+    public void removeInfoProvider(DataServerInfoProvider provider) {
+        if (this.infoProviders.contains(provider)) {
+            this.infoProviders.remove(provider);
+        }
+    }
+
+    public void deleteAllInfoProvider(DataServerInfoProvider provider) {
+        this.infoProviders.clear();
+    }
+
     public void removeServerListener(ServerListener listener) {
         this.serverListeners.remove(listener);
     }
 
     public void deleteAllServerListeners() {
         this.serverListeners.clear();
+    }
+
+    public ArrayList<DataServerInfoProvider> getInfoProviders() {
+        return this.infoProviders;
     }
 
     public ExtensionMessengerInterface getExtensionMessenger() {

@@ -3,6 +3,7 @@ package aibo.systemextensions.core;
 import aibo.ExtensionManager;
 import aibo.systemextensions.core.commands.messagelisteners.*;
 import aibo.systemextensions.core.commands.serverlisteners.*;
+import aibo.systemextensions.core.infoproviders.AboutInfoProvider;
 import org.jaibo.api.Extension;
 import org.jaibo.api.errors.ExtensionError;
 
@@ -60,6 +61,8 @@ public class Object extends Extension {
 
     @Override
     public void setCommands() {
+        this.addInfoProvider(new AboutInfoProvider());
+
         this.addServerListener(new Pong(this));
         this.addServerListener(new Login(this));
 

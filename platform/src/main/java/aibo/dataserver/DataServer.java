@@ -1,12 +1,16 @@
 package aibo.dataserver;
 
+import aibo.ExtensionManager;
 import aibo.networkconnection.DataServerNetworkConnection;
 import aibo.networkconnection.DataServerNetworkConnectionListener;
-
+import aibo.systemextensions.TaskManager;
+import org.jaibo.api.dataserver.DataServerInfoPackage;
 import org.jaibo.api.dataserver.DataServerInfoProvider;
+import org.jaibo.api.dataserver.DataServerInfoStatusCode;
+import org.jaibo.api.dataserver.status.DataServerInfoArgumentErrorStatus;
+import org.jaibo.api.dataserver.status.DataServerInfoIncorrectPathStatus;
 
 import java.net.Socket;
-import java.util.ArrayList;
 
 /**
  * Data server
@@ -28,52 +32,81 @@ import java.util.ArrayList;
 
 public final class DataServer implements DataServerNetworkConnectionListener, Runnable {
     private final DataServerNetworkConnection networkConnection = new DataServerNetworkConnection();
-    private final static ArrayList<DataServerInfoProvider> InfoProviders = new ArrayList<DataServerInfoProvider>();
+    private TaskManager taskManager = null;
 
-    private Socket clientSocket = null;
     private String listenAddress = null;
     private int listenPort;
 
-    public DataServer(String listenAddress, int port, boolean isDebug) {
+    public DataServer(String listenAddress, int port, TaskManager taskManager, boolean isDebug) {
         this.listenAddress = listenAddress;
         this.listenPort = port;
+        this.taskManager = taskManager;
 
         this.networkConnection.setDebug(isDebug);
+        this.networkConnection.addListener(this);
     }
 
     @Override
     public void dataServerRequestReceived(Socket clientSocket, String infoPath) {
-        for (DataServerInfoProvider infoProvider : InfoProviders) {
-            String answer = infoProvider.checkAndGetInfo(infoPath);
-
-            this.send(answer);
-        }
-    }
-
-    public static ArrayList<DataServerInfoProvider> getInfoProviders() {
-        return InfoProviders;
-    }
-
-    public static void addInfoProvider(DataServerInfoProvider provider) {
-        if (!InfoProviders.contains(provider)) {
-            InfoProviders.add(provider);
-        }
-    }
-
-    public static void removeInfoProvider(DataServerInfoProvider provider) {
-        if (InfoProviders.contains(provider)) {
-            InfoProviders.remove(provider);
-        }
-    }
-
-    public void send(String jsonAnswer) {
-        if (this.clientSocket != null && jsonAnswer != null && !jsonAnswer.isEmpty()) {
-            this.networkConnection.send(this.clientSocket, jsonAnswer);
-        }
+        new Thread(new DataServerRequestProcessor(taskManager, clientSocket, networkConnection, infoPath)).start();
     }
 
     @Override
     public void run() {
         this.networkConnection.startListenOn(this.listenAddress, this.listenPort);
+    }
+}
+
+
+class DataServerRequestProcessor implements Runnable {
+    private DataServerNetworkConnection connection = null;
+    private Socket clientSocket = null;
+    private TaskManager taskManager = null;
+    private String infoPath = null;
+
+
+    public DataServerRequestProcessor(TaskManager taskManager, Socket clientSocket,
+                                      DataServerNetworkConnection connection, String infoPath) {
+        this.taskManager = taskManager;
+        this.clientSocket = clientSocket;
+        this.connection = connection;
+        this.infoPath = infoPath;
+    }
+
+    private void processRequest() {
+        DataServerInfoProvider[] infoProviders = this.taskManager.getInfoProviders();
+        boolean answered = false;
+
+        for (DataServerInfoProvider infoProvider : infoProviders) {
+            String answer = infoProvider.checkAndGetInfo(this.infoPath);
+
+            if (answer != null && !answer.isEmpty()) {
+                this.send(answer);
+
+                answered = true;
+            }
+        }
+
+        if (!answered) {
+            this.sendError();
+        }
+    }
+
+    public void sendError() {
+        DataServerInfoPackage errorPackage = new DataServerInfoPackage();
+        errorPackage.setStatus(DataServerInfoStatusCode.INCORRECT_PATH);
+
+        this.send(errorPackage.toString());
+    }
+
+    public void send(String jsonAnswer) {
+        if (this.clientSocket != null && jsonAnswer != null && !jsonAnswer.isEmpty()) {
+            this.connection.send(this.clientSocket, jsonAnswer);
+        }
+    }
+
+    @Override
+    public void run() {
+        this.processRequest();
     }
 }

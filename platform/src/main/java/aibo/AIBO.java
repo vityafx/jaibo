@@ -81,7 +81,7 @@ public final class AIBO implements IrcNetworkListener {
                 String listenAddress = Configuration.get("data_server.listen_ip");
                 boolean isDebug = Configuration.getBoolean("network.debug");
 
-                new Thread(new DataServer(listenAddress, listenPort, isDebug)).start();
+                new Thread(new DataServer(listenAddress, listenPort, this.taskManager, isDebug)).start();
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }

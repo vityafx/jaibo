@@ -1,7 +1,11 @@
-package org.jaibo.api.dataserver;
+package org.jaibo.api.dataserver.status;
+
+import org.jaibo.api.dataserver.DataServerInfoStatus;
+import org.jaibo.api.dataserver.DataServerInfoStatusCode;
+import org.jaibo.api.errors.DataServerError;
 
 /**
- * Data server information provider
+ * Success status implementation
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,32 +22,21 @@ package org.jaibo.api.dataserver;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public abstract class DataServerInfoProvider {
-    private String infoPath;
+public final class DataServerInfoSuccessStatus extends DataServerInfoStatus {
+    private final String message = "Success";
 
 
-    public String getInfoPath() {
-        return infoPath;
+    public String getMessage() {
+        return message;
     }
 
-    public void setInfoPath(String infoPath) {
-        this.infoPath = infoPath;
+    @Override
+    public void setMessage(String message) {
+        throw new DataServerError(String.format("Can't set custom message to \"%s\" status", this.getMessage()));
     }
 
-
-    public boolean checkPath(String path) {
-        return path != null && !path.isEmpty() && path.equalsIgnoreCase(this.getInfoPath());
+    @Override
+    public DataServerInfoStatusCode getStatus() {
+        return DataServerInfoStatusCode.SUCCESS;
     }
-
-    public String checkAndGetInfo(String path) {
-        String answer = null;
-
-        if (this.checkPath(path)) {
-            answer = this.action();
-        }
-
-        return answer;
-    }
-
-    protected abstract String action(); // returns json string with answer
 }
