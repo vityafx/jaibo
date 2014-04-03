@@ -1,5 +1,6 @@
 package aibo.systemextensions.core.commands.messagelisteners;
 
+import aibo.AIBO;
 import org.jaibo.api.Command;
 import org.jaibo.api.Extension;
 import org.jaibo.api.IrcMessage;
@@ -54,8 +55,8 @@ public final class Shutdown extends Command implements MessageListener {
 
     @Override
     protected void action() {
-        this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, "Goodbye! But will now shutdown.");
+        this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, "Goodbye! But shut down in 5 seconds.");
 
-        System.exit(0);
+        AIBO.Shutdown();
     }
 }

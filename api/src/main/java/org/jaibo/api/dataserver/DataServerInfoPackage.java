@@ -1,11 +1,10 @@
 package org.jaibo.api.dataserver;
 
 
-import org.jaibo.api.dataserver.status.DataServerInfoArgumentErrorStatus;
-import org.jaibo.api.dataserver.status.DataServerInfoIncorrectPathStatus;
-import org.jaibo.api.dataserver.status.DataServerInfoParseErrorStatus;
-import org.jaibo.api.dataserver.status.DataServerInfoSuccessStatus;
+import org.jaibo.api.dataserver.status.*;
+import org.jaibo.api.dataserver.status.DataServerProcessorIncorrectPathStatus;
 
+import org.jaibo.api.dataserver.status.DataServerProcessorSuccessStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,11 +27,11 @@ import org.json.JSONObject;
  */
 
 public final class DataServerInfoPackage {
-    private final DataServerInfoStatus[] statuses = {
-        new DataServerInfoSuccessStatus(),
-        new DataServerInfoArgumentErrorStatus(),
-        new DataServerInfoIncorrectPathStatus(),
-        new DataServerInfoParseErrorStatus()
+    private final DataServerProcessorStatus[] statuses = {
+        new DataServerProcessorSuccessStatus(),
+        new DataServerProcessorArgumentErrorStatus(),
+        new DataServerProcessorIncorrectPathStatus(),
+        new DataServerProcessorParseErrorStatus()
     };
 
     private final String dataSection = "data";
@@ -58,7 +57,7 @@ public final class DataServerInfoPackage {
     private String getStatus() {
         String statusString = null;
 
-        for(DataServerInfoStatus status : this.statuses) {
+        for(DataServerProcessorStatus status : this.statuses) {
             if (status.getStatus() == this.status) {
                 statusString = status.toInfoObject().toString();
             }
@@ -67,10 +66,10 @@ public final class DataServerInfoPackage {
         return statusString;
     }
 
-    private DataServerInfoStatus getInfoStatusObject(DataServerInfoStatusCode statusCode) {
-        DataServerInfoStatus statusObject = null;
+    private DataServerProcessorStatus getInfoStatusObject(DataServerInfoStatusCode statusCode) {
+        DataServerProcessorStatus statusObject = null;
 
-        for(DataServerInfoStatus status : this.statuses) {
+        for(DataServerProcessorStatus status : this.statuses) {
             if (status.getStatus() == statusCode) {
                 statusObject = status;
             }
@@ -84,7 +83,7 @@ public final class DataServerInfoPackage {
     }
 
     public void setStatusMessage(String statusMessage) {
-        DataServerInfoStatus statusObject = this.getInfoStatusObject(this.status);
+        DataServerProcessorStatus statusObject = this.getInfoStatusObject(this.status);
 
         if (statusObject != null) {
             statusObject.setMessage(statusMessage);

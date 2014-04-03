@@ -6,7 +6,7 @@ import aibo.ircnetwork.IrcMessageSender;
 import org.jaibo.api.Extension;
 import org.jaibo.api.IrcEvent;
 import org.jaibo.api.IrcMessage;
-import org.jaibo.api.dataserver.DataServerInfoProvider;
+import org.jaibo.api.dataserver.DataServerProcessor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -77,9 +77,9 @@ public final class TaskManager {
         }
     }
 
-    public DataServerInfoProvider[] getInfoProviders() {
-        ArrayList<DataServerInfoProvider> infoProviders = new ArrayList<DataServerInfoProvider>();
-        DataServerInfoProvider[] infoProviderArray = new DataServerInfoProvider[]{};
+    public DataServerProcessor[] getDataServerProcessors() {
+        ArrayList<DataServerProcessor> dataServerProcessors = new ArrayList<DataServerProcessor>();
+        DataServerProcessor[] dataServerProcessorsArray = new DataServerProcessor[]{};
 
 
         Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
@@ -89,11 +89,11 @@ public final class TaskManager {
         while(extensionIterator.hasNext()) {
             extension = extensionIterator.next();
 
-            infoProviders.addAll(extension.getInfoProviders());
+            dataServerProcessors.addAll(extension.getDataServerProcessors());
         }
 
-        infoProviderArray = infoProviders.toArray(infoProviderArray);
+        dataServerProcessorsArray = dataServerProcessors.toArray(dataServerProcessorsArray);
 
-        return infoProviderArray;
+        return dataServerProcessorsArray;
     }
 }

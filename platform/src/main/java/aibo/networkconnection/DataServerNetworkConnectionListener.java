@@ -1,5 +1,8 @@
 package aibo.networkconnection;
 
+import com.sun.net.httpserver.HttpHandler;
+import org.jaibo.api.dataserver.DataServerProcessor;
+
 import java.net.Socket;
 
 /**
@@ -21,5 +24,5 @@ import java.net.Socket;
  */
 
 public interface DataServerNetworkConnectionListener {
-    public void dataServerRequestReceived(Socket clientSocket, String data);
+    public DataServerProcessor[] getDataProcessors();
 }

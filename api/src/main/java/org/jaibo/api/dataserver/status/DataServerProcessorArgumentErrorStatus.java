@@ -1,10 +1,10 @@
 package org.jaibo.api.dataserver.status;
 
-import org.jaibo.api.dataserver.DataServerInfoStatus;
+import org.jaibo.api.dataserver.DataServerProcessorStatus;
 import org.jaibo.api.dataserver.DataServerInfoStatusCode;
 
 /**
- * Data server process parse_error status
+ * Argument error status code of jaibo's data server
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,8 @@ import org.jaibo.api.dataserver.DataServerInfoStatusCode;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class DataServerInfoParseErrorStatus extends DataServerInfoStatus {
-    private final String messagePrefix = "Parse error";
+public final class DataServerProcessorArgumentErrorStatus extends DataServerProcessorStatus {
+    private final String messagePrefix = "Argument error";
     private String message = this.messagePrefix;
 
 
@@ -39,6 +39,6 @@ public final class DataServerInfoParseErrorStatus extends DataServerInfoStatus {
 
     @Override
     public DataServerInfoStatusCode getStatus() {
-        return DataServerInfoStatusCode.PARSE_ERROR;
+        return DataServerInfoStatusCode.ARGUMENT_ERROR;
     }
 }

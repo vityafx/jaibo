@@ -1,11 +1,10 @@
 package org.jaibo.api.dataserver.status;
 
-import org.jaibo.api.dataserver.DataServerInfoStatus;
+import org.jaibo.api.dataserver.DataServerProcessorStatus;
 import org.jaibo.api.dataserver.DataServerInfoStatusCode;
-import org.jaibo.api.errors.DataServerError;
 
 /**
- * Data Server Process Incorrect Path Status
+ * Data server process parse_error status
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,8 +21,8 @@ import org.jaibo.api.errors.DataServerError;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class DataServerInfoIncorrectPathStatus extends DataServerInfoStatus {
-    private final String messagePrefix = "Incorrect path";
+public final class DataServerProcessorParseErrorStatus extends DataServerProcessorStatus {
+    private final String messagePrefix = "Parse error";
     private String message = this.messagePrefix;
 
 
@@ -33,11 +32,13 @@ public final class DataServerInfoIncorrectPathStatus extends DataServerInfoStatu
 
     @Override
     public void setMessage(String message) {
-        throw new DataServerError(String.format("Can't set custom message to \"%s\" status", this.getMessage()));
+        if (message != null && !message.isEmpty()) {
+            this.message = String.format("%s: %s", this.messagePrefix, message);
+        }
     }
 
     @Override
     public DataServerInfoStatusCode getStatus() {
-        return DataServerInfoStatusCode.INCORRECT_PATH;
+        return DataServerInfoStatusCode.PARSE_ERROR;
     }
 }

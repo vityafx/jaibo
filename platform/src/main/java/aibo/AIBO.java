@@ -9,6 +9,9 @@ import org.jaibo.api.IrcMessage;
 import aibo.ircnetwork.IrcNetwork;
 import org.jaibo.api.IrcNetworkListener;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 /**
  * aibo bot realization
@@ -86,5 +89,25 @@ public final class AIBO implements IrcNetworkListener {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void Shutdown() {
+        Shutdown(5);
+    }
+
+    public static void Shutdown(int seconds) {
+        int time = seconds * 1000;
+        Timer timer = new Timer();
+
+        System.out.println(String.format("Bot is shutting down in %d seconds", seconds));
+
+        timer.schedule(new TimerTask(){
+            @Override
+            public void run() {
+                System.out.println("Bot is shutting down");
+
+                System.exit(0);
+            }
+        }, time);
     }
 }

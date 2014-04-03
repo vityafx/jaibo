@@ -1,13 +1,7 @@
-package aibo.systemextensions.core.infoproviders;
-
-import aibo.AIBO;
-
-import org.jaibo.api.dataserver.DataServerInfoObject;
-import org.jaibo.api.dataserver.DataServerInfoPackage;
-import org.jaibo.api.dataserver.DataServerInfoProvider;
+package org.jaibo.api.dataserver;
 
 /**
- * Core extension about provider
+ * Data Server Process Status Interface
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,21 +18,21 @@ import org.jaibo.api.dataserver.DataServerInfoProvider;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class AboutInfoProvider extends DataServerInfoProvider {
-
-    public AboutInfoProvider() {
-        this.setInfoPath("/core/about");
+public abstract class DataServerProcessorStatus {
+    public String getSectionName() {
+        return "status";
     }
 
-    @Override
-    protected String action() {
-        String aboutString = AIBO.Configuration.get("aibo.about");
-
-        DataServerInfoPackage infoPackage = new DataServerInfoPackage();
+    public DataServerInfoObject toInfoObject() {
         DataServerInfoObject infoObject = new DataServerInfoObject();
-        infoObject.putData("about", aboutString);
-        infoPackage.setInfoObject(infoObject);
+        infoObject.putData(this.getSectionName(), this.getMessage());
 
-        return infoPackage.toString();
+        return infoObject;
     }
+
+
+    public abstract String getMessage();
+    public abstract void setMessage(String message);
+
+    public abstract DataServerInfoStatusCode getStatus();
 }

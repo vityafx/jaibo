@@ -3,7 +3,8 @@ package aibo.systemextensions.core;
 import aibo.ExtensionManager;
 import aibo.systemextensions.core.commands.messagelisteners.*;
 import aibo.systemextensions.core.commands.serverlisteners.*;
-import aibo.systemextensions.core.infoproviders.AboutInfoProvider;
+import aibo.systemextensions.core.dataserverprocessors.AboutProcessor;
+import aibo.systemextensions.core.dataserverprocessors.ShutdownProcessor;
 import org.jaibo.api.Extension;
 import org.jaibo.api.errors.ExtensionError;
 
@@ -61,7 +62,8 @@ public class Object extends Extension {
 
     @Override
     public void setCommands() {
-        this.addInfoProvider(new AboutInfoProvider());
+        this.addDataServerProcessor(new AboutProcessor());
+        this.addDataServerProcessor(new ShutdownProcessor(this));
 
         this.addServerListener(new Pong(this));
         this.addServerListener(new Login(this));
@@ -73,6 +75,7 @@ public class Object extends Extension {
         this.addMessageListener(new UpdateConfiguration(this));
         this.addMessageListener(new Shutdown(this));
         this.addMessageListener(new GetOp(this));
+        this.addMessageListener(new APIToken(this));
         this.addMessageListener(new AddAdmin(this));
         this.addMessageListener(new RemoveAdmin(this));
         this.addMessageListener(new About(this));

@@ -1,14 +1,11 @@
 package aibo.dataserver;
 
-import aibo.ExtensionManager;
 import aibo.networkconnection.DataServerNetworkConnection;
 import aibo.networkconnection.DataServerNetworkConnectionListener;
 import aibo.systemextensions.TaskManager;
 import org.jaibo.api.dataserver.DataServerInfoPackage;
-import org.jaibo.api.dataserver.DataServerInfoProvider;
 import org.jaibo.api.dataserver.DataServerInfoStatusCode;
-import org.jaibo.api.dataserver.status.DataServerInfoArgumentErrorStatus;
-import org.jaibo.api.dataserver.status.DataServerInfoIncorrectPathStatus;
+import org.jaibo.api.dataserver.DataServerProcessor;
 
 import java.net.Socket;
 
@@ -47,66 +44,12 @@ public final class DataServer implements DataServerNetworkConnectionListener, Ru
     }
 
     @Override
-    public void dataServerRequestReceived(Socket clientSocket, String infoPath) {
-        new Thread(new DataServerRequestProcessor(taskManager, clientSocket, networkConnection, infoPath)).start();
+    public DataServerProcessor[] getDataProcessors() {
+        return this.taskManager.getDataServerProcessors();
     }
 
     @Override
     public void run() {
         this.networkConnection.startListenOn(this.listenAddress, this.listenPort);
-    }
-}
-
-
-class DataServerRequestProcessor implements Runnable {
-    private DataServerNetworkConnection connection = null;
-    private Socket clientSocket = null;
-    private TaskManager taskManager = null;
-    private String infoPath = null;
-
-
-    public DataServerRequestProcessor(TaskManager taskManager, Socket clientSocket,
-                                      DataServerNetworkConnection connection, String infoPath) {
-        this.taskManager = taskManager;
-        this.clientSocket = clientSocket;
-        this.connection = connection;
-        this.infoPath = infoPath;
-    }
-
-    private void processRequest() {
-        DataServerInfoProvider[] infoProviders = this.taskManager.getInfoProviders();
-        boolean answered = false;
-
-        for (DataServerInfoProvider infoProvider : infoProviders) {
-            String answer = infoProvider.checkAndGetInfo(this.infoPath);
-
-            if (answer != null && !answer.isEmpty()) {
-                this.send(answer);
-
-                answered = true;
-            }
-        }
-
-        if (!answered) {
-            this.sendError();
-        }
-    }
-
-    public void sendError() {
-        DataServerInfoPackage errorPackage = new DataServerInfoPackage();
-        errorPackage.setStatus(DataServerInfoStatusCode.INCORRECT_PATH);
-
-        this.send(errorPackage.toString());
-    }
-
-    public void send(String jsonAnswer) {
-        if (this.clientSocket != null && jsonAnswer != null && !jsonAnswer.isEmpty()) {
-            this.connection.send(this.clientSocket, jsonAnswer);
-        }
-    }
-
-    @Override
-    public void run() {
-        this.processRequest();
     }
 }

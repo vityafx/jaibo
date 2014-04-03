@@ -1,17 +1,14 @@
 package aibo.networkconnection;
 
-import org.jaibo.api.NetworkConnectionInterface;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import org.jaibo.api.dataserver.DataServerProcessor;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.ServerSocket;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Data server network connection
@@ -34,7 +31,7 @@ import java.util.regex.Pattern;
 public final class DataServerNetworkConnection {
     private boolean isDebug;
     private ArrayList<DataServerNetworkConnectionListener> listeners = new ArrayList<DataServerNetworkConnectionListener>();
-    private ServerSocket serverSocket;
+    private HttpServer server = null;
 
 
     public DataServerNetworkConnection() {
@@ -60,22 +57,21 @@ public final class DataServerNetworkConnection {
         }
     }
 
-    private void notifyListeners(Socket clientSocket, String dataServerData) {
-        for (DataServerNetworkConnectionListener listener : this.listeners) {
-            listener.dataServerRequestReceived(clientSocket, dataServerData);
-        }
-    }
-
     public void startListenOn(String address, int port) {
         try {
             if (address != null && !address.isEmpty()) {
-                this.serverSocket = new ServerSocket(port, 0, InetAddress.getByName(address));
+                this.server = HttpServer.create(new InetSocketAddress(address, port), 0);
             } else {
-                this.serverSocket = new ServerSocket(port);
+                this.server = HttpServer.create(new InetSocketAddress(port), 0);
             }
 
+            this.setContextHandlers();
+
+            server.setExecutor(null);
+            server.start();
+
             if (this.isDebug) {
-                String addressString = null;
+                String addressString;
 
                 if (address != null && !address.isEmpty()) {
                     addressString = address;
@@ -84,40 +80,6 @@ public final class DataServerNetworkConnection {
                 }
 
                 System.out.println(String.format("Data server connection opened, listening %s:%s", addressString, port));
-            }
-
-            this.runLoop();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void runLoop() {
-        try {
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-
-                BufferedReader networkInputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-                char[] inputChars = new char[1024];
-                int charsRead;
-
-                if ((charsRead = networkInputStream.read(inputChars)) != -1) {
-                    String dataString = new String(inputChars, 0, charsRead);
-                    String[] request = dataString.split("\r\n");
-
-                    String infoPath = parseInfoPath(request);
-
-                    if (infoPath != null) {
-                        this.notifyListeners(clientSocket, infoPath);
-
-                        if (this.isDebug) {
-                            System.out.println(String.format("<< %s", infoPath));
-                        }
-                    } else {
-                        clientSocket.close();
-                    }
-                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -139,44 +101,23 @@ public final class DataServerNetworkConnection {
         }
     }
 
-    private String parseInfoPath(String[] request) {
-        String infoPath = null;
-
-        for (String requestLine : request) {
-            if (requestLine.startsWith("GET ")) {
-                Pattern p = Pattern.compile(String.format("^GET (.*) (.*)$"));
-
-                CharSequence sequence = requestLine.subSequence(0, requestLine.length());
-                Matcher matcher = p.matcher(sequence);
-
-                if (matcher.matches()) {
-                    infoPath = matcher.group(1);
-
-                    if (infoPath.equals("/")) {
-                        infoPath = null;
-                    }
-
-                    break;
-                }
-
-                break;
-            }
-        }
-
-        return infoPath;
-    }
-
     private void setShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(){public void run(){
-            try {
-                if (serverSocket != null) {
-                    serverSocket.close();
+            if (server != null) {
+                server.stop(0);
 
-                    System.out.println("Closing data server socket.");
-                }
-            } catch (IOException e) {
-                System.out.println("Error while closing data server socket.");
+                System.out.println("Data server stopped.");
             }
         }});
+    }
+
+    private void setContextHandlers() {
+        if (this.server != null) {
+            for (DataServerNetworkConnectionListener listener : this.listeners) {
+                for (DataServerProcessor processor : listener.getDataProcessors()) {
+                    this.server.createContext(processor.getInfoPath(), (HttpHandler)processor);
+                }
+            }
+        }
     }
 }

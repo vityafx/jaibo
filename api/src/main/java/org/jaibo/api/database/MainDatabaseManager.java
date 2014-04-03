@@ -78,7 +78,7 @@ public final class MainDatabaseManager {
 
     public String[] adminsForExtension(String extensionName) {
         if (extensionName != null && !extensionName.isEmpty()) {
-            String query = String.format("SELECT %s as host as adminCount FROM %s WHERE %s=?",
+            String query = String.format("SELECT %s as host FROM %s WHERE %s=?",
                     this.adminHostField, this.adminTableName, this.adminExtensionField);
             PreparedStatement preparedStatement = DatabaseProvider.createPreparedStatement(query);
             ArrayList<String> adminsList = new ArrayList<String>();

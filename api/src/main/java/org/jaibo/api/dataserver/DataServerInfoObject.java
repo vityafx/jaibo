@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Data server info object
@@ -25,7 +26,24 @@ import java.util.Collection;
  */
 
 public final class DataServerInfoObject {
+    private final String errorPrefix = "JSON parse error: ";
     private JSONObject jsonObject = new JSONObject();
+
+    public DataServerInfoObject() {
+
+    }
+
+    public DataServerInfoObject(String jsonString) {
+        try {
+            this.jsonObject = new JSONObject(jsonString);
+        } catch (JSONException e) {
+            System.out.println(errorPrefix + e.getMessage());
+        }
+    }
+
+    public DataServerInfoObject(Map map) {
+        this.set(map);
+    }
 
     @Override
     public String toString() {
@@ -40,6 +58,22 @@ public final class DataServerInfoObject {
         this.jsonObject = new JSONObject();
     }
 
+    public String get(String key) {
+        String object = null;
+
+        try {
+            object = this.jsonObject.getString(key);
+        } catch (JSONException e) {
+            System.out.println(errorPrefix + e.getMessage());
+        }
+
+        return object;
+    }
+
+    public void set(Map map) {
+        this.jsonObject = new JSONObject(map);
+    }
+
     public void putData(String key, String stringData) {
         this.putDataInObject(this.jsonObject, key, stringData);
     }
@@ -50,7 +84,7 @@ public final class DataServerInfoObject {
         try {
             this.jsonObject.put(key, jsonArray);
         } catch (JSONException e) {
-            e.printStackTrace();
+            System.out.println(errorPrefix + e.getMessage());
         }
     }
 
@@ -60,7 +94,7 @@ public final class DataServerInfoObject {
             try {
                 jsonObject.put(key, stringData);
             } catch (JSONException e) {
-                e.printStackTrace();
+                System.out.println(errorPrefix + e.getMessage());
             }
         }
     }

@@ -1,12 +1,15 @@
 package org.jaibo.api;
 
 import org.jaibo.api.database.MainDatabaseManager;
-import org.jaibo.api.dataserver.DataServerInfoProvider;
+import org.jaibo.api.dataserver.DataServerProcessor;
 import org.jaibo.api.helpers.Configuration;
 import org.jaibo.api.helpers.ConfigurationListener;
+import org.jaibo.api.helpers.MD5Crypt;
+import sun.security.rsa.RSASignature;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Extension Interface
@@ -32,7 +35,7 @@ public abstract class Extension extends Thread implements ConfigurationListener 
     private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
     private ArrayList<EventListener> eventListeners = new ArrayList<EventListener>();
     private ArrayList<ServerListener> serverListeners = new ArrayList<ServerListener>();
-    private ArrayList<DataServerInfoProvider> infoProviders = new ArrayList<DataServerInfoProvider>();
+    private ArrayList<DataServerProcessor> dataServerProcessors = new ArrayList<DataServerProcessor>();
 
     private ExtensionMessengerInterface messenger;
 
@@ -121,20 +124,20 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         }
     }
 
-    public void addInfoProvider(DataServerInfoProvider provider) {
-        if (!this.infoProviders.contains(provider)) {
-            this.infoProviders.add(provider);
+    public void addDataServerProcessor(DataServerProcessor provider) {
+        if (!this.dataServerProcessors.contains(provider)) {
+            this.dataServerProcessors.add(provider);
         }
     }
 
-    public void removeInfoProvider(DataServerInfoProvider provider) {
-        if (this.infoProviders.contains(provider)) {
-            this.infoProviders.remove(provider);
+    public void removeDataServerProcessor(DataServerProcessor provider) {
+        if (this.dataServerProcessors.contains(provider)) {
+            this.dataServerProcessors.remove(provider);
         }
     }
 
-    public void deleteAllInfoProvider(DataServerInfoProvider provider) {
-        this.infoProviders.clear();
+    public void deleteAllDataServerProcessors() {
+        this.dataServerProcessors.clear();
     }
 
     public void removeServerListener(ServerListener listener) {
@@ -145,8 +148,8 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         this.serverListeners.clear();
     }
 
-    public ArrayList<DataServerInfoProvider> getInfoProviders() {
-        return this.infoProviders;
+    public ArrayList<DataServerProcessor> getDataServerProcessors() {
+        return this.dataServerProcessors;
     }
 
     public ExtensionMessengerInterface getExtensionMessenger() {
@@ -189,6 +192,34 @@ public abstract class Extension extends Thread implements ConfigurationListener 
         return rootAdminHost.equalsIgnoreCase(host)
                 || MainDatabaseManager.isAdminExists(this.getExtensionName(), host);
     }
+
+    public boolean isApiAuthTokenCorrect(String token) {
+        boolean isTokenCorrect = false;
+        String cryptedRootAdminHost = MD5Crypt.genMD5Hex(this.getRootAdmin());
+
+        isTokenCorrect = cryptedRootAdminHost.equals(token);
+
+        if (!isTokenCorrect) {
+            String[] admins = MainDatabaseManager.adminsForExtension(this.getExtensionName());
+
+            for (String adminHost : admins) {
+                if (token.equals(MD5Crypt.genMD5Hex(adminHost))) {
+                    isTokenCorrect = true;
+                }
+            }
+        }
+
+        return isTokenCorrect;
+    }
+
+    public String generateTokenForAdmin(String adminHost) {
+        if (isAdminHost(adminHost)) {
+            return MD5Crypt.genMD5Hex(adminHost);
+        } else {
+            return null;
+        }
+    }
+
 
     public String getRootAdmin() {
         String rootAdminHost = "test_root_admin";

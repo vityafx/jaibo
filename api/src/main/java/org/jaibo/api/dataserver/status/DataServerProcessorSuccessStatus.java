@@ -1,6 +1,6 @@
 package org.jaibo.api.dataserver.status;
 
-import org.jaibo.api.dataserver.DataServerInfoStatus;
+import org.jaibo.api.dataserver.DataServerProcessorStatus;
 import org.jaibo.api.dataserver.DataServerInfoStatusCode;
 import org.jaibo.api.errors.DataServerError;
 
@@ -22,7 +22,7 @@ import org.jaibo.api.errors.DataServerError;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class DataServerInfoSuccessStatus extends DataServerInfoStatus {
+public final class DataServerProcessorSuccessStatus extends DataServerProcessorStatus {
     private final String message = "Success";
 
 
