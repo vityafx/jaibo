@@ -109,7 +109,7 @@ public class Player implements PickupBotDatabaseManagerListener {
             if (ExtensionObject.DatabaseManager.isGameProfileExistsForHost(this.host)) {
                 this.gameProfile = ExtensionObject.DatabaseManager.getGameProfileForHost(this.host);
             } else {
-                throw new PlayerError("No game profile has been set. Ask admins for the help.");
+                throw new PlayerError("No game profile has been set. Try to set it by [!iam] command like [!iam player].");
             }
         }
     }
