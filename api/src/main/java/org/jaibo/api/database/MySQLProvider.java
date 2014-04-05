@@ -42,7 +42,7 @@ final class MySQLProvider extends AbstractDatabaseProvider {
                         credentials.getPassword());
 
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Can't find mysql jdbc driver.");
             }
         }
 

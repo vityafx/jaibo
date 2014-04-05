@@ -2,13 +2,19 @@ package aibo;
 
 import aibo.dataserver.DataServer;
 import aibo.systemextensions.TaskManager;
+import aibo.ircnetwork.IrcNetwork;
+
 import org.jaibo.api.database.DatabaseProvider;
 import org.jaibo.api.helpers.Configuration;
 import org.jaibo.api.IrcEvent;
 import org.jaibo.api.IrcMessage;
-import aibo.ircnetwork.IrcNetwork;
 import org.jaibo.api.IrcNetworkListener;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -34,12 +40,16 @@ import java.util.TimerTask;
 public final class AIBO implements IrcNetworkListener {
     public static Configuration Configuration = new Configuration("settings.ini");
 
+    private static GregorianCalendar startDateTime;
+
     private TaskManager taskManager;
 
     private IrcNetwork ircNetwork;
 
 
     public AIBO() {
+        AIBO.startDateTime = new GregorianCalendar();
+
         this.setUpDatabase();
 
         this.ircNetwork = new IrcNetwork(
@@ -118,5 +128,29 @@ public final class AIBO implements IrcNetworkListener {
             System.exit(0);
             }
         }, time);
+    }
+
+    public static GregorianCalendar getStartDateTime() {
+        return startDateTime;
+    }
+
+    public static void restart() {
+        try {
+            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+            final File currentJar = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+            if (currentJar.getName().endsWith(".jar")) {
+                final ArrayList<String> command = new ArrayList<String>();
+                command.add(javaBin);
+                command.add("-jar");
+                command.add(currentJar.getPath());
+
+                final ProcessBuilder builder = new ProcessBuilder(command);
+                builder.start();
+                System.exit(0);
+            }
+        } catch (Exception e) {
+            System.out.println("Can't restart the bot: %s" + e.getMessage());
+        }
     }
 }

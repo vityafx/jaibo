@@ -8,7 +8,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
@@ -36,6 +38,7 @@ public class NetworkConnection implements NetworkConnectionInterface {
     private String address;
 
     private Socket socket;
+    private int timeout;
 
     private ArrayList<NetworkConnectionListener> listeners = new ArrayList<NetworkConnectionListener>();
 
@@ -43,6 +46,10 @@ public class NetworkConnection implements NetworkConnectionInterface {
     public NetworkConnection() {
     }
 
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 
     public int getPort() {
         return this.port;
@@ -86,23 +93,47 @@ public class NetworkConnection implements NetworkConnectionInterface {
         }
     }
 
+    private void readLoop() throws IOException {
+        this.socket.setSoTimeout(this.timeout);
+        BufferedReader networkInputStream = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+
+        char[] inputChars = new char[1024];
+        int charsRead;
+
+        while (true) {
+            if ((charsRead = networkInputStream.read(inputChars)) != -1) {
+                this.socket.setSoTimeout(0);
+                String dataString = new String(inputChars, 0, charsRead);
+                String[] data = dataString.split("\r\n");
+
+                if (this.isDebug) {
+                    System.out.print(String.format("<< %s", dataString));
+                }
+
+                this.notifyListeners(data);
+            }
+        }
+    }
+
     private void runLoop() {
         try {
-            BufferedReader networkInputStream = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            this.readLoop();
+        } catch (IOException e) {
+            System.out.println(String.format("Error while trying to read (%s)", e.getMessage()));
+        }
+    }
 
-            char[] inputChars = new char[1024];
-            int charsRead;
+    @Override
+    public void send(String data) {
+        try {
+            if (this.socket != null) {
+                PrintWriter writer = new PrintWriter(this.socket.getOutputStream(), true);
 
-            while (true) {
-                if ((charsRead = networkInputStream.read(inputChars)) != -1) {
-                    String dataString = new String(inputChars, 0, charsRead);
-                    String[] data = dataString.split("\r\n");
+                writer.write(data + "\r\n");
+                writer.flush();
 
-                    if (this.isDebug) {
-                        System.out.print(String.format("<< %s", dataString));
-                    }
-
-                    this.notifyListeners(data);
+                if (this.isDebug) {
+                    System.out.println(String.format(">> %s", data));
                 }
             }
         } catch (IOException e) {
@@ -110,24 +141,10 @@ public class NetworkConnection implements NetworkConnectionInterface {
         }
     }
 
-    @Override
-    public void send(String data) {
-        try {
-            PrintWriter writer = new PrintWriter(this.socket.getOutputStream(), true);
-
-            writer.write(data + "\r\n");
-            writer.flush();
-
-            if (this.isDebug) {
-                System.out.println(String.format(">> %s", data));
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void connect() {
+        int currentAttempt = 1;
+        int maxAttempts = 3;
+
         if (this.port > 0 && this.address != null) {
             if (this.socket != null && this.socket.isConnected()) {
                 try {
@@ -138,7 +155,8 @@ public class NetworkConnection implements NetworkConnectionInterface {
             }
 
             try {
-                this.socket = new Socket(this.address, this.port);
+                this.socket = new Socket();
+                this.socket.connect(new InetSocketAddress(this.address, this.port), this.timeout);
 
                 this.runLoop();
             } catch (UnknownHostException exception) {
