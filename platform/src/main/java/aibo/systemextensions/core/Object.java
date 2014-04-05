@@ -6,6 +6,7 @@ import aibo.systemextensions.core.commands.serverlisteners.*;
 import aibo.systemextensions.core.dataserverprocessors.AboutProcessor;
 import aibo.systemextensions.core.dataserverprocessors.ShutdownProcessor;
 import org.jaibo.api.Extension;
+import org.jaibo.api.SimpleCommand;
 import org.jaibo.api.errors.ExtensionError;
 
 /**
@@ -41,6 +42,18 @@ public class Object extends Extension {
         } else {
             Object.ObjectCount++;
         }
+
+        this.setShutdownHook();
+    }
+
+    private void setShutdownHook() {
+        final QuitOnShutdown shutDownHandler = new QuitOnShutdown(this);
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                shutDownHandler.execute();
+            }
+        });
     }
 
     @Override
@@ -48,11 +61,6 @@ public class Object extends Extension {
         Object.ObjectCount--;
 
         super.finalize();
-    }
-
-    @Override
-    public void run() {
-
     }
 
     @Override

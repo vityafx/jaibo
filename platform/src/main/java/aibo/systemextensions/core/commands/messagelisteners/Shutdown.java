@@ -42,7 +42,7 @@ public final class Shutdown extends Command implements MessageListener {
 
     @Override
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage())) {
+        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.checkExact(message.getMessage())) {
             IrcUser user = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
             if (user != null && this.object.isAdminHost(user.getHost())) {
@@ -55,7 +55,7 @@ public final class Shutdown extends Command implements MessageListener {
 
     @Override
     protected void action() {
-        this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, "Goodbye! But shut down in 5 seconds.");
+        this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, "Bot will shut down in 5 seconds");
 
         AIBO.Shutdown();
     }

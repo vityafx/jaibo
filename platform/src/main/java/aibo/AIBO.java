@@ -40,7 +40,7 @@ public final class AIBO implements IrcNetworkListener {
 
 
     public AIBO() {
-        DatabaseProvider.setDefaultDatabase(Configuration.get("aibo.database_name"));
+        this.setUpDatabase();
 
         this.ircNetwork = new IrcNetwork(
                 Configuration.get("IrcConnection.host").split(" "),
@@ -77,7 +77,7 @@ public final class AIBO implements IrcNetworkListener {
         this.ircNetwork.connect();
     }
 
-    public void setUpDataServer() {
+    private void setUpDataServer() {
         if (Configuration.getBoolean("data_server")) {
             try {
                 int listenPort = Integer.parseInt(Configuration.get("data_server.listen_port"));
@@ -89,6 +89,15 @@ public final class AIBO implements IrcNetworkListener {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void setUpDatabase() {
+        DatabaseProvider.setDatabaseProvider(Configuration.get("aibo.database.provider"));
+        DatabaseProvider.setCredentials(
+                Configuration.get("aibo.database.host"),
+                Configuration.get("aibo.database.username"),
+                Configuration.get("aibo.database.password"),
+                Configuration.get("aibo.database.name"));
     }
 
     public static void Shutdown() {
@@ -104,9 +113,9 @@ public final class AIBO implements IrcNetworkListener {
         timer.schedule(new TimerTask(){
             @Override
             public void run() {
-                System.out.println("Bot is shutting down");
+            System.out.println("Bot is shutting down");
 
-                System.exit(0);
+            System.exit(0);
             }
         }, time);
     }

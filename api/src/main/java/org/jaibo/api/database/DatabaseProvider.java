@@ -1,12 +1,11 @@
 package org.jaibo.api.database;
 
-import com.sun.rowset.CachedRowSetImpl;
-
 import javax.sql.rowset.CachedRowSet;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
- * Database provider realization
+ * Database provider wrapper
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,110 +22,75 @@ import java.sql.*;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// this class actually implements DatabaseProviderInterface but in static context
 public final class DatabaseProvider {
+    private static AbstractDatabaseProvider currentProvider;
+
     private static String _defaultDatabase;
 
-    public static void setDefaultDatabase(String databaseName) {
-        _defaultDatabase = databaseName;
+
+    public static void setDatabaseProvider(String databaseProviderName) {
+        DatabaseProvider.currentProvider = DatabaseProviderFactory.createDatabaseProvider(databaseProviderName);
     }
 
-    public static String getDefaultDatabase() {
-        if (_defaultDatabase == null || _defaultDatabase.isEmpty()) {
-            return "defaultDatabase";
+    public static void setCredentials(String host, String username, String password, String databaseName) {
+        DatabaseCredentials credentials = new DatabaseCredentials(host, username, password, databaseName);
+
+        DatabaseProviderFactory.setCredentials(credentials);
+    }
+
+    public static CachedRowSet executeStatement(String sqlStatement, boolean needResult) throws SQLException {
+        if (DatabaseProvider.currentProvider != null) {
+            return DatabaseProvider.currentProvider.executeStatement(sqlStatement, needResult);
+        } else {
+            return null;
         }
-
-        return _defaultDatabase;
     }
 
-    private static Connection getConnection(String databaseName) {
-        try {
-            if (databaseName != null && !databaseName.isEmpty()) {
-                Class.forName("org.sqlite.JDBC");
-
-                return DriverManager.getConnection(databaseName);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static CachedRowSet executeStatementWithDatabase(DatabaseCredentials credentials, String sqlStatement, boolean needResult)
+            throws SQLException {
+        if (DatabaseProvider.currentProvider != null) {
+            return DatabaseProvider.currentProvider.executeStatementWithDatabase(credentials, sqlStatement, needResult);
+        } else {
+            return null;
         }
-
-        return null;
     }
 
-    public static CachedRowSet executeStatement(String sqlStatement, boolean needResult)
-            throws SQLException {
-
-        return executeStatementWithDatabase(getDefaultDatabase(), sqlStatement, needResult);
-    }
-
-    public static CachedRowSet executeStatementWithDatabase(String databaseName, String sqlStatement, boolean needResult)
-            throws SQLException {
-        String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
-
-        CachedRowSet cachedRowSet = null;
-        Connection sqlConnection = getConnection(formattedDatabaseName);
-
-        if (sqlConnection != null && sqlStatement != null && !sqlStatement.isEmpty()) {
-            Statement statement = sqlConnection.createStatement();
-
-            if (needResult) {
-                cachedRowSet = new CachedRowSetImpl();
-                cachedRowSet.populate(statement.executeQuery(sqlStatement));
-            } else {
-                statement.executeUpdate(sqlStatement);
-            }
-
-            statement.close();
-            sqlConnection.close();
+    public static CachedRowSet executePreparedStatement(PreparedStatement preparedStatement,
+                                                 boolean needResult) throws SQLException {
+        if (DatabaseProvider.currentProvider != null) {
+            return DatabaseProvider.currentProvider.executePreparedStatement(preparedStatement, needResult);
+        } else {
+            return null;
         }
-
-        return cachedRowSet;
     }
 
-    public static CachedRowSet executePreparedStatement(PreparedStatement preparedStatement, boolean needResult)
-            throws SQLException {
-        return executePreparedStatementWithDatabase(getDefaultDatabase(),
-                preparedStatement, needResult);
-    }
-
-    public static CachedRowSet executePreparedStatementWithDatabase(String databaseName,
-                                                                    PreparedStatement preparedStatement,
-                                                                    boolean needResult)
-            throws SQLException {
-
-        String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
-
-        CachedRowSet cachedRowSet = null;
-        Connection sqlConnection = getConnection(formattedDatabaseName);
-
-        if (sqlConnection != null && preparedStatement != null) {
-            if (needResult) {
-                cachedRowSet = new CachedRowSetImpl();
-                cachedRowSet.populate(preparedStatement.executeQuery());
-            } else {
-                preparedStatement.executeUpdate();
-            }
-
-            preparedStatement.close();
-            sqlConnection.close();
+    public static CachedRowSet executePreparedStatementWithDatabase(DatabaseCredentials credentials,
+                                                             PreparedStatement preparedStatement,
+                                                             boolean needResult) throws SQLException {
+        if (DatabaseProvider.currentProvider != null) {
+            return DatabaseProvider.currentProvider.executePreparedStatementWithDatabase(
+                    credentials,
+                    preparedStatement,
+                    needResult);
+        } else {
+            return null;
         }
-
-        return cachedRowSet;
     }
 
     public static PreparedStatement createPreparedStatement(String query) {
-        return createPreparedStatementWithDatabase(getDefaultDatabase(), query);
+        if (DatabaseProvider.currentProvider != null) {
+            return DatabaseProvider.currentProvider.createPreparedStatement(query);
+        } else {
+            return null;
+        }
     }
 
-    public static PreparedStatement createPreparedStatementWithDatabase(String databaseName, String query) {
-        String formattedDatabaseName = String.format("jdbc:sqlite:%s", databaseName);
-        PreparedStatement preparedStatement = null;
-
-        try {
-            preparedStatement = getConnection(formattedDatabaseName).prepareStatement(query);
-        } catch (SQLException e) {
-            System.out.println("Exception occured while creating prepared statement: " + e.getMessage());
+    public static PreparedStatement createPreparedStatementWithDatabase(DatabaseCredentials credentials, String query) {
+        if (DatabaseProvider.currentProvider != null) {
+            return DatabaseProvider.currentProvider.createPreparedStatementWithDatabase(credentials, query);
+        } else {
+            return null;
         }
-
-        return preparedStatement;
     }
 }

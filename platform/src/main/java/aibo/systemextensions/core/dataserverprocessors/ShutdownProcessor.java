@@ -40,21 +40,22 @@ public final class ShutdownProcessor extends DataServerProcessor {
         DataServerInfoPackage infoPackage = new DataServerInfoPackage();
         DataServerInfoObject infoObject = new DataServerInfoObject();
 
-        if (this.getInfoObject() != null) {
+        if (this.getInfoObject() == null || this.getInfoObject().get("token") == null
+                || this.getInfoObject().get("token").isEmpty()) {
+
+            infoPackage.setStatus(DataServerInfoStatusCode.ARGUMENT_ERROR);
+            infoPackage.setStatusMessage("You must have a token");
+
+        } else {
             String adminHost = this.getInfoObject().get("token");
 
-            if (adminHost != null && !adminHost.isEmpty()) {
-                if (this.extensionObject.isApiAuthTokenCorrect(adminHost)) {
-                    infoObject.putData("answer", "Bot will shut down in 5 seconds");
+            if (this.extensionObject.isApiAuthTokenCorrect(adminHost)) {
+                infoObject.putData("answer", "Bot will shut down in 5 seconds");
 
-                    AIBO.Shutdown();
-                } else {
-                    infoPackage.setStatus(DataServerInfoStatusCode.ARGUMENT_ERROR);
-                    infoPackage.setStatusMessage(String.format("'%s' unknown token", adminHost));
-                }
+                AIBO.Shutdown();
             } else {
                 infoPackage.setStatus(DataServerInfoStatusCode.ARGUMENT_ERROR);
-                infoPackage.setStatusMessage("You must have a token");
+                infoPackage.setStatusMessage(String.format("'%s' unknown token", adminHost));
             }
         }
 

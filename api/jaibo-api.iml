@@ -15,6 +15,7 @@
     <orderEntry type="library" exported="" name="Gradle: sqlite-jdbc-3.7.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit-3.8.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: json-20080701" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: mysql-connector-java-5.1.30" level="project" />
   </component>
 </module>
 

@@ -135,20 +135,24 @@ public final class ExtensionManager {
     public static boolean IsExtensionObjectExists(String extensionName) {
         boolean extensionExists;
 
-        try {
-            File jarPath = new File(ExtensionManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            String jarPathAsString = jarPath.getParentFile().getAbsolutePath();
-            String extensionPath = "file://" + jarPathAsString + "/libs/" +extensionName + ".jar";
-            URLClassLoader child = new URLClassLoader (new URL[]{new URL(extensionPath)},
-                    ExtensionManager.class.getClassLoader());
+        if (!extensionName.equalsIgnoreCase("core")) {
+            try {
+                File jarPath = new File(ExtensionManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+                String jarPathAsString = jarPath.getParentFile().getAbsolutePath();
+                String extensionPath = "file://" + jarPathAsString + "/libs/" + extensionName + ".jar";
+                URLClassLoader child = new URLClassLoader(new URL[]{new URL(extensionPath)},
+                        ExtensionManager.class.getClassLoader());
 
-            Class.forName(extensionName + ".ExtensionObject", true, child);
+                Class.forName(extensionName + ".ExtensionObject", true, child);
 
+                extensionExists = true;
+            } catch (ClassNotFoundException e) {
+                extensionExists = false;
+            } catch (MalformedURLException e) {
+                extensionExists = false;
+            }
+        } else {
             extensionExists = true;
-        } catch (ClassNotFoundException e) {
-            extensionExists = false;
-        } catch (MalformedURLException e) {
-            extensionExists = false;
         }
 
         return extensionExists;

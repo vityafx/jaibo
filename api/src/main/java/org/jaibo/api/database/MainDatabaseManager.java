@@ -1,7 +1,5 @@
 package org.jaibo.api.database;
 
-import org.jaibo.api.database.DatabaseProvider;
-
 import javax.sql.rowset.CachedRowSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

@@ -41,9 +41,12 @@ public final class APIToken extends Command implements MessageListener {
 
     @Override
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.PrivateMessage) {
-            if (this.check(message.getMessage().trim())) {
+        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.checkExact(message.getMessage().trim())) {
+            IrcUser user = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
+
+            if (user != null && this.object.isAdminHost(user.getHost())) {
                 this.receiver = message.getNick();
+                this.adminHost = user.getHost();
 
                 this.execute();
             }
@@ -51,38 +54,12 @@ public final class APIToken extends Command implements MessageListener {
     }
 
     @Override
-    public boolean check(String message) {
-        boolean checkPassed = false;
-
-        if (super.check(message)) {
-            for (String name : this.getNames()) {
-                Pattern p = Pattern.compile(String.format("^%s (.*)$", name), Pattern.CASE_INSENSITIVE);
-
-                CharSequence sequence = message.subSequence(0, message.length());
-                Matcher matcher = p.matcher(sequence);
-
-                if (matcher.matches()) {
-                    this.adminHost = matcher.group(1);
-
-                    break;
-                }
-            }
-
-            checkPassed = true;
-        }
-
-        return checkPassed;
-    }
-
-    @Override
     protected void action() {
         String token = this.object.generateTokenForAdmin(this.adminHost);
-        String answer = "Wrong admin host provided";
 
         if (token != null) {
-            answer = String.format("Your API token is: [ %s ]", token);
+            this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
+                    String.format("Your API token is: [ %s ]", token));
         }
-
-        this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, answer);
     }
 }

@@ -2,24 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7f8d398c-4c7d-4074-a20a-1eac361f9b50" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/dataserverprocessors/ShutdownProcessor.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/DataServerInfoProvider.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/DataServerProcessor.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/DataServerInfoStatus.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/DataServerProcessorStatus.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/status/DataServerInfoArgumentErrorStatus.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/status/DataServerProcessorArgumentErrorStatus.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/status/DataServerInfoIncorrectPathStatus.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/status/DataServerProcessorIncorrectPathStatus.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/status/DataServerInfoParseErrorStatus.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/status/DataServerProcessorParseErrorStatus.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/status/DataServerInfoSuccessStatus.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/status/DataServerProcessorSuccessStatus.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/infoproviders/AboutInfoProvider.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/dataserverprocessors/AboutProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/AIBO.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/AIBO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/dataserver/DataServer.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/dataserver/DataServer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/DataServerInfoObject.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/DataServerInfoObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/DataServerInfoPackage.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/dataserver/DataServerInfoPackage.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/networkconnection/DataServerNetworkConnection.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/networkconnection/DataServerNetworkConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/networkconnection/DataServerNetworkConnectionListener.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/networkconnection/DataServerNetworkConnectionListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/Extension.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/Extension.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/Object.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/Object.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/messagelisteners/Shutdown.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/messagelisteners/Shutdown.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/TaskManager.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/TaskManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../../api/.idea/libraries/Gradle__mysql_connector_java_5_1_30.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../api/build.gradle" afterPath="$PROJECT_DIR$/../../../api/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../api/jaibo-api.iml" afterPath="$PROJECT_DIR$/../../../api/jaibo-api.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="pickupbot.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -66,20 +52,8 @@
         <entry file="file://$PROJECT_DIR$/../../../platform/settings/settings.ini">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="1050">
-              <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
+              <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="760" max-vertical-offset="1725">
-              <caret line="95" column="2" selection-start-line="95" selection-start-column="2" selection-end-line="95" selection-end-column="2" />
-              <folding>
-                <marker date="1396286931499" expanded="true" signature="1709:2088" placeholder="..." />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -94,11 +68,54 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AutoRemovablePlayer.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="AutoRemovablePlayer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/AutoRemovablePlayer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.41295117" vertical-offset="271" max-vertical-offset="1620">
-              <caret line="53" column="33" selection-start-line="53" selection-start-column="33" selection-end-line="53" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="166" max-vertical-offset="1650">
+              <caret line="25" column="50" selection-start-line="25" selection-start-column="50" selection-end-line="25" selection-end-column="50" />
+              <folding>
+                <element signature="e#1207#1208#0" expanded="true" />
+                <element signature="e#1259#1260#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Player.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/Player.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.14225054" vertical-offset="826" max-vertical-offset="2040">
+              <caret line="75" column="5" selection-start-line="75" selection-start-column="5" selection-end-line="75" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Add.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/commands/messagelisteners/Add.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="675" max-vertical-offset="1680">
+              <caret line="110" column="29" selection-start-line="110" selection-start-column="29" selection-end-line="110" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ExtensionObject.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/ExtensionObject.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1651" max-vertical-offset="5670">
+              <caret line="154" column="28" selection-start-line="154" selection-start-column="28" selection-end-line="154" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Game.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/Game.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="616" max-vertical-offset="5130">
+              <caret line="78" column="67" selection-start-line="78" selection-start-column="67" selection-end-line="78" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -383,7 +400,6 @@
         <option value="$PROJECT_DIR$/src/main/java/games/pickupbot/Tournament.java" />
         <option value="$PROJECT_DIR$/src/main/java/games/pickupbot/commands/messagelisteners/RemoveGameProfileBinding.java" />
         <option value="$PROJECT_DIR$/src/main/java/games/pickupbot/commands/messagelisteners/Remove.java" />
-        <option value="$PROJECT_DIR$/src/main/java/games/pickupbot/Player.java" />
         <option value="$PROJECT_DIR$/src/main/java/games/pickupbot/PickupBotDatabaseManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/games/pickupbot/ExtensionObject.java" />
         <option value="$PROJECT_DIR$/src/main/java/games/pickupbot/Game.java" />
@@ -394,11 +410,12 @@
         <option value="$PROJECT_DIR$/../../../build.gradle" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/src/test/java/GameTests.java" />
+        <option value="$PROJECT_DIR$/src/main/java/games/pickupbot/Player.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-4" />
+    <option name="x" value="1916" />
     <option name="y" value="-3" />
     <option name="width" value="1928" />
     <option name="height" value="1087" />
@@ -429,7 +446,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -439,18 +455,9 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pickupbot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pickupbot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -530,12 +537,6 @@
       <ConfigurationWrapper RunnerId="ExternalSystemTaskRunner" />
       <method />
     </configuration>
-    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
-      <module name="" />
-      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
-      <option name="PROGRAM_PARAMETERS" />
-      <method />
-    </configuration>
     <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
       <module name="" />
       <setting name="path" value="" />
@@ -543,6 +544,12 @@
       <setting name="params" value="" />
       <setting name="workDir" value="file://$PROJECT_DIR$" />
       <setting name="debug" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
       <method />
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
@@ -589,6 +596,19 @@
       </ExternalSystemSettings>
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -614,19 +634,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -708,10 +715,15 @@
       <created>1395437970070</created>
       <updated>1395437970070</updated>
     </task>
+    <task id="LOCAL-00001" summary="Fixed message format in pickupbot">
+      <created>1396547345852</created>
+      <updated>1396547345852</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-3" width="1928" height="1087" extended-state="6" />
+    <frame x="1916" y="-3" width="1928" height="1087" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -724,6 +736,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32920536" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32920536" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960597" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -735,8 +748,8 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32955715" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -754,6 +767,8 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
+    <MESSAGE value="Fixed message format in pickupbot" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed message format in pickupbot" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -761,14 +776,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="270" max-vertical-offset="1110">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/Tournament.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1725">
@@ -798,7 +805,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="781" max-vertical-offset="1725">
           <caret line="95" column="2" selection-start-line="95" selection-start-column="2" selection-end-line="95" selection-end-column="2" />
           <folding>
-            <marker date="1396286931499" expanded="true" signature="1709:2088" placeholder="..." />
+            <marker date="1396286931499" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -839,7 +846,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="645" max-vertical-offset="1725">
           <caret line="43" column="14" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
           <folding>
-            <marker date="1396286931499" expanded="true" signature="1709:2088" placeholder="..." />
+            <marker date="1396286931499" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -887,7 +894,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="645" max-vertical-offset="1725">
           <caret line="43" column="14" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
           <folding>
-            <marker date="1396286931499" expanded="true" signature="1709:2088" placeholder="..." />
+            <marker date="1396286931499" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -957,7 +964,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="585" max-vertical-offset="1410">
           <caret line="64" column="1" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
           <folding>
-            <marker date="1396286931499" expanded="true" signature="1709:2088" placeholder="..." />
+            <marker date="1396286931499" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1042,22 +1049,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../platform/settings/settings.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="1050">
-          <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../README.md">
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.360262" vertical-offset="0" max-vertical-offset="916">
           <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
         </state>
+      </provider>
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../livestreams/build.gradle">
@@ -1095,34 +1094,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="760" max-vertical-offset="1725">
-          <caret line="95" column="2" selection-start-line="95" selection-start-column="2" selection-end-line="95" selection-end-column="2" />
-          <folding>
-            <marker date="1396286931499" expanded="true" signature="1709:2088" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/ExtensionObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.6131622" vertical-offset="1995" max-vertical-offset="5670">
-          <caret line="220" column="5" selection-start-line="220" selection-start-column="5" selection-end-line="220" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/jaibo-api-1.0.jar!/org/jaibo/api/helpers/GregorianCalendarHelper.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.12541807" vertical-offset="0" max-vertical-offset="598">
           <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45264846" vertical-offset="648" max-vertical-offset="2115">
-          <caret line="66" column="16" selection-start-line="66" selection-start-column="16" selection-end-line="66" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -1133,10 +1108,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/Game.java">
+    <entry file="file://$PROJECT_DIR$/../../../build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7648305" vertical-offset="2713" max-vertical-offset="5130">
-          <caret line="247" column="5" selection-start-line="247" selection-start-column="5" selection-end-line="247" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.40254238" vertical-offset="85" max-vertical-offset="1725">
+          <caret line="31" column="2" selection-start-line="31" selection-start-column="2" selection-end-line="31" selection-end-column="2" />
+          <folding>
+            <marker date="1396286931499" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../platform/settings/settings.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="1050">
+          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1148,10 +1134,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/commands/messagelisteners/Add.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="675" max-vertical-offset="1680">
+          <caret line="110" column="29" selection-start-line="110" selection-start-column="29" selection-end-line="110" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/ExtensionObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1651" max-vertical-offset="5670">
+          <caret line="154" column="28" selection-start-line="154" selection-start-column="28" selection-end-line="154" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="616" max-vertical-offset="5130">
+          <caret line="78" column="67" selection-start-line="78" selection-start-column="67" selection-end-line="78" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/AutoRemovablePlayer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41295117" vertical-offset="271" max-vertical-offset="1620">
-          <caret line="53" column="33" selection-start-line="53" selection-start-column="33" selection-end-line="53" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="166" max-vertical-offset="1650">
+          <caret line="25" column="50" selection-start-line="25" selection-start-column="50" selection-end-line="25" selection-end-column="50" />
+          <folding>
+            <element signature="e#1207#1208#0" expanded="true" />
+            <element signature="e#1259#1260#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14225054" vertical-offset="826" max-vertical-offset="2040">
+          <caret line="75" column="5" selection-start-line="75" selection-start-column="5" selection-end-line="75" selection-end-column="5" />
           <folding />
         </state>
       </provider>

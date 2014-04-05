@@ -1,4 +1,5 @@
 import junit.framework.TestCase;
+import org.jaibo.api.database.DatabaseCredentials;
 import org.jaibo.api.database.DatabaseProvider;
 
 import java.sql.PreparedStatement;
@@ -24,22 +25,26 @@ import java.sql.SQLException;
  */
 
 public final class DatabaseTests extends TestCase {
-    private String testDatabaseName = "test.db";
     private String testTableName = "test_table";
     private String testFieldName = "test_field";
     private String testFieldValue = "test_field_value";
 
+    // To test with mysql simply set correct credentials and change provider in `setUp` method
+    private static DatabaseCredentials testCredentials = new DatabaseCredentials(null, null, null, "aibo");
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        DatabaseProvider.setDatabaseProvider("sqlite");
     }
 
-    public void testCreateTable() {
+    private void createTableTest() {
         String createString = String.format("CREATE TABLE IF NOT EXISTS %s(%s text)",
                 this.testTableName, this.testFieldName);
 
         try {
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, createString, false);
 
             assertTrue(true);
         } catch (SQLException e) {
@@ -47,6 +52,10 @@ public final class DatabaseTests extends TestCase {
 
             assertTrue(false);
         }
+    }
+
+    public void testCreateTable() {
+        this.createTableTest();
     }
 
     public void testInsertData() {
@@ -57,8 +66,8 @@ public final class DatabaseTests extends TestCase {
                 this.testTableName, this.testFieldName, this.testFieldValue);
 
         try {
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, createString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, insertString, false);
 
             assertTrue(true);
         } catch (SQLException e) {
@@ -78,10 +87,10 @@ public final class DatabaseTests extends TestCase {
         String selectString = String.format("SELECT * from %s t", this.testTableName);
 
         try {
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, createString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, insertString, false);
 
-            ResultSet rs = DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, selectString, true);
+            ResultSet rs = DatabaseProvider.executeStatementWithDatabase(testCredentials, selectString, true);
 
             assertTrue(rs.next());
 
@@ -108,11 +117,11 @@ public final class DatabaseTests extends TestCase {
         String selectString = String.format("SELECT t.%s from %s t", this.testFieldName, this.testTableName);
 
         try {
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, updateString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, createString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, insertString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, updateString, false);
 
-            ResultSet rs = DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, selectString, true);
+            ResultSet rs = DatabaseProvider.executeStatementWithDatabase(testCredentials, selectString, true);
 
             assertTrue(rs.next());
 
@@ -138,11 +147,11 @@ public final class DatabaseTests extends TestCase {
         String selectString = String.format("SELECT t.%s from %s t", this.testFieldName, this.testTableName);
 
         try {
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, deleteString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, createString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, insertString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, deleteString, false);
 
-            ResultSet rs = DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, selectString, true);
+            ResultSet rs = DatabaseProvider.executeStatementWithDatabase(testCredentials, selectString, true);
 
             assertFalse(rs.next());
         } catch (SQLException e) {
@@ -156,7 +165,7 @@ public final class DatabaseTests extends TestCase {
         String createString = String.format("CREATE TABLE IF NOT EXISTS %s(%s text)",
                 this.testTableName, this.testFieldName);
 
-        PreparedStatement preparedInsertStatement = DatabaseProvider.createPreparedStatementWithDatabase(this.testDatabaseName,
+        PreparedStatement preparedInsertStatement = DatabaseProvider.createPreparedStatementWithDatabase(testCredentials,
                 String.format("INSERT INTO %s(%s) VALUES (?)", this.testTableName, this.testFieldName));
 
         String selectString = String.format("SELECT t.%s from %s t", this.testFieldName, this.testTableName);
@@ -164,12 +173,12 @@ public final class DatabaseTests extends TestCase {
         try {
             preparedInsertStatement.setString(1, this.testFieldValue);
 
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, createString, false);
 
-            DatabaseProvider.executePreparedStatementWithDatabase(this.testDatabaseName,
+            DatabaseProvider.executePreparedStatementWithDatabase(testCredentials,
                     preparedInsertStatement, false);
 
-            ResultSet rs = DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, selectString, true);
+            ResultSet rs = DatabaseProvider.executeStatementWithDatabase(testCredentials, selectString, true);
 
             assertTrue(rs.next());
 
@@ -190,14 +199,14 @@ public final class DatabaseTests extends TestCase {
         String insertString = String.format("INSERT INTO %s(%s) VALUES (\"%s\")",
                 this.testTableName, this.testFieldName, this.testFieldValue);
 
-        PreparedStatement preparedSelectStatement = DatabaseProvider.createPreparedStatementWithDatabase(this.testDatabaseName,
+        PreparedStatement preparedSelectStatement = DatabaseProvider.createPreparedStatementWithDatabase(testCredentials,
                 String.format("SELECT * from %s t", this.testTableName));
 
         try {
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, createString, false);
-            DatabaseProvider.executeStatementWithDatabase(this.testDatabaseName, insertString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, createString, false);
+            DatabaseProvider.executeStatementWithDatabase(testCredentials, insertString, false);
 
-            ResultSet rs = DatabaseProvider.executePreparedStatementWithDatabase(this.testDatabaseName,
+            ResultSet rs = DatabaseProvider.executePreparedStatementWithDatabase(testCredentials,
                     preparedSelectStatement, true);
 
             assertTrue(rs.next());
