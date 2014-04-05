@@ -28,6 +28,8 @@ public final class QuitOnShutdown extends SimpleCommand {
 
     @Override
     public void execute() {
-        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("QUIT", ":Bot is shutting down");
+        if (this.object != null) {
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("QUIT", ":Bot is shutting down");
+        }
     }
 }

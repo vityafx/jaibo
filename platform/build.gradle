@@ -13,7 +13,7 @@ targetCompatibility = 1.6
 
 buildDir = "target"
 
-mainClassName = "Main"
+mainClassName = "aibo.Main"
 
 repositories {
 
@@ -72,7 +72,7 @@ jar {
     archiveName = "$rootProject.name-$version" + '.jar'
 
     manifest.attributes(
-            "Main-Class": "Main",
+            "Main-Class": "aibo.Main",
             "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
     )
 }
