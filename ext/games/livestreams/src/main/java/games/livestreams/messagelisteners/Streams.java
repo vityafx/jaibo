@@ -2,6 +2,7 @@ package games.livestreams.messagelisteners;
 
 import games.livestreams.ExtensionObject;
 
+import games.livestreams.errors.ProviderError;
 import org.jaibo.api.Command;
 import org.jaibo.api.helpers.ConfigurationListener;
 import org.jaibo.api.IrcMessage;
@@ -83,14 +84,18 @@ public final class Streams extends Command implements MessageListener, Configura
 
     @Override
     protected void action() {
-        String[] streams = this.object.getStreams(this.providerName, this.streamTag);
+        this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(),
+                String.format("Retrieving live streams information with limit=[%s] on service[%s]",
+                        ExtensionObject.Configuration.get("streams.limit"), this.providerName));
 
-        StringBuilder answerBuilder = new StringBuilder();
+        try {
+            String[] streams = this.object.getStreams(this.providerName, this.streamTag);
 
-        for(String stream : streams) {
-            answerBuilder.append(stream);
+            for (String stream : streams) {
+                this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), stream);
+            }
+        } catch (ProviderError e) {
+            this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), e.getMessage());
         }
-
-        this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(), answerBuilder.toString());
     }
 }

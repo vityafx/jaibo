@@ -36,6 +36,11 @@ public class ExtensionObject extends Extension {
     }
 
     @Override
+    public String getExtensionVersion() {
+        return "1.0";
+    }
+
+    @Override
     public void setCommands() {
     }
 

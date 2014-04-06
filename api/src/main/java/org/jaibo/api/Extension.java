@@ -72,6 +72,8 @@ public abstract class Extension extends Thread implements ConfigurationListener 
 
     public abstract String getExtensionName();
 
+    public abstract String getExtensionVersion();
+
     public void processTask(IrcMessage ircMessage) {
         for(MessageListener listener : messageListeners) {
             listener.messageReceived(ircMessage);

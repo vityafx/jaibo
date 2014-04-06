@@ -43,6 +43,11 @@ public final class ExtensionObject extends Extension implements ConfigurationLis
     }
 
     @Override
+    public String getExtensionVersion() {
+        return "1.0";
+    }
+
+    @Override
     protected void setCommands() {
         this.addMessageListener(new Streams(this));
     }
@@ -87,6 +92,10 @@ public final class ExtensionObject extends Extension implements ConfigurationLis
         ArrayList<String> streams = new ArrayList<String>();
         String[] streamsArray = new String[]{};
 
+        if (!this.isProviderExists(providerName)) {
+            throw new ProviderError(String.format("No such provider \"%s\"", providerName));
+        }
+
         for (Provider provider : this.providers) {
             if (provider.getProviderName().equalsIgnoreCase(providerName)) {
                 try {
@@ -100,5 +109,19 @@ public final class ExtensionObject extends Extension implements ConfigurationLis
         }
 
         return streams.toArray(streamsArray);
+    }
+
+    public boolean isProviderExists(String providerName) {
+        boolean exists = false;
+
+        for (Provider provider : this.providers) {
+            if (provider.getProviderName().equalsIgnoreCase(providerName)) {
+                exists = true;
+
+                break;
+            }
+        }
+
+        return exists;
     }
 }

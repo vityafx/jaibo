@@ -74,6 +74,10 @@ public final class ExtensionManager {
             extension.setExtensionMessenger(this.messenger);
 
             this.extensions.add(extension);
+
+            System.out.println(String.format("Extension added: %s (version: %s)",
+                    extension.getExtensionName(),
+                    extension.getExtensionVersion()));
         }
     }
 
@@ -96,6 +100,10 @@ public final class ExtensionManager {
             extension.prepareToUnload();
 
             this.extensions.remove(extension);
+
+            System.out.println(String.format("Extension removed: %s (version: %s)",
+                    extension.getExtensionName(),
+                    extension.getExtensionVersion()));
         }
     }
 

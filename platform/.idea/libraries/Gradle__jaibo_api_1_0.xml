@@ -4,8 +4,6 @@
       <root url="jar://$PROJECT_DIR$/jaibo-api-1.0.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="file://$PROJECT_DIR$/../api/src/main/java" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

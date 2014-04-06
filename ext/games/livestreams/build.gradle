@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '3.8.1'
+    compile group: 'org.json', name: 'json', version: '20080701'
     compile files('jaibo-api-1.0.jar')
 }
 
@@ -46,7 +47,7 @@ task copyDependenciesToTarget(type: Copy) {
 
 
 compileJava.dependsOn(copyTask)
-//build.dependsOn(copyDependenciesToTarget)
+build.dependsOn(copyDependenciesToTarget)
 
 jar {
     archiveName = "$project.group" + '.jar'

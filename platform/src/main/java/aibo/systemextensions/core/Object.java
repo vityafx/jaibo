@@ -69,6 +69,11 @@ public class Object extends Extension {
     }
 
     @Override
+    public String getExtensionVersion() {
+        return "0.4";
+    }
+
+    @Override
     public void setCommands() {
         this.addDataServerProcessor(new AboutProcessor());
         this.addDataServerProcessor(new ShutdownProcessor(this));
