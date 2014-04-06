@@ -1,11 +1,14 @@
 package other.advertisement;
 
+import other.advertisement.dataserverprocessors.AdvertisementProcessor;
 import other.advertisement.errors.AdvertisementError;
 import other.advertisement.messagelisteners.RemoveAd;
 import other.advertisement.messagelisteners.SetAd;
 
 import org.jaibo.api.Extension;
 import org.jaibo.api.helpers.Configuration;
+import other.advertisement.messagelisteners.ShowAds;
+import other.advertisement.messagelisteners.ViewAd;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -32,6 +35,7 @@ public final class ExtensionObject extends Extension {
 
     public final static Configuration Configuration = new Configuration("Other.Advertisement.ini");
     private final ArrayList<Advertisement> advertisements = new ArrayList<Advertisement>();
+    private final int maxAdvertisementCount = 10;
 
     @Override
     public String getExtensionName() {
@@ -45,8 +49,12 @@ public final class ExtensionObject extends Extension {
 
     @Override
     protected void setCommands() {
+        this.addDataServerProcessor(new AdvertisementProcessor(this));
+
         this.addMessageListener(new SetAd(this));
         this.addMessageListener(new RemoveAd(this));
+        this.addMessageListener(new ViewAd(this));
+        this.addMessageListener(new ShowAds(this));
     }
 
     @Override
@@ -55,7 +63,11 @@ public final class ExtensionObject extends Extension {
     }
 
     public int setAdvertisement(String advertisementText, short timePeriod) {
-        int advertisementId = this.generateId();
+        if (this.advertisements.size() == this.maxAdvertisementCount) {
+            throw new AdvertisementError("Maximum advertisement count reached");
+        }
+
+        short advertisementId = this.generateId();
 
         if (advertisementText != null && !advertisementText.isEmpty()) {
             Advertisement ad = new Advertisement(advertisementText, timePeriod, this);
@@ -69,7 +81,7 @@ public final class ExtensionObject extends Extension {
         return advertisementId;
     }
 
-    public Advertisement removeAdvertisement(int advertisementId) {
+    public Advertisement removeAdvertisement(short advertisementId) {
         Advertisement advertisement = this.getAdvertisementById(advertisementId);
 
         if (advertisement != null) {
@@ -83,31 +95,48 @@ public final class ExtensionObject extends Extension {
         return advertisement;
     }
 
-    private Advertisement getAdvertisementById(int id) {
+    public Advertisement getAdvertisementById(short id) {
         Advertisement advertisement = null;
 
         for (Advertisement ad : this.advertisements) {
             if (ad.getAdvertisementId() == id) {
                 advertisement = ad;
+
+                break;
             }
         }
 
         return advertisement;
     }
 
-    private int generateId() {
+    public Short[] getAdvertisementIds() {
+        final ArrayList<Short> ids = new ArrayList<Short>();
+        Short[] idArray = new Short[]{};
+
+        for (Advertisement ad : this.advertisements) {
+            ids.add(ad.getAdvertisementId());
+        }
+
+        return ids.toArray(idArray);
+    }
+
+    public Advertisement[] getAdvertisements() {
+        Advertisement[] advertisements = new Advertisement[]{};
+
+        return this.advertisements.toArray(advertisements);
+    }
+
+    private short generateId() {
         Random generator = new Random();
-        int id = generator.nextInt() + 1;
+        short id = (short)((generator.nextInt(this.maxAdvertisementCount)) + 1);
         boolean idFound = false;
 
         while (!idFound) {
             if (this.getAdvertisementById(id) != null) {
-                id = generator.nextInt() + 1;
-
-                break;
+                id = (short)((generator.nextInt(this.maxAdvertisementCount)) + 1);
+            } else {
+                idFound = true;
             }
-
-            idFound = true;
         }
 
         return id;

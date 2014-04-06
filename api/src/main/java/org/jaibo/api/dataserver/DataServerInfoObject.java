@@ -82,6 +82,11 @@ public final class DataServerInfoObject {
         this.putDataInObject(this.jsonObject, key, booleanData);
     }
 
+    public void putData(String key, int intData) {
+        this.putDataInObject(this.jsonObject, key, intData);
+    }
+
+
     public void putArrayWithEscaping(String key, Collection objectArray) {
         JSONArray jsonArray = new JSONArray(objectArray);
 
@@ -112,6 +117,17 @@ public final class DataServerInfoObject {
 
             try {
                 jsonObject.put(key, stringData);
+            } catch (JSONException e) {
+                System.out.println(errorPrefix + e.getMessage());
+            }
+        }
+    }
+
+    public void putDataInObject(JSONObject jsonObject, String key, int intData) {
+        if (jsonObject != null) {
+
+            try {
+                jsonObject.put(key, intData);
             } catch (JSONException e) {
                 System.out.println(errorPrefix + e.getMessage());
             }

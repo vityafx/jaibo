@@ -2,20 +2,15 @@ package other.advertisement.messagelisteners;
 
 import other.advertisement.Advertisement;
 import other.advertisement.ExtensionObject;
-import other.advertisement.errors.AdvertisementError;
 
-import org.jaibo.api.Command;
+import org.jaibo.api.*;
 import org.jaibo.api.helpers.ConfigurationListener;
-import org.jaibo.api.IrcMessage;
-import org.jaibo.api.IrcMessageType;
-import org.jaibo.api.IrcUser;
-import org.jaibo.api.MessageListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Removes advertisement
+ * View advertisement by id
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,18 +27,18 @@ import java.util.regex.Pattern;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class RemoveAd extends Command implements MessageListener, ConfigurationListener {
+public final class ViewAd extends Command implements MessageListener, ConfigurationListener {
     private ExtensionObject object;
 
     private String receiver;
     private short advertisementId;
 
 
-    public RemoveAd() {
+    public ViewAd() {
         this.configurationChanged();
     }
 
-    public RemoveAd(ExtensionObject object) {
+    public ViewAd(ExtensionObject object) {
         this();
 
         this.object = object;
@@ -53,7 +48,7 @@ public final class RemoveAd extends Command implements MessageListener, Configur
     public void configurationChanged() {
         this.clearNames();
 
-        String[] names = ExtensionObject.Configuration.get("commands.remove_ad").split(" ");
+        String[] names = ExtensionObject.Configuration.get("commands.view_ad").split(" ");
 
         this.addNames(names);
     }
@@ -94,13 +89,13 @@ public final class RemoveAd extends Command implements MessageListener, Configur
 
     @Override
     protected void action() {
-        try {
-            Advertisement ad = this.object.removeAdvertisement(this.advertisementId);
+        Advertisement advertisement = this.object.getAdvertisementById(this.advertisementId);
+        String answer = String.format("No advertisement with id=[%d]", this.advertisementId);
 
-            this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
-                    String.format("Advertisement has been removed successfully. Advertisement was: [%s]", ad));
-        } catch (AdvertisementError e) {
-            this.object.getExtensionMessenger().sendNotice(this.receiver, e.getMessage());
+        if (advertisement != null) {
+            answer = advertisement.toString();
         }
+
+        this.object.getExtensionMessenger().sendPrivateMessage(this.receiver, answer);
     }
 }

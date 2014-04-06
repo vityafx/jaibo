@@ -22,7 +22,7 @@ import java.util.TimerTask;
  */
 
 public final class Advertisement extends TimerTask {
-    private int advertisementId;
+    private short advertisementId;
     private String advertisementText;
     private short timePeriod;
     ExtensionObject object;
@@ -54,11 +54,11 @@ public final class Advertisement extends TimerTask {
     public void setTimePeriod(short timePeriod) {
         this.timePeriod = timePeriod;
     }
-    public int getAdvertisementId() {
+    public short getAdvertisementId() {
         return advertisementId;
     }
 
-    public void setAdvertisementId(int advertisementId) {
+    public void setAdvertisementId(short advertisementId) {
         this.advertisementId = advertisementId;
     }
 
