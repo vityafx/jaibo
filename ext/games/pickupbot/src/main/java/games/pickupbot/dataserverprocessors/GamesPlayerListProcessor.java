@@ -2,6 +2,8 @@ package games.pickupbot.dataserverprocessors;
 
 import games.pickupbot.ExtensionObject;
 import games.pickupbot.Game;
+import games.pickupbot.Player;
+import games.pickupbot.Tournament;
 import games.pickupbot.errors.PickupBotError;
 
 import org.jaibo.api.dataserver.DataServerInfoObject;
@@ -49,12 +51,27 @@ public final class GamesPlayerListProcessor extends DataServerProcessor {
             ArrayList<DataServerInfoObject> games = new ArrayList<DataServerInfoObject>();
 
             for (Game game : this.extensionObject.getGames()) {
+                boolean isTournament = game instanceof Tournament;
                 String gameType = game.getGameType();
-                List<String> registeredPlayers = Arrays.asList(game.getPlayerNicknames());
+                List<Player> registeredPlayers = Arrays.asList(game.getPlayers());
+                ArrayList<DataServerInfoObject> players = new ArrayList<DataServerInfoObject>();
+
+                for (Player player : registeredPlayers) {
+                    DataServerInfoObject playerObject = new DataServerInfoObject();
+
+                    if (!isTournament) {
+                        playerObject.putData("nick", player.getNick());
+                    }
+
+                    playerObject.putData("game_profile", player.getGameProfile());
+
+                    players.add(playerObject);
+                }
 
                 DataServerInfoObject gameObject = new DataServerInfoObject();
+                gameObject.putData("is_tournament", isTournament);
                 gameObject.putData("game_type", gameType);
-                gameObject.putArrayWithoutEscaping("players", registeredPlayers);
+                gameObject.putArrayWithoutEscaping("players", players);
                 games.add(gameObject);
             }
 

@@ -60,8 +60,7 @@ public final class Uptime extends Command implements MessageListener {
                 new GregorianCalendar(),
                 AIBO.getStartDateTime());
 
-        System.gc();
-        long usedMB = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
+        long usedMB = AIBO.getRAMUsage();
 
         this.object.getExtensionMessenger().sendPrivateMessage(this.ircUser.getNick(),
                 String.format("Uptime: %s | Memory usage: %d MB", upTime, usedMB));

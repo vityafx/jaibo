@@ -116,6 +116,12 @@ public final class DataServerNetworkConnection {
         if (this.server != null) {
             for (DataServerNetworkConnectionListener listener : this.listeners) {
                 for (DataServerProcessor processor : listener.getDataProcessors()) {
+                    try {
+                        this.server.removeContext(processor.getInfoPath());
+                    } catch (IllegalArgumentException e) {
+                        // we really don't need to catch this exception
+                    }
+
                     this.server.createContext(processor.getInfoPath(), processor);
                 }
             }
@@ -133,6 +139,6 @@ public final class DataServerNetworkConnection {
             public void run() {
                 updateContextHandlers();
             }
-        }, 5000);
+        }, 5000, 5000);
     }
 }

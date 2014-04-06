@@ -22,14 +22,21 @@ import org.jaibo.api.SimpleCommand;
  */
 
 public final class QuitOnShutdown extends SimpleCommand {
+    private static String quitMessage = "Bot is shutting down";
+
     public QuitOnShutdown(Extension object) {
         super(object);
+    }
+
+
+    public static void setQuitMessage(String quitMessage) {
+        QuitOnShutdown.quitMessage = quitMessage;
     }
 
     @Override
     public void execute() {
         if (this.object != null) {
-            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("QUIT", ":Bot is shutting down");
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("QUIT", ":" + quitMessage);
         }
     }
 }

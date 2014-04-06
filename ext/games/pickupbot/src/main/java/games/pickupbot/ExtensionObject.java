@@ -360,7 +360,6 @@ public final class ExtensionObject extends Extension implements GameListener, Co
     @Override
     public void pickupFormed(Game game) {
         String notifyPattern = "%s pickup game is ready to play! Players are [%s]";
-
         String players;
 
         if (ExtensionObject.Configuration.getBoolean("player.game_profile_required")) {

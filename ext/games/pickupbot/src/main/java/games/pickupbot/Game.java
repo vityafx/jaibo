@@ -30,7 +30,6 @@ public class Game {
     protected String gameType;
     protected int maxPlayers;
     protected LastGameStamp lastGameStamp;
-    protected int gameId;
     protected final ArrayList<Player> playerList = new ArrayList<Player>();
 
     private final ArrayList<GameListener> listeners = new ArrayList<GameListener>();
@@ -219,6 +218,17 @@ public class Game {
         return allAddedPlayerNickNames.toArray(nickNames);
     }
 
+    public Player[] getPlayers() {
+        ArrayList<Player> playersList = new ArrayList<Player>();
+        Player[] players = new Player[]{};
+
+        for (Player player : this.playerList) {
+            playersList.add(player);
+        }
+
+        return playersList.toArray(players);
+    }
+
     public String getGameProfilesAsString(String separator) {
         StringBuilder allGameProfiles = new StringBuilder();
 
@@ -312,14 +322,6 @@ public class Game {
         this.maxPlayers = maxPlayers;
     }
 
-    public int getGameId() {
-        return this.gameId;
-    }
-
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
-    }
-
     public static Game tryParse(String gameString) {
         Game game = null;
 
@@ -341,7 +343,7 @@ public class Game {
                 this.removePlayer(playerToSubstitute);
                 this.addPlayer(newPlayer);
             } else {
-                throw new GameError(String.format("games.pickupbot.Player %s is already added in %s",
+                throw new GameError(String.format("Player %s is already added in %s",
                         IrcMessageTextModifier.makeBold(newPlayer.getNick()),
                         IrcMessageTextModifier.makeBold(this.getGameType())));
             }
@@ -354,7 +356,7 @@ public class Game {
                 Player player = this.getPlayerByNick(oldNick);
                 player.setNick(newNick);
             } else {
-                throw new GameError(String.format("games.pickupbot.Player %s is already added in %s",
+                throw new GameError(String.format("Player %s is already added in %s",
                         IrcMessageTextModifier.makeBold(newNick),
                         IrcMessageTextModifier.makeBold(this.getGameType())));
             }

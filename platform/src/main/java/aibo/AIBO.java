@@ -4,6 +4,7 @@ import aibo.dataserver.DataServer;
 import aibo.systemextensions.TaskManager;
 import aibo.ircnetwork.IrcNetwork;
 
+import aibo.systemextensions.core.commands.serverlisteners.QuitOnShutdown;
 import org.jaibo.api.database.DatabaseProvider;
 import org.jaibo.api.helpers.Configuration;
 import org.jaibo.api.IrcEvent;
@@ -134,23 +135,38 @@ public final class AIBO implements IrcNetworkListener {
         return startDateTime;
     }
 
+    public static long getRAMUsage() {
+        System.gc();
+        return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
+    }
+
     public static void restart() {
-        try {
-            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-            final File currentJar = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        int time = 5000;
+        Timer timer = new Timer();
 
-            if (currentJar.getName().endsWith(".jar")) {
-                final ArrayList<String> command = new ArrayList<String>();
-                command.add(javaBin);
-                command.add("-jar");
-                command.add(currentJar.getPath());
+        timer.schedule(new TimerTask(){
+            @Override
+            public void run() {
+                try {
+                    final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+                    final File currentJar = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
-                final ProcessBuilder builder = new ProcessBuilder(command);
-                builder.start();
-                System.exit(0);
+                    if (currentJar.getName().endsWith(".jar")) {
+                        final ArrayList<String> command = new ArrayList<String>();
+                        command.add(javaBin);
+                        command.add("-jar");
+                        command.add(currentJar.getPath());
+
+                        final ProcessBuilder builder = new ProcessBuilder(command);
+                        builder.start();
+
+                        QuitOnShutdown.setQuitMessage("Bot is going to restart now");
+                        System.exit(0);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Can't restart the bot: %s" + e.getMessage());
+                }
             }
-        } catch (Exception e) {
-            System.out.println("Can't restart the bot: %s" + e.getMessage());
-        }
+        }, time);
     }
 }

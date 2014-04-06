@@ -3,8 +3,7 @@ package aibo.systemextensions.core;
 import aibo.ExtensionManager;
 import aibo.systemextensions.core.commands.messagelisteners.*;
 import aibo.systemextensions.core.commands.serverlisteners.*;
-import aibo.systemextensions.core.dataserverprocessors.AboutProcessor;
-import aibo.systemextensions.core.dataserverprocessors.ShutdownProcessor;
+import aibo.systemextensions.core.dataserverprocessors.*;
 import org.jaibo.api.Extension;
 import org.jaibo.api.SimpleCommand;
 import org.jaibo.api.errors.ExtensionError;
@@ -77,6 +76,12 @@ public class Object extends Extension {
     public void setCommands() {
         this.addDataServerProcessor(new AboutProcessor());
         this.addDataServerProcessor(new ShutdownProcessor(this));
+        this.addDataServerProcessor(new RestartProcessor(this));
+        this.addDataServerProcessor(new LoadExtensionProcessor(this));
+        this.addDataServerProcessor(new UnloadExtensionProcessor(this));
+        this.addDataServerProcessor(new MotdProcessor(this));
+        this.addDataServerProcessor(new UptimeProcessor(this));
+        this.addDataServerProcessor(new UpdateConfigurationProcessor(this));
 
         this.addServerListener(new Pong(this));
         this.addServerListener(new Login(this));

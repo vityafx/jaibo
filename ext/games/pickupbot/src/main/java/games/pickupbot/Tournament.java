@@ -3,6 +3,7 @@ package games.pickupbot;
 import games.pickupbot.errors.GameError;
 import org.jaibo.api.IrcMessageTextModifier;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,6 +68,20 @@ public final class Tournament extends Game {
         } else {
             return this.getSimplePlayersList();
         }
+    }
+
+    @Override
+    public Player[] getPlayers() {
+        ArrayList<Player> playersList = new ArrayList<Player>();
+        Player[] players = new Player[]{};
+
+        String[] gameProfiles = ExtensionObject.DatabaseManager.getPlayersRegisteredInTournament(this.getGameType());
+
+        for (String gameProfile : gameProfiles) {
+            playersList.add(new Player(null, null, gameProfile));
+        }
+
+        return playersList.toArray(players);
     }
 
     private String getLinkToPlayersList() {
