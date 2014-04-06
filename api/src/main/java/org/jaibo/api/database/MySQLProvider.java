@@ -3,6 +3,7 @@ package org.jaibo.api.database;
 import com.sun.rowset.CachedRowSetImpl;
 
 import javax.sql.rowset.CachedRowSet;
+import java.io.IOException;
 import java.sql.*;
 
 /**
@@ -45,8 +46,12 @@ final class MySQLProvider extends AbstractDatabaseProvider {
                         credentials.getUsername(),
                         credentials.getPassword());
 
-            } catch (Exception e) {
-                System.out.println("Can't find mysql jdbc driver.");
+            } catch (ClassNotFoundException e) {
+                System.out.println("Can't find mysql jdbc driver. ");
+            } catch (SQLException e) {
+                System.out.println(
+                        String.format("Error while connecting to mysql. Check your credentials. Error message: %s",
+                                e.getMessage()));
             }
         }
 

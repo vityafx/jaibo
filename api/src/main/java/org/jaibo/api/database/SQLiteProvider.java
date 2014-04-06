@@ -2,6 +2,7 @@ package org.jaibo.api.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * SQLite database provider
@@ -43,8 +44,12 @@ class SQLiteProvider extends AbstractDatabaseProvider {
 
                     return DriverManager.getConnection(formattedDatabaseName);
                 }
-            } catch (Exception e) {
-                System.out.println("Can't find sqlite jdbc driver.");
+            } catch (ClassNotFoundException e) {
+                System.out.println("Can't find sqlite jdbc driver. ");
+            } catch (SQLException e) {
+                System.out.println(
+                        String.format("Error while connecting to sqlite. Check your credentials. Error message: %s",
+                                e.getMessage()));
             }
         }
 

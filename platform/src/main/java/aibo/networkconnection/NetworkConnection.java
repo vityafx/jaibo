@@ -8,11 +8,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 /**
  * Network connection realization
@@ -39,6 +37,7 @@ public class NetworkConnection implements NetworkConnectionInterface {
 
     private Socket socket;
     private int timeout;
+    private NetworkInterface networkInterface;
 
     private ArrayList<NetworkConnectionListener> listeners = new ArrayList<NetworkConnectionListener>();
 
@@ -46,6 +45,20 @@ public class NetworkConnection implements NetworkConnectionInterface {
     public NetworkConnection() {
     }
 
+    public void setNetworkInterface(String interfaceName) {
+        try {
+            this.networkInterface = NetworkInterface.getByName(interfaceName);
+
+            if (this.networkInterface == null) {
+                System.out.println(String.format("No such interface: %s", interfaceName));
+            }
+        } catch (SocketException e) {
+            System.out.println(String.format("Error while setting network interface(%s): %s", interfaceName,
+                    e.getMessage()));
+
+            System.exit(1);
+        }
+    }
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
@@ -156,6 +169,31 @@ public class NetworkConnection implements NetworkConnectionInterface {
 
             try {
                 this.socket = new Socket();
+
+                if (this.networkInterface != null) {
+                    Enumeration<InetAddress> addresses = this.networkInterface.getInetAddresses();
+                    InetAddress address = null;
+
+                    while (addresses.hasMoreElements())
+                    {
+                        InetAddress addr = addresses.nextElement();
+
+                        if (addr instanceof Inet4Address && !addr.isLoopbackAddress())
+                        {
+                            address = addr;
+
+                            break;
+                        }
+                    }
+
+                    if (address != null) {
+                        System.out.println(String.format("Binding to %s through %s", address.getHostName(),
+                                this.networkInterface.getDisplayName()));
+
+                        this.socket.bind(new InetSocketAddress(address, 0));
+                    }
+                }
+
                 this.socket.connect(new InetSocketAddress(this.address, this.port), this.timeout);
 
                 this.runLoop();

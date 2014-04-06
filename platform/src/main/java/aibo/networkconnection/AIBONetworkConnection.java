@@ -49,6 +49,10 @@ public final class AIBONetworkConnection implements ConfigurationListener, Netwo
     @Override
     public void configurationChanged() {
         this.networkConnection.setDebug(AIBO.Configuration.getBoolean("network.debug"));
+
+        if (AIBO.Configuration.getBoolean("network.custom_interface")) {
+            this.networkConnection.setNetworkInterface(AIBO.Configuration.get("network.interface"));
+        }
     }
 
     public void removeListener(AIBONetworkConnectionListener listener) {
