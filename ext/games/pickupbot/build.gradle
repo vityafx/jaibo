@@ -1,0 +1,69 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+
+group = 'games.pickupbot'
+version = '0.4'
+
+sourceCompatibility = 1.5
+
+buildDir = "target"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '3.8.1'
+    compile files('jaibo-api-1.0.jar')
+}
+
+
+task copyTask(type: Copy) {
+
+    println 'Copying configuration files and distribution files...'
+
+    ['target/classes/settings/', 'target/libs/settings/'].each { dest ->
+        copy {
+            with from ('settings/') {
+                include '*.ini'
+            }
+            into dest
+        }
+    }
+}
+
+task copyDependenciesToTarget(type: Copy) {
+    println 'Copying dependencies to target...'
+
+    configurations.compile.collect().each { compileDependency ->
+        copy {
+            with from (compileDependency.getPath()) {
+                include '*'
+            }
+            into 'target/libs'
+        }
+    }
+}
+
+
+compileJava.dependsOn(copyTask)
+//build.dependsOn(copyDependenciesToTarget)
+
+jar {
+    archiveName = "$project.group" + '.jar'
+
+    manifest.attributes(
+            "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+    )
+}
+
+/* Overwriting distribution tasks: */
+task distZip(type:Zip, overwrite:true) {
+    archiveName = "$project.name-$version" + '.zip'
+    from "target/libs"
+}
+
+task distTar(type:Tar, overwrite:true) {
+    archiveName = "$project.name-$version" + '.tar'
+    from "target/libs"
+}

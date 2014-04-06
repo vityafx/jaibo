@@ -1,6 +1,0 @@
-This is an extensions directory.
-Extensions directory divided into categories - games, life, other.
-
-Games is goodly explain by it's name.
-Life - this category should contain extensions that helps people in life. Weather forecast, news etc.
-Other - cvs-hooks, link handlers, polling bots, i.e. non-games and non-life extensions.

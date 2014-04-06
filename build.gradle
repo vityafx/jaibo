@@ -3,8 +3,8 @@ apply plugin: 'maven'
 apply plugin: 'idea'
 apply plugin: 'application'
 
-group = 'jaibo'
-version = '0.3'
+group = 'jaibo-full'
+version = '0.4'
 
 description = """Java Advanced IRC BOt"""
 
@@ -16,61 +16,86 @@ buildDir = "target"
 mainClassName = "Main"
 
 repositories {
-
-     maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "http://repo.maven.apache.org/maven2" }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version:'3.8.1'
-    //compile group: 'org.xerial', name: 'sqlite-jdbc', version:'3.7.2'
-    compile 'org.xerial:sqlite-jdbc:3.7.2'
+//    compile project(path: ':api')
+//    compile project(path: ':platform')
+//    compile project(path: ':ext/games/livestreams')
+//    compile project(path: ':ext/games/pickupbot')
 }
 
-task copyTask(type: Copy) {
 
-    println 'Copying configuration files and distribution files...'
+//task evaluateSubprojects() {
+//    println 'Evaluating subprojects...'
+//
+//    subprojects.each { subProject ->
+//        evaluationDependsOn ":$subProject.name"
+//    }
+//}
 
-    ['target/classes/settings/', 'target/libs/settings/'].each { dest ->
+task copySubprojects() {
+    println 'Copying subprojects to target...'
+
+    subprojects.each { subProject ->
+        println 'Copying subproject(' + subProject.getProjectDir().getAbsolutePath() + '/target/libs/' + ') to target...'
+
         copy {
-            with from ('src/main/java/settings/') {
-                include '*.ini'
-            }
-            into dest
-        }
-    }
-
-    from (rootProject.rootDir) {
-        include 'README.md'
-        include 'LICENSE'
-        include 'CHANGELOG'
-
-        include '*.sh'
-    }
-    into 'target/libs'
-}
-
-task copyDependenciesToTarget(type: Copy) {
-    println 'Copying dependencies to target...'
-
-    configurations.compile.collect().each { compileDependency ->
-        copy {
-            with from (compileDependency.getPath()) {
-                include '*'
+            with from (subProject.getProjectDir().getAbsolutePath() + '/target/libs/') {
+                include '**'
             }
             into 'target/libs/libs'
         }
     }
 }
 
-compileJava.dependsOn(copyTask)
-build.dependsOn(copyDependenciesToTarget)
 
-jar {
-    manifest.attributes(
-            "Main-Class": "Main",
-            "Class-Path": configurations.compile.collect { 'libs/' + it.getName()}.join(' ')
-    )
-}
+//task getRunTask() {
+//    subprojects.each { subProject ->
+//        if (subProject.getName().equalsIgnoreCase('platform')) {
+//            return subProject.run
+//        }
+//    }
+//}
+//build.dependsOn(subprojects.build)
+//copySubprojects.dependsOn(buildDependents)
+//run.dependsOn(copySubprojects)
+
+
+//build.dependsOn(evaluateSubprojects)
+//run.dependsOn(subprojects.jar)
+//run.dependsOn(copySubprojects)
+//run.dependsOn(getRunTask)
+//
+//beforeEvaluate
+//{
+//    subprojects.each
+//    { p->
+//        dependencies.compile p
+//    }
+//}
+//
+//allprojects
+//{ proj ->
+//    this is most important. This makes the root task depend on the subprojects getting built
+//    run.dependsOn.add proj.tasks.getByPath("build")
+//
+//    some code to read the dependencies
+//    proj.dependencies.compile project(otherProjectName)
+//
+//    some code to read the source directories
+//    proj.sourceSets.main.resources.srcDir srcDir
+//}
+
+
+//task fullBuildAndRun() {
+//    println 'Full build & run...'
+//
+//     evaluateSubprojects
+//
+//    configurations.compile.resolve()
+//}
 
 /* Overwriting distribution tasks: */
 task distZip(type:Zip, overwrite:true) {

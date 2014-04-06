@@ -1,0 +1,88 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+group = 'jaibo-platform'
+version = '0.4'
+
+description = """Java Advanced IRC BOt"""
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+buildDir = "target"
+
+mainClassName = "aibo.Main"
+
+repositories {
+
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version:'3.8.1'
+    compile files('jaibo-api-1.0.jar')
+}
+
+task copyTask(type: Copy) {
+
+    println 'Copying configuration files and distribution files...'
+
+    ['target/classes/settings/', 'target/libs/settings/'].each { dest ->
+        copy {
+            with from ('settings/') {
+                include '*.ini'
+            }
+            into dest
+        }
+    }
+
+    from ('../') {
+        include 'README.md'
+        include 'LICENSE'
+        include 'CHANGELOG'
+    }
+    into 'target/libs'
+
+    from (project.rootDir) {
+        include '*.sh'
+    }
+    into 'target/libs'
+}
+
+
+task copyDependenciesToTarget(type: Copy) {
+    println 'Copying dependencies to target...'
+
+    configurations.compile.collect().each { compileDependency ->
+        copy {
+            with from (compileDependency.getPath()) {
+                include '*'
+            }
+            into 'target/libs'
+        }
+    }
+}
+
+compileJava.dependsOn(copyTask)
+build.dependsOn(copyDependenciesToTarget)
+
+jar {
+    archiveName = "$rootProject.name-$version" + '.jar'
+
+    manifest.attributes(
+            "Main-Class": "aibo.Main",
+            "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+    )
+}
+/* Overwriting distribution tasks: */
+task distZip(type:Zip, overwrite:true) {
+    archiveName = "$rootProject.name-$version" + '.zip'
+    from "target/libs"
+}
+
+task distTar(type:Tar, overwrite:true) {
+    archiveName = "$rootProject.name-$version" + '.tar'
+    from "target/libs"
+}
