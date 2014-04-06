@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7f8d398c-4c7d-4074-a20a-1eac361f9b50" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../livestreams/.idea/libraries/Gradle__json_20080701.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../livestreams/.idea/uiDesigner.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/Extension.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/Extension.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/ExtensionManager.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/ExtensionManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../livestreams/src/main/java/games/livestreams/ExtensionObject.java" afterPath="$PROJECT_DIR$/../livestreams/src/main/java/games/livestreams/ExtensionObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/test/ExtensionObject.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/test/ExtensionObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../livestreams/settings/Games.LiveStreams.ini" afterPath="$PROJECT_DIR$/../livestreams/settings/Games.LiveStreams.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/.idea/libraries/Gradle__jaibo_api_1_0.xml" afterPath="$PROJECT_DIR$/../../../platform/.idea/libraries/Gradle__jaibo_api_1_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/Object.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/Object.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../livestreams/src/main/java/games/livestreams/messagelisteners/Streams.java" afterPath="$PROJECT_DIR$/../livestreams/src/main/java/games/livestreams/messagelisteners/Streams.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../livestreams/src/main/java/games/livestreams/providers/Twitch.java" afterPath="$PROJECT_DIR$/../livestreams/src/main/java/games/livestreams/providers/Twitch.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../livestreams/build.gradle" afterPath="$PROJECT_DIR$/../livestreams/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../livestreams/livestreams.iml" afterPath="$PROJECT_DIR$/../livestreams/livestreams.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="7f8d398c-4c7d-4074-a20a-1eac361f9b50" name="Default" comment="" />
     <ignored path="pickupbot.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
