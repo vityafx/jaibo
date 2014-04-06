@@ -192,7 +192,7 @@ public final class PickupBotDatabaseManager {
         String[] playersStringList = null;
 
         if (tournament != null && !tournament.isEmpty()) {
-            String query = String.format("SELECT %s as player FROM %s WHERE %s=?", this.tournamentsGameProfileFieldName,
+            String query = String.format("SELECT %s FROM %s WHERE %s=?", this.tournamentsGameProfileFieldName,
                     this.tournamentsTableName, this.tournamentsTournamentFieldName);
             PreparedStatement preparedStatement = DatabaseProvider.createPreparedStatement(query);
 
@@ -206,7 +206,7 @@ public final class PickupBotDatabaseManager {
                     playersStringList = new String[]{};
 
                     if (rowSet.next()) {
-                        playersList.add(rowSet.getString("player"));
+                        playersList.add(rowSet.getString(this.tournamentsGameProfileFieldName));
                     }
 
                     playersStringList = playersList.toArray(playersStringList);

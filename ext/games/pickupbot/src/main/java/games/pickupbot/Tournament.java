@@ -36,6 +36,11 @@ public final class Tournament extends Game {
     }
 
     @Override
+    public int addedPlayersCount() {
+        return ExtensionObject.DatabaseManager.getPlayersRegisteredInTournament(this.getGameType()).length;
+    }
+
+    @Override
     public void addPlayer(Player player) {
         if (!ExtensionObject.DatabaseManager.isPlayerRegisteredInTournament(this.getGameType(),
                 player.getGameProfile())) {
@@ -57,7 +62,7 @@ public final class Tournament extends Game {
 
     @Override
     public String getRegisteredPlayers() {
-        if (ExtensionObject.Configuration.getBoolean("tournament.players_export")) {
+        if (ExtensionObject.Configuration.getBoolean("tournaments.players_export")) {
             return this.getLinkToPlayersList();
         } else {
             return this.getSimplePlayersList();
@@ -65,7 +70,7 @@ public final class Tournament extends Game {
     }
 
     private String getLinkToPlayersList() {
-        return ExtensionObject.Configuration.get("tournament.tournaments.web_page");
+        return ExtensionObject.Configuration.get("tournaments.web_page");
     }
 
     private String getSimplePlayersList() {

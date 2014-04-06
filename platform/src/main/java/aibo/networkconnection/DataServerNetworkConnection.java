@@ -1,6 +1,5 @@
 package aibo.networkconnection;
 
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.jaibo.api.dataserver.DataServerProcessor;
 
@@ -9,6 +8,8 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Data server network connection
@@ -65,7 +66,7 @@ public final class DataServerNetworkConnection {
                 this.server = HttpServer.create(new InetSocketAddress(port), 0);
             }
 
-            this.setContextHandlers();
+            this.setUpdateContextHandlersTimer();
 
             server.setExecutor(null);
             server.start();
@@ -115,9 +116,23 @@ public final class DataServerNetworkConnection {
         if (this.server != null) {
             for (DataServerNetworkConnectionListener listener : this.listeners) {
                 for (DataServerProcessor processor : listener.getDataProcessors()) {
-                    this.server.createContext(processor.getInfoPath(), (HttpHandler)processor);
+                    this.server.createContext(processor.getInfoPath(), processor);
                 }
             }
         }
+    }
+
+    public void updateContextHandlers() {
+        this.setContextHandlers();
+    }
+
+    private void setUpdateContextHandlersTimer() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask(){
+            @Override
+            public void run() {
+                updateContextHandlers();
+            }
+        }, 5000);
     }
 }

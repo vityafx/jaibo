@@ -2,6 +2,7 @@ package games.pickupbot;
 
 import games.pickupbot.commands.eventlisteners.KickPartQuit;
 import games.pickupbot.commands.messagelisteners.*;
+import games.pickupbot.dataserverprocessors.GamesPlayerListProcessor;
 import org.jaibo.api.Extension;
 import games.pickupbot.commands.eventlisteners.NickChange;
 import games.pickupbot.errors.GameError;
@@ -69,6 +70,9 @@ public final class ExtensionObject extends Extension implements GameListener, Co
     public void setCommands() {
         this.deleteAllMessageListeners();
         this.deleteAllEventListeners();
+        this.deleteAllDataServerProcessors();
+
+        this.addDataServerProcessor(new GamesPlayerListProcessor(this));
 
         this.addMessageListener(new Add(this));
         this.addMessageListener(new Promote(this));
@@ -246,6 +250,10 @@ public final class ExtensionObject extends Extension implements GameListener, Co
         return game.getPlayerNicknamesAsString(", ", usingZeroWidthSpace, true);
     }
 
+    public String[] getPlayers(String gameType) {
+        return this.getGameByType(gameType).getPlayerNicknames();
+    }
+
     public String getRegisteredPlayers(String gameType) {
         Game game = this.getGameByType(gameType);
 
@@ -271,6 +279,12 @@ public final class ExtensionObject extends Extension implements GameListener, Co
             throw new PickupBotError(String.format("Unknown game type %s",
                     IrcMessageTextModifier.makeBold(gameType)));
         }
+    }
+
+    public Game[] getGames() {
+        Game[] games = new Game[]{};
+
+        return this.games.toArray(games);
     }
 
     public void promote(Player player, String gameType) {

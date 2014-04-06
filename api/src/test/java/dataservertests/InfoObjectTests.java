@@ -40,14 +40,28 @@ public final class InfoObjectTests extends TestCase {
         assertEquals(infoObject.toString(), "{\"key\":\"value\"}");
     }
 
-    public void testArrayNode() {
+    public void testSimpleArrayNode() {
         ArrayList<String> stringArray = new ArrayList<String>();
         stringArray.add("value1");
         stringArray.add("value2");
 
-        infoObject.putArray("collection", stringArray);
+        infoObject.putArrayWithEscaping("collection", stringArray);
 
         assertEquals(infoObject.toString(), "{\"collection\":[\"value1\",\"value2\"]}");
+    }
+
+    public void testComplexArrayNode() {
+        ArrayList<DataServerInfoObject> objectArray = new ArrayList<DataServerInfoObject>();
+        DataServerInfoObject obj1 = new DataServerInfoObject();
+        obj1.putData("key1", "value1");
+        DataServerInfoObject obj2 = new DataServerInfoObject();
+        obj2.putData("key2", "value2");
+        objectArray.add(obj1);
+        objectArray.add(obj2);
+
+        infoObject.putArrayWithoutEscaping("collection", objectArray);
+
+        assertEquals(infoObject.toString(), "{\"collection\":[{\"key1\":\"value1\"},{\"key2\":\"value2\"}]}");
     }
 
     public void testSelfSubPackage() {
