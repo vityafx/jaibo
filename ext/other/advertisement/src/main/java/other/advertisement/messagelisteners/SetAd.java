@@ -96,10 +96,10 @@ public final class SetAd extends Command implements MessageListener, Configurati
     @Override
     protected void action() {
         try {
-            this.object.setAdvertisement(this.advertisementText, this.timePeriod);
+            int id = this.object.setAdvertisement(this.advertisementText, this.timePeriod);
 
             this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
-                    "Advertisement has been set successfully.");
+                    String.format("Advertisement has been set successfully, id=[%d]", id));
         } catch (AdvertisementError e) {
             this.object.getExtensionMessenger().sendNotice(this.receiver, e.getMessage());
         }

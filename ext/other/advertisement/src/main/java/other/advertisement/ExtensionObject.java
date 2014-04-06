@@ -7,6 +7,9 @@ import other.advertisement.messagelisteners.SetAd;
 import org.jaibo.api.Extension;
 import org.jaibo.api.helpers.Configuration;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 /**
  * Greets people when they are joins the channel
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
@@ -27,12 +30,17 @@ import org.jaibo.api.helpers.Configuration;
 
 public final class ExtensionObject extends Extension {
 
-    public final static org.jaibo.api.helpers.Configuration Configuration = new Configuration("Other.Advertisement.ini");
-    private Advertisement advertisement;
+    public final static Configuration Configuration = new Configuration("Other.Advertisement.ini");
+    private final ArrayList<Advertisement> advertisements = new ArrayList<Advertisement>();
 
     @Override
     public String getExtensionName() {
         return "other.advertisement";
+    }
+
+    @Override
+    public String getExtensionVersion() {
+        return "1.0";
     }
 
     @Override
@@ -46,21 +54,62 @@ public final class ExtensionObject extends Extension {
         return ExtensionObject.Configuration.get("helppage");
     }
 
-    public void setAdvertisement(String advertisementText, short timePeriod) {
-        if (this.advertisement != null) {
-            throw new AdvertisementError("Advertisement is already set");
+    public int setAdvertisement(String advertisementText, short timePeriod) {
+        int advertisementId = this.generateId();
+
+        if (advertisementText != null && !advertisementText.isEmpty()) {
+            Advertisement ad = new Advertisement(advertisementText, timePeriod, this);
+            ad.setAdvertisementId(advertisementId);
+
+            this.advertisements.add(ad);
+        } else {
+            throw new AdvertisementError("Advertisement text should not be empty");
         }
 
-        this.advertisement = new Advertisement(advertisementText, timePeriod, this);
+        return advertisementId;
     }
 
-    public void removeAdvertisement() {
-        if (this.advertisement != null) {
-            this.advertisement.stopAdvertisementTimer();
+    public Advertisement removeAdvertisement(int advertisementId) {
+        Advertisement advertisement = this.getAdvertisementById(advertisementId);
 
-            this.advertisement = null;
+        if (advertisement != null) {
+            advertisement.stopAdvertisementTimer();
+
+            this.advertisements.remove(advertisement);
         } else {
-            throw new AdvertisementError("No advertisement has been set before.");
+            throw new AdvertisementError(String.format("No advertisement with id=[%d]", advertisementId));
         }
+
+        return advertisement;
+    }
+
+    private Advertisement getAdvertisementById(int id) {
+        Advertisement advertisement = null;
+
+        for (Advertisement ad : this.advertisements) {
+            if (ad.getAdvertisementId() == id) {
+                advertisement = ad;
+            }
+        }
+
+        return advertisement;
+    }
+
+    private int generateId() {
+        Random generator = new Random();
+        int id = generator.nextInt() + 1;
+        boolean idFound = false;
+
+        while (!idFound) {
+            if (this.getAdvertisementById(id) != null) {
+                id = generator.nextInt() + 1;
+
+                break;
+            }
+
+            idFound = true;
+        }
+
+        return id;
     }
 }

@@ -1,5 +1,6 @@
 package other.advertisement.messagelisteners;
 
+import other.advertisement.Advertisement;
 import other.advertisement.ExtensionObject;
 import other.advertisement.errors.AdvertisementError;
 
@@ -9,6 +10,9 @@ import org.jaibo.api.IrcMessage;
 import org.jaibo.api.IrcMessageType;
 import org.jaibo.api.IrcUser;
 import org.jaibo.api.MessageListener;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Removes advertisement
@@ -32,6 +36,7 @@ public final class RemoveAd extends Command implements MessageListener, Configur
     private ExtensionObject object;
 
     private String receiver;
+    private int advertisementId;
 
 
     public RemoveAd() {
@@ -54,7 +59,7 @@ public final class RemoveAd extends Command implements MessageListener, Configur
     }
 
     public void messageReceived(IrcMessage message) {
-        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.checkExact(message.getMessage().trim())) {
+        if (message.getMessageType() == IrcMessageType.PrivateMessage && this.check(message.getMessage().trim())) {
             IrcUser ircUser = IrcUser.tryParseFromIrcMessage(message.getFullMessage());
 
             if (ircUser != null && this.object.isAdminHost(ircUser.getHost())) {
@@ -66,12 +71,34 @@ public final class RemoveAd extends Command implements MessageListener, Configur
     }
 
     @Override
+    public boolean check(String message) {
+        boolean checkPassed = false;
+
+        for (String name : this.getNames()) {
+            Pattern p = Pattern.compile(String.format("^%s (\\d+)$", name), Pattern.CASE_INSENSITIVE);
+
+            CharSequence sequence = message.subSequence(0, message.length());
+            Matcher matcher = p.matcher(sequence);
+
+            if (matcher.matches()) {
+                this.advertisementId = Integer.parseInt(matcher.group(1));
+
+                checkPassed = true;
+
+                break;
+            }
+        }
+
+        return checkPassed;
+    }
+
+    @Override
     protected void action() {
         try {
-            this.object.removeAdvertisement();
+            Advertisement ad = this.object.removeAdvertisement(this.advertisementId);
 
             this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
-                    "Advertisement has been removed successfully.");
+                    String.format("Advertisement has been removed successfully. Advertisement was: [%s]", ad));
         } catch (AdvertisementError e) {
             this.object.getExtensionMessenger().sendNotice(this.receiver, e.getMessage());
         }

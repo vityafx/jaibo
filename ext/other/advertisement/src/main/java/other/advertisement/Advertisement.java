@@ -1,7 +1,5 @@
 package other.advertisement;
 
-import other.advertisement.ExtensionObject;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,6 +22,7 @@ import java.util.TimerTask;
  */
 
 public final class Advertisement extends TimerTask {
+    private int advertisementId;
     private String advertisementText;
     private short timePeriod;
     ExtensionObject object;
@@ -33,8 +32,8 @@ public final class Advertisement extends TimerTask {
 
 
     public Advertisement(String advertisementText, short timePeriod, ExtensionObject object) {
-        this.advertisementText = advertisementText;
-        this.timePeriod = timePeriod;
+        this.setAdvertisementText(advertisementText);
+        this.setTimePeriod(timePeriod);
         this.object = object;
 
         this.setTimer();
@@ -54,6 +53,13 @@ public final class Advertisement extends TimerTask {
 
     public void setTimePeriod(short timePeriod) {
         this.timePeriod = timePeriod;
+    }
+    public int getAdvertisementId() {
+        return advertisementId;
+    }
+
+    public void setAdvertisementId(int advertisementId) {
+        this.advertisementId = advertisementId;
     }
 
     @Override
@@ -76,5 +82,13 @@ public final class Advertisement extends TimerTask {
 
     public void stopAdvertisementTimer() {
         this.cancelTimer();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Text: [%s] | Show time in minutes: [%d] | Id: [%d]",
+                this.getAdvertisementText(),
+                this.getTimePeriod(),
+                this.getAdvertisementId());
     }
 }
