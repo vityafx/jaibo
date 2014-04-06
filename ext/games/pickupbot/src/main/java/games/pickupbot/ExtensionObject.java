@@ -43,7 +43,6 @@ public final class ExtensionObject extends Extension implements GameListener, Co
     private boolean topicNeedsUpdate = false;
     private int topicUpdateDelay;
     private Timer topicAutoUpdateTimer;
-    private TimerTask topicAutoUpdateTask;
 
 
     public ExtensionObject() {
@@ -63,7 +62,7 @@ public final class ExtensionObject extends Extension implements GameListener, Co
 
     @Override
     public String getExtensionVersion() {
-        return "0.4";
+        return "1.0";
     }
 
     @Override
@@ -132,7 +131,7 @@ public final class ExtensionObject extends Extension implements GameListener, Co
         if (this.topicAutoUpdate) {
             this.topicAutoUpdateTimer = new Timer();
 
-            this.topicAutoUpdateTask = new TimerTask() {
+            this.topicAutoUpdateTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     if (topicNeedsUpdate) {
@@ -141,9 +140,7 @@ public final class ExtensionObject extends Extension implements GameListener, Co
                         topicNeedsUpdate = false;
                     }
                 }
-            };
-
-            this.topicAutoUpdateTimer.schedule(this.topicAutoUpdateTask, this.topicUpdateDelay, this.topicUpdateDelay);
+            }, this.topicUpdateDelay, this.topicUpdateDelay);
         } else {
             this.topicAutoUpdateTimer.cancel();
             this.topicAutoUpdateTimer.purge();
