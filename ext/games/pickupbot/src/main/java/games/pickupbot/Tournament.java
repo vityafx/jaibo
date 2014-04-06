@@ -57,15 +57,15 @@ public final class Tournament extends Game {
 
     @Override
     public String getRegisteredPlayers() {
-//        if (Object.Configuration.getBoolean("tournament.players_export")) {
-//            return this.getLinkToPlayersList();
-//        } else {
-        return this.getSimplePlayersList();
-//        }
+        if (ExtensionObject.Configuration.getBoolean("tournament.players_export")) {
+            return this.getLinkToPlayersList();
+        } else {
+            return this.getSimplePlayersList();
+        }
     }
 
     private String getLinkToPlayersList() {
-        return null;
+        return ExtensionObject.Configuration.get("tournament.tournaments.web_page");
     }
 
     private String getSimplePlayersList() {

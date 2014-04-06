@@ -13,6 +13,8 @@ import org.jaibo.api.IrcMessageTextModifier;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * PickupBot gathers people to play games
@@ -37,10 +39,16 @@ public final class ExtensionObject extends Extension implements GameListener, Co
 
     public final static PickupBotDatabaseManager DatabaseManager = new PickupBotDatabaseManager();
     private final ArrayList<Game> games = new ArrayList<Game>();
+    private boolean topicAutoUpdate = false;
+    private boolean topicNeedsUpdate = false;
+    private int topicUpdateDelay;
+    private Timer topicAutoUpdateTimer;
+    private TimerTask topicAutoUpdateTask;
 
 
     public ExtensionObject() {
         this.setGamesData();
+        this.setTopicAutoUpdateFromConfiguration();
     }
 
     @Override
@@ -51,6 +59,11 @@ public final class ExtensionObject extends Extension implements GameListener, Co
     @Override
     public String getExtensionName() {
         return "games.pickupbot";
+    }
+
+    @Override
+    public String getExtensionVersion() {
+        return "0.4";
     }
 
     @Override
@@ -102,6 +115,49 @@ public final class ExtensionObject extends Extension implements GameListener, Co
 
         this.setGamesData();
         this.setCommands();
+        this.setTopicAutoUpdateFromConfiguration();
+    }
+
+    private void setTopicAutoUpdateFromConfiguration() {
+        this.topicAutoUpdate = Configuration.getBoolean("topic.auto_update");
+
+        if (this.topicAutoUpdate) {
+            this.topicUpdateDelay = Integer.parseInt(Configuration.get("topic.update_delay")) * 1000;
+        }
+
+        this._setTopicAutoUpdate();
+    }
+
+    private void _setTopicAutoUpdate() {
+        if (this.topicAutoUpdate) {
+            this.topicAutoUpdateTimer = new Timer();
+
+            this.topicAutoUpdateTask = new TimerTask() {
+                @Override
+                public void run() {
+                    if (topicNeedsUpdate) {
+                        _updateTopic();
+
+                        topicNeedsUpdate = false;
+                    }
+                }
+            };
+
+            this.topicAutoUpdateTimer.schedule(this.topicAutoUpdateTask, this.topicUpdateDelay, this.topicUpdateDelay);
+        } else {
+            this.topicAutoUpdateTimer.cancel();
+            this.topicAutoUpdateTimer.purge();
+        }
+    }
+
+    public void setTopicAutoUpdate(boolean autoUpdate) {
+        this.topicAutoUpdate = autoUpdate;
+
+        if (this.topicAutoUpdate) {
+            this.topicUpdateDelay = 5000;
+        }
+
+        this._setTopicAutoUpdate();
     }
 
     private void setGamesData() {
@@ -233,6 +289,14 @@ public final class ExtensionObject extends Extension implements GameListener, Co
     }
 
     private void updateTopic() {
+        if (!this.topicAutoUpdate) {
+            this._updateTopic();
+        } else {
+            this.topicNeedsUpdate = true;
+        }
+    }
+
+    private void _updateTopic() {
         StringBuilder topicBuilder = new StringBuilder();
 
         for (Game game : this.games) {

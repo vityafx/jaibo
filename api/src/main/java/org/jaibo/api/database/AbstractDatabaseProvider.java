@@ -26,6 +26,9 @@ import java.sql.*;
 abstract class AbstractDatabaseProvider implements DatabaseProviderInterface{
     private DatabaseCredentials databaseCredentials;
 
+    private boolean closeNeedAfterExecuting = false;
+
+
     protected AbstractDatabaseProvider() {
     }
 
@@ -37,6 +40,10 @@ abstract class AbstractDatabaseProvider implements DatabaseProviderInterface{
 
     public void setDatabaseCredentials(DatabaseCredentials databaseCredentials) {
         this.databaseCredentials = databaseCredentials;
+    }
+
+    public void setCloseNeedAfterExecuting(boolean closeNeedAfterExecuting) {
+        this.closeNeedAfterExecuting = closeNeedAfterExecuting;
     }
 
     protected Connection getConnection() {
@@ -67,7 +74,10 @@ abstract class AbstractDatabaseProvider implements DatabaseProviderInterface{
             }
 
             statement.close();
-            sqlConnection.close();
+
+            if (this.closeNeedAfterExecuting) {
+                sqlConnection.close();
+            }
         }
 
         return cachedRowSet;
@@ -96,7 +106,10 @@ abstract class AbstractDatabaseProvider implements DatabaseProviderInterface{
             }
 
             preparedStatement.close();
-            sqlConnection.close();
+
+            if (this.closeNeedAfterExecuting) {
+                sqlConnection.close();
+            }
         }
 
         return cachedRowSet;

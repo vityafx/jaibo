@@ -30,6 +30,10 @@ final class MySQLProvider extends AbstractDatabaseProvider {
         return "mysql";
     }
 
+    public MySQLProvider() {
+        this.setCloseNeedAfterExecuting(false);
+    }
+
     @Override
     protected Connection getConnection(DatabaseCredentials credentials) {
         if (credentials != null) {

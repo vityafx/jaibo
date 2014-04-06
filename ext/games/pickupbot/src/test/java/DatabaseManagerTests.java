@@ -1,5 +1,7 @@
 import games.pickupbot.PickupBotDatabaseManager;
 import junit.framework.TestCase;
+import org.jaibo.api.database.DatabaseCredentials;
+import org.jaibo.api.database.DatabaseProvider;
 
 import java.util.GregorianCalendar;
 
@@ -27,6 +29,16 @@ public final class DatabaseManagerTests extends TestCase {
     private String host2 = "1.1.1.1";
     private String host3 = "2.12.2.5";
 
+    // To test with mysql simply set correct credentials and change provider in `setUp` method
+    private static DatabaseCredentials testCredentials = new DatabaseCredentials(null, null, null, "aibo");
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        DatabaseProvider.setCredentials(testCredentials);
+        DatabaseProvider.setDatabaseProvider("sqlite");
+    }
 
     public void testGameProfiles() {
         PickupBotDatabaseManager manager = new PickupBotDatabaseManager();

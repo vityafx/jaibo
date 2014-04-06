@@ -97,7 +97,7 @@ public class Player implements PickupBotDatabaseManagerListener {
                 String timeDifference = GregorianCalendarHelper.GetDifferenceAsHumanReadableString(lockedDateTimeStamp,
                         new GregorianCalendar());
 
-                String lockedErrorString = String.format("games.pickupbot.Player is locked [%s remaining]", timeDifference);
+                String lockedErrorString = String.format("Player is locked [%s remaining]", timeDifference);
                 throw new PlayerError(lockedErrorString);
             }
         }

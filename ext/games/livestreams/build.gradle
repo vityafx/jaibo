@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 group = 'games.livestreams'
-version = '0.4'
+version = '1.0'
 
 sourceCompatibility = 1.5
 

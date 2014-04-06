@@ -28,6 +28,10 @@ class SQLiteProvider extends AbstractDatabaseProvider {
         return "sqlite";
     }
 
+    public SQLiteProvider() {
+        this.setCloseNeedAfterExecuting(true);
+    }
+
     @Override
     protected Connection getConnection(DatabaseCredentials credentials) {
         if (credentials != null) {

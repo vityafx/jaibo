@@ -102,7 +102,7 @@ public final class Iam extends Command implements MessageListener, Configuration
                 this.object.addGameProfile(userAndHost, this.gameProfile);
 
                 this.object.getExtensionMessenger().sendNotice(this.ircUser.getNick(),
-                        String.format("games.pickupbot.Game profile=[%s] has been set successfully", this.gameProfile));
+                        String.format("Game profile=[%s] has been set successfully", this.gameProfile));
             } catch (PlayerError e) {
                 String gameProfile = ExtensionObject.DatabaseManager.getGameProfileForHost(userAndHost);
 

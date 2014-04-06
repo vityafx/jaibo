@@ -5,6 +5,8 @@ import games.pickupbot.GameListener;
 import games.pickupbot.Player;
 
 import junit.framework.TestCase;
+import org.jaibo.api.database.DatabaseCredentials;
+import org.jaibo.api.database.DatabaseProvider;
 
 /**
  * games.pickupbot.Game class tests
@@ -31,6 +33,9 @@ public final class GameTests extends TestCase {
         "test/2"
     };
 
+    // To test with mysql simply set correct credentials and change provider in `setUp` method
+    private static DatabaseCredentials testCredentials = new DatabaseCredentials(null, null, null, "aibo");
+
     private String testGameAccount1 = "_test_aibo_game_account_1_";
     private String testGameAccount2 = "_test_aibo_game_account_2_";
 
@@ -40,6 +45,9 @@ public final class GameTests extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        DatabaseProvider.setCredentials(testCredentials);
+        DatabaseProvider.setDatabaseProvider("sqlite");
 
         ExtensionObject.DatabaseManager.addGameProfile(testPlayer1.getHost(), testGameAccount1);
         ExtensionObject.DatabaseManager.addGameProfile(testPlayer2.getHost(), testGameAccount2);

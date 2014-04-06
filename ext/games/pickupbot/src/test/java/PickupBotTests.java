@@ -48,6 +48,8 @@ public final class PickupBotTests extends TestCase {
 
         this.object.clearGames();
 
+        this.object.setTopicAutoUpdate(false);
+
         for (String gameType : this.games) {
             Game game = Game.tryParse(gameType);
 

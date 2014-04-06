@@ -1,5 +1,8 @@
 import games.pickupbot.ExtensionObject;
 import games.pickupbot.Game;
+import org.jaibo.api.database.DatabaseCredentials;
+import org.jaibo.api.database.DatabaseProvider;
+import org.jaibo.api.database.MainDatabaseManager;
 import org.jaibo.api.tests.TestExtensionMessenger;
 import org.jaibo.api.IrcEvent;
 import org.jaibo.api.IrcMessage;
@@ -25,6 +28,9 @@ import junit.framework.TestCase;
 
 public final class CommandsTests extends TestCase {
     private final TestExtensionMessenger messenger = new TestExtensionMessenger();
+
+    // To test with mysql simply set correct credentials and change provider in `setUp` method
+    private static DatabaseCredentials testCredentials = new DatabaseCredentials(null, null, null, "aibo");
 
     private final ExtensionObject extensionObject = new ExtensionObject();
 
@@ -102,6 +108,14 @@ public final class CommandsTests extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        this.extensionObject.setTopicAutoUpdate(false);
+
+        DatabaseProvider.setCredentials(testCredentials);
+        DatabaseProvider.setDatabaseProvider("sqlite");
+
+        // Need to create admin table to pass tests
+        new MainDatabaseManager();
 
         this.extensionObject.clearGames();
 

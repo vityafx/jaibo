@@ -36,6 +36,10 @@ public final class DatabaseProvider {
     public static void setCredentials(String host, String username, String password, String databaseName) {
         DatabaseCredentials credentials = new DatabaseCredentials(host, username, password, databaseName);
 
+        setCredentials(credentials);
+    }
+
+    public static void setCredentials(DatabaseCredentials credentials) {
         DatabaseProviderFactory.setCredentials(credentials);
     }
 
