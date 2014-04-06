@@ -81,6 +81,8 @@ public class Object extends Extension {
         this.addServerListener(new Pong(this));
         this.addServerListener(new Login(this));
 
+        this.addMessageListener(new Restart(this));
+        this.addMessageListener(new Uptime(this));
         this.addMessageListener(new Hello(this));
         this.addMessageListener(new Motd(this));
         this.addMessageListener(new LoadExtension(this));

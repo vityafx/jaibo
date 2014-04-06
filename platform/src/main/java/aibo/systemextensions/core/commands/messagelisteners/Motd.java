@@ -1,5 +1,6 @@
 package aibo.systemextensions.core.commands.messagelisteners;
 
+import aibo.AIBO;
 import org.jaibo.api.Command;
 import aibo.systemextensions.core.Object;
 import org.jaibo.api.IrcMessage;
@@ -46,9 +47,19 @@ public final class Motd extends Command implements MessageListener {
     public void messageReceived(IrcMessage message) {
         if (message.getMessageType() == IrcMessageType.ChannelMessage) {
             if (this.check(message.getMessage().trim())) {
-                String receiverHost = IrcUser.tryParse(message.getNick() + "!" + message.getHost()).getHost();
+                boolean passed = false;
 
-                if (receiverHost != null && this.object.isAdminHost(receiverHost)) {
+                if (!AIBO.Configuration.getBoolean("aibo.topic_for_everyone")) {
+                    String receiverHost = IrcUser.tryParse(message.getNick() + "!" + message.getHost()).getHost();
+
+                    if (receiverHost != null && this.object.isAdminHost(receiverHost)) {
+                        passed = true;
+                    }
+                } else {
+                    passed = true;
+                }
+
+                if (passed) {
                     this.execute();
                 }
             }

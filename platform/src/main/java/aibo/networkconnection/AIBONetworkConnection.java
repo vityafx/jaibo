@@ -41,13 +41,14 @@ public final class AIBONetworkConnection implements ConfigurationListener, Netwo
 
         this.networkConnection.setAddress(server);
         this.networkConnection.setPort(port);
+        this.networkConnection.setTimeout(Integer.parseInt(AIBO.Configuration.get("network.connection_timeout")) * 1000);
 
         this.networkConnection.addListener(this);
     }
 
     @Override
     public void configurationChanged() {
-        this.networkConnection.setDebug(AIBO.Configuration.getBoolean("Network.debug"));
+        this.networkConnection.setDebug(AIBO.Configuration.getBoolean("network.debug"));
     }
 
     public void removeListener(AIBONetworkConnectionListener listener) {

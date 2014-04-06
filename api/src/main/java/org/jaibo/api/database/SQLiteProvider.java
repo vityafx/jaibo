@@ -40,7 +40,7 @@ class SQLiteProvider extends AbstractDatabaseProvider {
                     return DriverManager.getConnection(formattedDatabaseName);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Can't find sqlite jdbc driver.");
             }
         }
 
