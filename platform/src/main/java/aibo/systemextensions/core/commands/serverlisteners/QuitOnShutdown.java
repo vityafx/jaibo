@@ -1,6 +1,7 @@
 package aibo.systemextensions.core.commands.serverlisteners;
 
 import org.jaibo.api.Extension;
+import org.jaibo.api.IrcCommand;
 import org.jaibo.api.SimpleCommand;
 
 /**
@@ -36,7 +37,7 @@ public final class QuitOnShutdown extends SimpleCommand {
     @Override
     public void execute() {
         if (this.object != null) {
-            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("QUIT", ":" + quitMessage);
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand(new IrcCommand("QUIT", ":" + quitMessage));
         }
     }
 }

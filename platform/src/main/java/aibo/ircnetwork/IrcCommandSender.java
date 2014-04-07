@@ -1,6 +1,6 @@
 package aibo.ircnetwork;
 
-import aibo.networkconnection.NetworkConnection;
+import org.jaibo.api.IrcCommand;
 import org.jaibo.api.IrcCommandSenderInterface;
 import org.jaibo.api.NetworkConnectionInterface;
 
@@ -36,9 +36,9 @@ public class IrcCommandSender implements IrcCommandSenderInterface {
 
 
     @Override
-    public void sendIrcCommand(String command, String arguments) {
-        if (this.connection != null) {
-            connection.send(String.format("%s %s", command, arguments));
+    public void sendIrcCommand(IrcCommand ircCommand) {
+        if (this.connection != null && ircCommand != null) {
+            connection.send(ircCommand.toString());
         }
     }
 }

@@ -12,8 +12,6 @@ import org.jaibo.api.IrcMessage;
 import org.jaibo.api.IrcNetworkListener;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Timer;
@@ -55,7 +53,10 @@ public final class AIBO implements IrcNetworkListener {
 
         this.ircNetwork = new IrcNetwork(
                 Configuration.get("IrcConnection.host").split(" "),
-                Integer.parseInt(Configuration.get("IrcConnection.port")), this);
+                Integer.parseInt(Configuration.get("IrcConnection.port")),
+                this);
+
+        this.setIrcMessageSender();
 
         this.taskManager = new TaskManager(this.ircNetwork.getMessageSender());
 
@@ -66,6 +67,14 @@ public final class AIBO implements IrcNetworkListener {
         this();
 
         this.taskManager.getExtensionManager().addExtensionsByNames(extensionNames);
+    }
+
+    private void setIrcMessageSender() {
+        short commandDelayTime = Short.parseShort(Configuration.get("aibo.command_delay_time"));
+        short maxCommandsPerTime = Short.parseShort(Configuration.get("aibo.max_commands_per_time"));
+
+        this.ircNetwork.getMessageSender().setCommandDelayTime(commandDelayTime);
+        this.ircNetwork.getMessageSender().setMaxCommandsPerTime(maxCommandsPerTime);
     }
 
     @Override

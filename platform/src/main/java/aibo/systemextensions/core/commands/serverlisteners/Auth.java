@@ -1,6 +1,7 @@
 package aibo.systemextensions.core.commands.serverlisteners;
 
 import aibo.AIBO;
+import org.jaibo.api.IrcCommand;
 import org.jaibo.api.SimpleCommand;
 import aibo.systemextensions.core.Object;
 import org.jaibo.api.helpers.ConfigurationListener;
@@ -60,14 +61,14 @@ public final class Auth extends SimpleCommand implements ConfigurationListener {
     public void execute() {
         if (!this.authenticated && this.authenticationNeed) {
 
-            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("AUTH",
-                    String.format("%s %s", this.username, this.password));
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand(new IrcCommand("AUTH",
+                    String.format("%s %s", this.username, this.password)));
 
             if (this.setHiddenHostNeeded) {
                 Object coreObject = (Object)this.object;
 
-                this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("MODE",
-                        String.format("%s +x", coreObject.getCurrentNickName()));
+                this.object.getExtensionMessenger().getCommandSender().sendIrcCommand(new IrcCommand("MODE",
+                        String.format("%s +x", coreObject.getCurrentNickName())));
             }
 
             this.authenticated = true;

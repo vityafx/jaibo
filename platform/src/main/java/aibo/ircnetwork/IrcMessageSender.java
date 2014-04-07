@@ -2,9 +2,15 @@ package aibo.ircnetwork;
 
 import aibo.networkconnection.NetworkConnection;
 
+import org.jaibo.api.IrcCommand;
 import org.jaibo.api.IrcCommandSenderInterface;
 import org.jaibo.api.IrcMessageSenderInterface;
 import org.jaibo.api.NetworkConnectionInterface;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Message sender realization
@@ -26,42 +32,87 @@ import org.jaibo.api.NetworkConnectionInterface;
 
 public class IrcMessageSender implements IrcMessageSenderInterface {
     protected IrcCommandSenderInterface sender;
+    private final Queue<IrcCommand> commandsQueue = new LinkedList<IrcCommand>();
+    private short maxCommandsPerTime = 5;
+    private short commandDelayTimeInSeconds = 3;
+    private Timer timer = null;
 
 
     protected IrcMessageSender() {
-
+        this.setSendByTimer();
     }
 
     public IrcMessageSender(NetworkConnectionInterface connection) {
+        this();
+
         this.sender = new IrcCommandSender(connection);
     }
 
+    private void setSendByTimer() {
+        this.timer = new Timer();
+
+        this.timer.schedule(new TimerTask(){
+            @Override
+            public void run() {
+                for (short i = 0; i < maxCommandsPerTime; i++) {
+                    if (commandsQueue.isEmpty()) {
+                        break;
+                    } else {
+                        sender.sendIrcCommand(commandsQueue.remove());
+                    }
+                }
+            }
+        }, this.commandDelayTimeInSeconds * 1000, this.commandDelayTimeInSeconds * 1000);
+    }
+
+    private void stopSendTimer() {
+        this.timer.cancel();
+        this.timer.purge();
+        this.timer = null;
+    }
+
+    private void resetSendTimer() {
+        this.stopSendTimer();
+        this.setSendByTimer();
+    }
+
+    public void setCommandDelayTime(short delayTimeInSeconds) {
+        this.commandDelayTimeInSeconds = delayTimeInSeconds;
+
+        this.resetSendTimer();
+    }
+
+    public void setMaxCommandsPerTime(short commandsCount) {
+        this.maxCommandsPerTime = commandsCount;
+
+        this.resetSendTimer();
+    }
 
     @Override
     public void sendNotice(String username, String message) {
-        this.sender.sendIrcCommand("NOTICE", String.format("%s :%s", username, message));
+        this.commandsQueue.add(new IrcCommand("NOTICE", String.format("%s :%s", username, message)));
     }
 
     @Override
     public void sendPrivateMessage(String username, String message) {
-        this.sender.sendIrcCommand("PRIVMSG", String.format("%s :%s", username, message));
+        this.commandsQueue.add(new IrcCommand("PRIVMSG", String.format("%s :%s", username, message)));
     }
 
     @Override
     public void sendChannelMessage(String channel, String message) {
-        this.sender.sendIrcCommand("PRIVMSG", String.format("%s :%s", channel, message));
+        this.commandsQueue.add(new IrcCommand("PRIVMSG", String.format("%s :%s", channel, message)));
     }
 
     @Override
     public void sendBroadcastMessage(String[] channels, String message) {
         for(String channel : channels) {
-            this.sender.sendIrcCommand("PRIVMSG", String.format("%s :%s", channel, message));
+            this.commandsQueue.add(new IrcCommand("PRIVMSG", String.format("%s :%s", channel, message)));
         }
     }
 
     @Override
     public void setTopic(String channel, String topicContent) {
-        this.sender.sendIrcCommand("TOPIC", String.format("%s :%s", channel, topicContent));
+        this.commandsQueue.add(new IrcCommand("TOPIC", String.format("%s :%s", channel, topicContent)));
     }
 
     @Override

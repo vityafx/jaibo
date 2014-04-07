@@ -1,6 +1,5 @@
 package org.jaibo.api.tests;
 
-import org.jaibo.api.IrcCommandSenderInterface;
 import org.jaibo.api.IrcMessageSenderInterface;
 
 /**

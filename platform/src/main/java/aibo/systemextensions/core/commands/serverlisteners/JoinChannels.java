@@ -1,6 +1,7 @@
 package aibo.systemextensions.core.commands.serverlisteners;
 
 import org.jaibo.api.Extension;
+import org.jaibo.api.IrcCommand;
 import org.jaibo.api.SimpleCommand;
 
 /**
@@ -31,8 +32,8 @@ public final class JoinChannels extends SimpleCommand {
         String[] channels = this.object.getChannels();
 
         for (String channel : channels) {
-            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("JOIN",
-                    String.format("%s", channel));
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand(new IrcCommand("JOIN",
+                    String.format("%s", channel)));
         }
     }
 }

@@ -3,6 +3,7 @@ package aibo.systemextensions.core.commands.serverlisteners;
 import aibo.AIBO;
 import org.jaibo.api.Command;
 import aibo.systemextensions.core.Object;
+import org.jaibo.api.IrcCommand;
 import org.jaibo.api.errors.ExtensionError;
 import org.jaibo.api.ServerListener;
 
@@ -84,12 +85,12 @@ public final class Login extends Command implements ServerListener {
     protected void action() {
         String nickName = this.getNickName();
 
-        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("nick", nickName);
+        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand(new IrcCommand("nick", nickName));
         this.object.setCurrentNickName(nickName);
 
         if (!loggedIn) {
-            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("user",
-                    String.format("%s * ** : %s", this.getIdentity(), this.getInformation()));
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand(new IrcCommand("user",
+                    String.format("%s * ** : %s", this.getIdentity(), this.getInformation())));
 
             this.loggedIn = true;
         }

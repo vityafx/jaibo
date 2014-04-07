@@ -2,6 +2,7 @@ package aibo.systemextensions.core.commands.serverlisteners;
 
 import org.jaibo.api.Command;
 import aibo.systemextensions.core.Object;
+import org.jaibo.api.IrcCommand;
 import org.jaibo.api.ServerListener;
 
 
@@ -64,6 +65,6 @@ public final class Pong extends Command implements ServerListener {
 
     @Override
     protected void action() {
-        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("PONG", this.pongAnswer);
+        this.object.getExtensionMessenger().getCommandSender().sendIrcCommand(new IrcCommand("PONG", this.pongAnswer));
     }
 }

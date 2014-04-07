@@ -1,10 +1,7 @@
 package aibo.systemextensions.core.commands.messagelisteners;
 
-import org.jaibo.api.Command;
+import org.jaibo.api.*;
 import aibo.systemextensions.core.Object;
-import org.jaibo.api.IrcMessage;
-import org.jaibo.api.IrcUser;
-import org.jaibo.api.MessageListener;
 
 /**
  * Gives operator privileges to a user with host = root_admin_host
@@ -52,8 +49,8 @@ public final class GetOp extends Command implements MessageListener {
     @Override
     protected void action() {
         for(String channel : this.object.getChannels()) {
-            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand("MODE",
-                    String.format("%s +o %s", channel, this.ircUser.getNick()));
+            this.object.getExtensionMessenger().getCommandSender().sendIrcCommand(new IrcCommand("MODE",
+                    String.format("%s +o %s", channel, this.ircUser.getNick())));
         }
     }
 }

@@ -1,5 +1,6 @@
 package org.jaibo.api.tests;
 
+import org.jaibo.api.IrcCommand;
 import org.jaibo.api.IrcCommandSenderInterface;
 
 /**
@@ -23,7 +24,9 @@ import org.jaibo.api.IrcCommandSenderInterface;
 public final class TestIrcCommandSender implements IrcCommandSenderInterface {
 
     @Override
-    public void sendIrcCommand(String command, String arguments) {
-        System.out.println(String.format("Sending %s: %s", command, arguments));
+    public void sendIrcCommand(IrcCommand command) {
+        if (command != null) {
+            System.out.println(String.format("Sending %s: %s", command.getName(), command.getArguments()));
+        }
     }
 }

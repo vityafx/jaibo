@@ -84,10 +84,6 @@ public final class Streams extends Command implements MessageListener, Configura
 
     @Override
     protected void action() {
-        this.object.getExtensionMessenger().sendBroadcastMessage(this.object.getChannels(),
-                String.format("Retrieving live streams information with limit=[%s] on service[%s]",
-                        ExtensionObject.Configuration.get("streams.limit"), this.providerName));
-
         try {
             String[] streams = this.object.getStreams(this.providerName, this.streamTag);
 

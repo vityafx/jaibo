@@ -420,7 +420,7 @@ public final class ExtensionObject extends Extension implements GameListener, Co
         if (ExtensionObject.DatabaseManager.isGameProfileExists(oldGameProfile)) {
             ExtensionObject.DatabaseManager.changeGameProfile(oldGameProfile, newGameProfile);
         } else {
-            throw new PlayerError(String.format("games.pickupbot.Game profile=[%s] does not exists", oldGameProfile));
+            throw new PlayerError(String.format("Game profile=[%s] does not exists", oldGameProfile));
         }
     }
 
