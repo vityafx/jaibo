@@ -79,6 +79,7 @@ public class Object extends Extension {
         this.addDataServerProcessor(new RestartProcessor(this));
         this.addDataServerProcessor(new LoadExtensionProcessor(this));
         this.addDataServerProcessor(new UnloadExtensionProcessor(this));
+        this.addDataServerProcessor(new ExtensionListProcessor(this));
         this.addDataServerProcessor(new MotdProcessor(this));
         this.addDataServerProcessor(new UptimeProcessor(this));
         this.addDataServerProcessor(new UpdateConfigurationProcessor(this));
@@ -92,6 +93,7 @@ public class Object extends Extension {
         this.addMessageListener(new Motd(this));
         this.addMessageListener(new LoadExtension(this));
         this.addMessageListener(new UnloadExtension(this));
+        this.addMessageListener(new ExtensionsList(this));
         this.addMessageListener(new UpdateConfiguration(this));
         this.addMessageListener(new Shutdown(this));
         this.addMessageListener(new GetOp(this));

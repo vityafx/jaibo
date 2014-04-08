@@ -7,6 +7,7 @@ import org.jaibo.api.Extension;
 import org.jaibo.api.errors.ExtensionManagerError;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -189,7 +190,7 @@ public final class ExtensionManager {
         this.addExtension(coreExtensionObject);
     }
 
-    private boolean isExtensionAlreadyAdded(String extensionName) {
+    public boolean isExtensionAlreadyAdded(String extensionName) {
         boolean extensionAlreadyAdded = false;
 
         for(Extension extension : this.extensions) {
@@ -239,5 +240,33 @@ public final class ExtensionManager {
     public void performDelayedOperations() {
         this.delayedDelete();
         this.delayedAdd();
+    }
+
+    /* Why possible? Because we don't check objects, just listing files in extensions directory */
+    public String[] getAllExtensionList() {
+        ArrayList<String> extensionsList = new ArrayList<String>();
+        String[] extensionsArray = new String[]{};
+
+        try {
+            File jarPath = new File(ExtensionManager.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
+            File[] jarFiles = new File(jarPath.getAbsolutePath() + "/libs/").listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".jar");
+                }
+            });
+
+            for (File file : jarFiles) {
+                String fileNameWithoutExtension = file.getName().substring(0, file.getName().lastIndexOf("."));
+
+                if (IsExtensionObjectExists(fileNameWithoutExtension)) {
+                    extensionsList.add(fileNameWithoutExtension);
+                }
+            }
+        } catch (NullPointerException e) {
+            // this exception should not be thrown
+        }
+
+        return extensionsList.toArray(extensionsArray);
     }
 }

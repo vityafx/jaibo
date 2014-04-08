@@ -2,30 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7f8d398c-4c7d-4074-a20a-1eac361f9b50" name="Default" comment="Fixed message format in pickupbot">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/IrcCommand.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__sqlite_jdbc_3_7_2.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../other/advertisement/.gradle/1.11/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/../../other/advertisement/.gradle/1.11/taskArtifacts/cache.properties.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../other/advertisement/.gradle/1.11/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/../../other/advertisement/.gradle/1.11/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../other/advertisement/.gradle/1.11/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/../../other/advertisement/.gradle/1.11/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../other/advertisement/.gradle/1.11/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/../../other/advertisement/.gradle/1.11/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/AIBO.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/AIBO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/Auth.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/Auth.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/games/pickupbot/ExtensionObject.java" afterPath="$PROJECT_DIR$/src/main/java/games/pickupbot/ExtensionObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/messagelisteners/GetOp.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/messagelisteners/GetOp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__jaibo_api_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__jaibo_api_1_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/ircnetwork/IrcCommandSender.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/ircnetwork/IrcCommandSender.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/IrcCommandSenderInterface.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/IrcCommandSenderInterface.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/ircnetwork/IrcMessageSender.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/ircnetwork/IrcMessageSender.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/JoinChannels.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/JoinChannels.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/Login.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/Login.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/Pong.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/Pong.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/QuitOnShutdown.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/serverlisteners/QuitOnShutdown.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/games/pickupbot/commands/messagelisteners/Remove.java" afterPath="$PROJECT_DIR$/src/main/java/games/pickupbot/commands/messagelisteners/Remove.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../livestreams/src/main/java/games/livestreams/messagelisteners/Streams.java" afterPath="$PROJECT_DIR$/../livestreams/src/main/java/games/livestreams/messagelisteners/Streams.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/tests/TestIrcCommandSender.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/tests/TestIrcCommandSender.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/tests/TestIrcMessageSender.java" afterPath="$PROJECT_DIR$/../../../api/src/main/java/org/jaibo/api/tests/TestIrcMessageSender.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/settings/settings.ini" afterPath="$PROJECT_DIR$/../../../platform/settings/settings.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/dataserverprocessors/ExtensionListProcessor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/commands/messagelisteners/ExtensionsList.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/ExtensionManager.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/ExtensionManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/Object.java" afterPath="$PROJECT_DIR$/../../../platform/src/main/java/aibo/systemextensions/core/Object.java" />
     </list>
     <ignored path="pickupbot.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,11 +28,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AutoRemovablePlayer.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/AutoRemovablePlayer.java">
+      <file leaf-file-name="GamesPlayerListProcessor.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/dataserverprocessors/GamesPlayerListProcessor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33262712" vertical-offset="676" max-vertical-offset="1620">
-              <caret line="79" column="16" selection-start-line="79" selection-start-column="16" selection-end-line="79" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.6822034" vertical-offset="241" max-vertical-offset="1200">
+              <caret line="72" column="58" selection-start-line="72" selection-start-column="58" selection-end-line="72" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -396,6 +376,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -415,9 +396,78 @@
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pickupbot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pickupbot" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pickupbot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pickupbot" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pickupbot" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pickupbot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pickupbot" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pickupbot" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dataserverprocessors" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -501,6 +551,12 @@
       <ConfigurationWrapper RunnerId="ExternalSystemTaskRunner" />
       <method />
     </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
     <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
       <module name="" />
       <setting name="path" value="" />
@@ -508,12 +564,6 @@
       <setting name="params" value="" />
       <setting name="workDir" value="file://$PROJECT_DIR$" />
       <setting name="debug" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
-      <module name="" />
-      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
-      <option name="PROGRAM_PARAMETERS" />
       <method />
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
@@ -560,19 +610,6 @@
       </ExternalSystemSettings>
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -598,6 +635,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -703,7 +753,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1916" y="-3" width="1928" height="1087" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1070,13 +1120,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/dataserverprocessors/GamesPlayerListProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23728813" vertical-offset="241" max-vertical-offset="1200">
-          <caret line="44" column="13" selection-start-line="44" selection-start-column="13" selection-end-line="44" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/PickupBotDatabaseManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5720339" vertical-offset="2715" max-vertical-offset="7425">
@@ -1115,8 +1158,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/AutoRemovablePlayer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33262712" vertical-offset="676" max-vertical-offset="1620">
+        <state vertical-scroll-proportion="0.35487288" vertical-offset="655" max-vertical-offset="1620">
           <caret line="79" column="16" selection-start-line="79" selection-start-column="16" selection-end-line="79" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/games/pickupbot/dataserverprocessors/GamesPlayerListProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6822034" vertical-offset="241" max-vertical-offset="1200">
+          <caret line="72" column="58" selection-start-line="72" selection-start-column="58" selection-end-line="72" selection-end-column="58" />
           <folding />
         </state>
       </provider>
