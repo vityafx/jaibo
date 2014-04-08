@@ -1,16 +1,16 @@
 package aibo;
 
-import aibo.systemextensions.core.Object;
-import org.jaibo.api.Extension;
 import aibo.systemextensions.ExtensionMessenger;
-import org.jaibo.api.errors.ExtensionManagerError;
 import aibo.ircnetwork.IrcMessageSender;
+
+import org.jaibo.api.Extension;
+import org.jaibo.api.errors.ExtensionManagerError;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Extension manager realization
@@ -32,6 +32,8 @@ import java.util.ArrayList;
 
 public final class ExtensionManager {
     private final ArrayList<Extension> extensions = new ArrayList<Extension>();
+    private final ArrayList<Extension> extensionToBeDeleted = new ArrayList<Extension>();
+    private final ArrayList<Extension> extensionToBeAdded = new ArrayList<Extension>();
     private ExtensionMessenger messenger;
 
 
@@ -73,7 +75,7 @@ public final class ExtensionManager {
         if (extension != null) {
             extension.setExtensionMessenger(this.messenger);
 
-            this.extensions.add(extension);
+            this.extensionToBeAdded.add(extension);
 
             System.out.println(String.format("Extension added: %s (version: %s)",
                     extension.getExtensionName(),
@@ -99,7 +101,7 @@ public final class ExtensionManager {
         if (extension != null) {
             extension.prepareToUnload();
 
-            this.extensions.remove(extension);
+            this.extensionToBeDeleted.add(extension);
 
             System.out.println(String.format("Extension removed: %s (version: %s)",
                     extension.getExtensionName(),
@@ -107,7 +109,7 @@ public final class ExtensionManager {
         }
     }
 
-    public ArrayList<Extension> getExtensions() {
+    public List<Extension> getExtensions() {
         return this.extensions;
     }
 
@@ -181,7 +183,7 @@ public final class ExtensionManager {
     }
 
     private void createCoreExtension() {
-        Object coreExtensionObject = new Object();
+        aibo.systemextensions.core.Object coreExtensionObject = new aibo.systemextensions.core.Object();
         coreExtensionObject.setExtensionManager(this);
 
         this.addExtension(coreExtensionObject);
@@ -210,5 +212,32 @@ public final class ExtensionManager {
         this.extensions.clear();
 
         super.finalize();
+    }
+
+    private void delayedDelete() {
+        for (Extension extensionToDelete : this.extensionToBeDeleted) {
+            Iterator<Extension> extensionIterator = this.extensions.iterator();
+
+            while(extensionIterator.hasNext()) {
+                Extension extension = extensionIterator.next();
+
+                if (extension.getExtensionName().equals(extensionToDelete.getExtensionName())) {
+                    extensionIterator.remove();
+                }
+            }
+        }
+
+        this.extensionToBeDeleted.clear();
+    }
+
+    private void delayedAdd() {
+        this.extensions.addAll(this.extensionToBeAdded);
+
+        this.extensionToBeAdded.clear();
+    }
+
+    public void performDelayedOperations() {
+        this.delayedDelete();
+        this.delayedAdd();
     }
 }

@@ -1,5 +1,6 @@
 package aibo.systemextensions.core.dataserverprocessors;
 
+import aibo.ExtensionManager;
 import aibo.systemextensions.core.Object;
 
 import org.jaibo.api.dataserver.DataServerInfoObject;
@@ -53,9 +54,13 @@ public final class LoadExtensionProcessor extends DataServerProcessor {
             if (this.extensionObject.isApiAuthTokenCorrect(adminHost)) {
                 if (extensionName != null && !extensionName.isEmpty()) {
                     try {
-                        this.extensionObject.getExtensionManager().addExtensionByName(extensionName);
+                        if (ExtensionManager.IsExtensionObjectExists(extensionName)) {
+                            this.extensionObject.getExtensionManager().addExtensionByName(extensionName);
 
-                        infoObject.putData("answer", "Extension has been loaded: " + extensionName);
+                            infoObject.putData("answer", "Extension will be loaded automatically soon: " + extensionName);
+                        } else {
+                            infoObject.putData("answer", "Extension is not exists: " + extensionName);
+                        }
                     } catch (ExtensionManagerError e) {
                         infoObject.putData("answer", e.getMessage());
                     }

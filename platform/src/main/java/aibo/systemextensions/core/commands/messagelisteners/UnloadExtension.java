@@ -1,5 +1,7 @@
 package aibo.systemextensions.core.commands.messagelisteners;
 
+import aibo.systemextensions.core.Object;
+
 import org.jaibo.api.Command;
 import org.jaibo.api.errors.ExtensionError;
 import org.jaibo.api.errors.ExtensionManagerError;
@@ -30,7 +32,7 @@ import java.util.regex.Pattern;
  */
 
 public final class UnloadExtension extends Command implements MessageListener {
-    private aibo.systemextensions.core.Object object;
+    private Object object;
     private String receiver;
     private String extensionName;
 
@@ -38,7 +40,7 @@ public final class UnloadExtension extends Command implements MessageListener {
         this.addName("!unload");
     }
 
-    public UnloadExtension(aibo.systemextensions.core.Object object) {
+    public UnloadExtension(Object object) {
         this();
 
         this.object = object;
@@ -84,10 +86,8 @@ public final class UnloadExtension extends Command implements MessageListener {
         try {
             this.object.getExtensionManager().removeExtensionByName(this.extensionName);
 
-            if (this.object.getExtensionManager().getCurrentlyRunningExtensionByName(this.extensionName) == null) {
-                this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
-                        String.format("'%s' extension successfully unloaded", this.extensionName));
-            }
+            this.object.getExtensionMessenger().sendPrivateMessage(this.receiver,
+                    String.format("'%s' extension successfully unloaded", this.extensionName));
 
             this.extensionName = null;
         } catch (ExtensionManagerError e) {

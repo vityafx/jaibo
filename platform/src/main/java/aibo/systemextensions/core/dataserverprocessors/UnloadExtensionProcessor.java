@@ -1,5 +1,6 @@
 package aibo.systemextensions.core.dataserverprocessors;
 
+import aibo.ExtensionManager;
 import aibo.systemextensions.core.Object;
 
 import org.jaibo.api.dataserver.DataServerInfoObject;
@@ -53,9 +54,13 @@ public final class UnloadExtensionProcessor extends DataServerProcessor {
             if (this.extensionObject.isApiAuthTokenCorrect(adminHost)) {
                 if (extensionName != null && !extensionName.isEmpty()) {
                     try {
-                        this.extensionObject.getExtensionManager().removeExtensionByName(extensionName);
+                        if (ExtensionManager.IsExtensionObjectExists(extensionName)) {
+                            this.extensionObject.getExtensionManager().removeExtensionByName(extensionName);
 
-                        infoObject.putData("answer", "Extension has been unloaded: " + extensionName);
+                            infoObject.putData("answer", "Extension will be unloaded: " + extensionName);
+                        } else {
+                            infoObject.putData("answer", "Extension is not exists " + extensionName);
+                        }
                     } catch (ExtensionManagerError e) {
                         infoObject.putData("answer", e.getMessage());
                     }

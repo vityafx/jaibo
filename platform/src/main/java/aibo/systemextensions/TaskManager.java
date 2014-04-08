@@ -34,6 +34,7 @@ public final class TaskManager {
 
     public TaskManager(IrcMessageSender messageSender) {
         this.extensionManager = new ExtensionManager(null, messageSender);
+        this.extensionManager.performDelayedOperations();
     }
 
 
@@ -51,6 +52,8 @@ public final class TaskManager {
 
             extension.processTask(ircMessage);
         }
+
+        extensionManager.performDelayedOperations();
     }
 
     public void notifyEventListeners(IrcEvent ircEvent) {
@@ -63,6 +66,8 @@ public final class TaskManager {
 
             extension.processTask(ircEvent);
         }
+
+        this.extensionManager.performDelayedOperations();
     }
 
     public void notifyServerListeners(String serverMessage) {
@@ -75,6 +80,8 @@ public final class TaskManager {
 
             extension.processTask(serverMessage);
         }
+
+        this.extensionManager.performDelayedOperations();
     }
 
     public DataServerProcessor[] getDataServerProcessors() {
