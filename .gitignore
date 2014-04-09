@@ -1,0 +1,10 @@
+.idea
+.gradle
+*.iws
+*.ipr
+**/*.iws
+**/*.ipr
+**/.idea/
+**/.target/
+**/.gradle/
+
