@@ -278,7 +278,7 @@ public class Game {
         if (ExtensionObject.Configuration.getBoolean("player.game_profile_required")) {
             return this.getGameProfilesAsString(separator);
         } else {
-            return this.getPlayerNicknamesAsString(separator, false, false);
+            return this.getPlayerNicknamesAsString(separator, true, false);
         }
     }
 
