@@ -1,0 +1,30 @@
+jaibo-0.4:
+Total: 7 improvements, 10 planned tasks, 1 new feature, 2 bugs fixed
+
+Improvements:
+- Data server realized which can send data from extensions in json format
+- Made a command delay before sending a lot of commands to avoid irc message flood
+- Removed unused files
+- Fixed error message when people without game profile are trying to add (Games.PickupBot extension)
+- Games.PickupBot extension now updates topic with delay to avoid flood
+- Realized a flag in settings file which can allow each user to modify the topic by !motd
+- Bot can now work through custom network interface
+
+Features:
+- MySQL support realized
+
+Bugs:
+- Extensions can be unloaded and loaded dynamically now
+- Fixed bug when advertisement had negative id number (Other.Advertisement extension)
+
+Tasks:
+- Realized a command to show running and all extensions
+- Created README.md files in each extension directory with build instructions
+- Made an opportunity to set data in extensions by sending requests through data server
+- Uptime command realized (!uptime) with showing bot memory usage and it's uptime
+- Twitch.tv provider realized (Games.LiveStreams extension)
+- Restart command realized (!restart) which restarts the bot
+- Simple web-service game tournament integration realized (Games.PickupBot extension)
+- Realized data server processors for Core and Games.PickupBot extensions
+- Created a command and data server processor to retrieve information about currently set advertisements
+- Created a command and data server processor to retrieve information about currently running extensions
