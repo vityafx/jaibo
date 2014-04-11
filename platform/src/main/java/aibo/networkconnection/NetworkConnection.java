@@ -4,10 +4,7 @@ import org.jaibo.api.NetworkConnectionInterface;
 import org.jaibo.api.helpers.ConfigurationListener;
 import org.jaibo.api.NetworkConnectionListener;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -40,6 +37,8 @@ public class NetworkConnection implements NetworkConnectionInterface {
     private NetworkInterface networkInterface;
 
     private ArrayList<NetworkConnectionListener> listeners = new ArrayList<NetworkConnectionListener>();
+    private BufferedReader networkInputStream;
+    private BufferedWriter networkOutputStream;
 
 
     public NetworkConnection() {
@@ -107,32 +106,28 @@ public class NetworkConnection implements NetworkConnectionInterface {
     }
 
     private void readLoop() throws IOException {
-        this.socket.setSoTimeout(this.timeout);
-        BufferedReader networkInputStream = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-
-        char[] inputChars = new char[1024];
-        int charsRead;
-
         while (true) {
-            if ((charsRead = networkInputStream.read(inputChars)) != -1) {
-                this.socket.setSoTimeout(0);
-                String dataString = new String(inputChars, 0, charsRead);
-                String[] data = dataString.split("\r\n");
+            String dataString = this.networkInputStream.readLine();
 
-                if (this.isDebug) {
-                    System.out.print(String.format("<< %s", dataString));
-                }
+            String[] data = dataString.split("\r\n");
 
-                this.notifyListeners(data);
+            if (this.isDebug) {
+                System.out.println(String.format("<< %s", dataString));
             }
+
+            this.notifyListeners(data);
         }
     }
 
     private void runLoop() {
         try {
+            this.networkInputStream = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            this.networkOutputStream = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+
             this.readLoop();
         } catch (IOException e) {
             System.out.println(String.format("Error while trying to read (%s)", e.getMessage()));
+            e.printStackTrace();
         }
     }
 
@@ -140,10 +135,8 @@ public class NetworkConnection implements NetworkConnectionInterface {
     public void send(String data) {
         try {
             if (this.socket != null) {
-                PrintWriter writer = new PrintWriter(this.socket.getOutputStream(), true);
-
-                writer.write(data + "\r\n");
-                writer.flush();
+                this.networkOutputStream.write(data + "\r\n");
+                this.networkOutputStream.flush();
 
                 if (this.isDebug) {
                     System.out.println(String.format(">> %s", data));
@@ -155,9 +148,6 @@ public class NetworkConnection implements NetworkConnectionInterface {
     }
 
     public void connect() {
-        int currentAttempt = 1;
-        int maxAttempts = 3;
-
         if (this.port > 0 && this.address != null) {
             if (this.socket != null && this.socket.isConnected()) {
                 try {
@@ -170,29 +160,7 @@ public class NetworkConnection implements NetworkConnectionInterface {
             try {
                 this.socket = new Socket();
 
-                if (this.networkInterface != null) {
-                    Enumeration<InetAddress> addresses = this.networkInterface.getInetAddresses();
-                    InetAddress address = null;
-
-                    while (addresses.hasMoreElements())
-                    {
-                        InetAddress addr = addresses.nextElement();
-
-                        if (addr instanceof Inet4Address && !addr.isLoopbackAddress())
-                        {
-                            address = addr;
-
-                            break;
-                        }
-                    }
-
-                    if (address != null) {
-                        System.out.println(String.format("Binding to %s through %s", address.getHostName(),
-                                this.networkInterface.getDisplayName()));
-
-                        this.socket.bind(new InetSocketAddress(address, 0));
-                    }
-                }
+                this.setCustomNetworkInterfaceIfSet();
 
                 this.socket.connect(new InetSocketAddress(this.address, this.port), this.timeout);
 
@@ -201,6 +169,32 @@ public class NetworkConnection implements NetworkConnectionInterface {
                 System.out.printf("%s", exception.getMessage());
             } catch (IOException exception) {
                 System.out.printf("%s", exception.getMessage());
+            }
+        }
+    }
+
+    private void setCustomNetworkInterfaceIfSet() throws IOException {
+        if (this.networkInterface != null) {
+            Enumeration<InetAddress> addresses = this.networkInterface.getInetAddresses();
+            InetAddress address = null;
+
+            while (addresses.hasMoreElements())
+            {
+                InetAddress inetAddress = addresses.nextElement();
+
+                if (inetAddress instanceof Inet4Address && !inetAddress.isLoopbackAddress())
+                {
+                    address = inetAddress;
+
+                    break;
+                }
+            }
+
+            if (address != null) {
+                System.out.println(String.format("Binding to %s through %s", address.getHostName(),
+                        this.networkInterface.getDisplayName()));
+
+                this.socket.bind(new InetSocketAddress(address, 0));
             }
         }
     }

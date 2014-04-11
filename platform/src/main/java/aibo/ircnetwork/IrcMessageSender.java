@@ -90,7 +90,7 @@ public class IrcMessageSender implements IrcMessageSenderInterface {
 
     @Override
     public void sendNotice(String username, String message) {
-        this.commandsQueue.add(new IrcCommand("NOTICE", String.format("%s :%s", username, message)));
+        this.sender.sendIrcCommand(new IrcCommand("NOTICE", String.format("%s :%s", username, message)));
     }
 
     @Override
@@ -112,7 +112,7 @@ public class IrcMessageSender implements IrcMessageSenderInterface {
 
     @Override
     public void setTopic(String channel, String topicContent) {
-        this.commandsQueue.add(new IrcCommand("TOPIC", String.format("%s :%s", channel, topicContent)));
+        this.sender.sendIrcCommand(new IrcCommand("TOPIC", String.format("%s :%s", channel, topicContent)));
     }
 
     @Override
