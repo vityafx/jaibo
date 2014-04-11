@@ -61,6 +61,8 @@ public final class AIBO implements IrcNetworkListener {
         this.taskManager = new TaskManager(this.ircNetwork.getMessageSender());
 
         this.setUpDataServer();
+
+        this.printAPIVersion();
     }
 
     public AIBO(String... extensionNames) {
@@ -118,6 +120,10 @@ public final class AIBO implements IrcNetworkListener {
                 Configuration.get("aibo.database.username"),
                 Configuration.get("aibo.database.password"),
                 Configuration.get("aibo.database.name"));
+    }
+
+    private void printAPIVersion() {
+        System.out.println(String.format("Running on API version: %.1f", org.jaibo.api.APIInfo.getVersion()));
     }
 
     public static void Shutdown() {

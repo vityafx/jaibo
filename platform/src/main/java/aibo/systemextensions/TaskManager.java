@@ -10,6 +10,7 @@ import org.jaibo.api.dataserver.DataServerProcessor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Sends tasks to each extension
@@ -34,7 +35,6 @@ public final class TaskManager {
 
     public TaskManager(IrcMessageSender messageSender) {
         this.extensionManager = new ExtensionManager(null, messageSender);
-        this.extensionManager.performDelayedOperations();
     }
 
 
@@ -42,40 +42,38 @@ public final class TaskManager {
         return this.extensionManager;
     }
 
-    public void notifyMessageListeners(IrcMessage ircMessage) {
-        Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
 
-        while(extensionIterator.hasNext()) {
-            Extension extension = extensionIterator.next();
-
-            extension.processTask(ircMessage);
+    public void notifyMessageListeners(final IrcMessage ircMessage) {
+        for (final Extension extension : this.extensionManager.getExtensions()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    extension.processTask(ircMessage);
+                }
+            }).start();
         }
-
-        extensionManager.performDelayedOperations();
     }
 
-    public void notifyEventListeners(IrcEvent ircEvent) {
-        Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
-
-        while(extensionIterator.hasNext()) {
-            Extension extension = extensionIterator.next();
-
-            extension.processTask(ircEvent);
+    public void notifyEventListeners(final IrcEvent ircEvent) {
+        for (final Extension extension : this.extensionManager.getExtensions()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    extension.processTask(ircEvent);
+                }
+            }).start();
         }
-
-        this.extensionManager.performDelayedOperations();
     }
 
-    public void notifyServerListeners(String serverMessage) {
-        Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
-
-        while(extensionIterator.hasNext()) {
-            Extension extension = extensionIterator.next();
-
-            extension.processTask(serverMessage);
+    public void notifyServerListeners(final String serverMessage) {
+        for (final Extension extension : this.extensionManager.getExtensions()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    extension.processTask(serverMessage);
+                }
+            }).start();
         }
-
-        this.extensionManager.performDelayedOperations();
     }
 
     public DataServerProcessor[] getDataServerProcessors() {

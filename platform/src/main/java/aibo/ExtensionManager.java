@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Extension manager realization
@@ -32,9 +33,7 @@ import java.util.*;
  */
 
 public final class ExtensionManager {
-    private final ArrayList<Extension> extensions = new ArrayList<Extension>();
-    private final ArrayList<Extension> extensionToBeDeleted = new ArrayList<Extension>();
-    private final ArrayList<Extension> extensionToBeAdded = new ArrayList<Extension>();
+    private final CopyOnWriteArrayList<Extension> extensions = new CopyOnWriteArrayList<Extension>();
     private ExtensionMessenger messenger;
 
 
@@ -73,14 +72,16 @@ public final class ExtensionManager {
     }
 
     private void addExtension(Extension extension) {
-        if (extension != null) {
-            extension.setExtensionMessenger(this.messenger);
+        synchronized (this) {
+            if (extension != null) {
+                extension.setExtensionMessenger(this.messenger);
 
-            this.extensionToBeAdded.add(extension);
+                this.extensions.add(extension);
 
-            System.out.println(String.format("Extension added: %s (version: %s)",
-                    extension.getExtensionName(),
-                    extension.getExtensionVersion()));
+                System.out.println(String.format("Extension added: %s (version: %s)",
+                        extension.getExtensionName(),
+                        extension.getExtensionVersion()));
+            }
         }
     }
 
@@ -99,14 +100,16 @@ public final class ExtensionManager {
     }
 
     private void removeExtension(Extension extension) {
-        if (extension != null) {
-            extension.prepareToUnload();
+        synchronized (this) {
+            if (extension != null) {
+                extension.prepareToUnload();
 
-            this.extensionToBeDeleted.add(extension);
+                this.extensions.remove(extension);
 
-            System.out.println(String.format("Extension removed: %s (version: %s)",
-                    extension.getExtensionName(),
-                    extension.getExtensionVersion()));
+                System.out.println(String.format("Extension removed: %s (version: %s)",
+                        extension.getExtensionName(),
+                        extension.getExtensionVersion()));
+            }
         }
     }
 
@@ -213,33 +216,6 @@ public final class ExtensionManager {
         this.extensions.clear();
 
         super.finalize();
-    }
-
-    private void delayedDelete() {
-        for (Extension extensionToDelete : this.extensionToBeDeleted) {
-            Iterator<Extension> extensionIterator = this.extensions.iterator();
-
-            while(extensionIterator.hasNext()) {
-                Extension extension = extensionIterator.next();
-
-                if (extension.getExtensionName().equals(extensionToDelete.getExtensionName())) {
-                    extensionIterator.remove();
-                }
-            }
-        }
-
-        this.extensionToBeDeleted.clear();
-    }
-
-    private void delayedAdd() {
-        this.extensions.addAll(this.extensionToBeAdded);
-
-        this.extensionToBeAdded.clear();
-    }
-
-    public void performDelayedOperations() {
-        this.delayedDelete();
-        this.delayedAdd();
     }
 
     public String[] getAllExtensionList() {

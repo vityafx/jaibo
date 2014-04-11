@@ -239,9 +239,9 @@ public abstract class Extension extends Thread implements ConfigurationListener 
             if (this != obj) {
                 Extension extensionObject = (Extension)obj;
 
-                if (extensionObject != null) {
-                    return extensionObject.getExtensionName().equalsIgnoreCase(this.getExtensionName());
-                }
+                return extensionObject.getExtensionName().equalsIgnoreCase(this.getExtensionName());
+            } else {
+                return true;
             }
         }
 
