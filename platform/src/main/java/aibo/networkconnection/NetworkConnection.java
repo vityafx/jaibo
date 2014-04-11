@@ -1,7 +1,6 @@
 package aibo.networkconnection;
 
 import org.jaibo.api.NetworkConnectionInterface;
-import org.jaibo.api.helpers.ConfigurationListener;
 import org.jaibo.api.NetworkConnectionListener;
 
 import java.io.*;
