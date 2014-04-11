@@ -242,7 +242,6 @@ public final class ExtensionManager {
         this.delayedAdd();
     }
 
-    /* Why possible? Because we don't check objects, just listing files in extensions directory */
     public String[] getAllExtensionList() {
         ArrayList<String> extensionsList = new ArrayList<String>();
         String[] extensionsArray = new String[]{};

@@ -45,10 +45,8 @@ public final class TaskManager {
     public void notifyMessageListeners(IrcMessage ircMessage) {
         Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
 
-        Extension extension;
-
         while(extensionIterator.hasNext()) {
-            extension = extensionIterator.next();
+            Extension extension = extensionIterator.next();
 
             extension.processTask(ircMessage);
         }
@@ -59,10 +57,8 @@ public final class TaskManager {
     public void notifyEventListeners(IrcEvent ircEvent) {
         Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
 
-        Extension extension;
-
         while(extensionIterator.hasNext()) {
-            extension = extensionIterator.next();
+            Extension extension = extensionIterator.next();
 
             extension.processTask(ircEvent);
         }
@@ -73,10 +69,8 @@ public final class TaskManager {
     public void notifyServerListeners(String serverMessage) {
         Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
 
-        Extension extension;
-
         while(extensionIterator.hasNext()) {
-            extension = extensionIterator.next();
+            Extension extension = extensionIterator.next();
 
             extension.processTask(serverMessage);
         }
@@ -87,14 +81,10 @@ public final class TaskManager {
     public DataServerProcessor[] getDataServerProcessors() {
         ArrayList<DataServerProcessor> dataServerProcessors = new ArrayList<DataServerProcessor>();
         DataServerProcessor[] dataServerProcessorsArray = new DataServerProcessor[]{};
-
-
         Iterator<Extension> extensionIterator = extensionManager.getExtensions().iterator();
 
-        Extension extension;
-
         while(extensionIterator.hasNext()) {
-            extension = extensionIterator.next();
+            Extension extension = extensionIterator.next();
 
             dataServerProcessors.addAll(extension.getDataServerProcessors());
         }
