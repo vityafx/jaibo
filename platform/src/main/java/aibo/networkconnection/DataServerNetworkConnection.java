@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,7 +32,8 @@ import java.util.TimerTask;
 
 public final class DataServerNetworkConnection {
     private boolean isDebug;
-    private ArrayList<DataServerNetworkConnectionListener> listeners = new ArrayList<DataServerNetworkConnectionListener>();
+    private final ArrayList<DataServerNetworkConnectionListener> listeners = new ArrayList<DataServerNetworkConnectionListener>();
+    private final ArrayList<DataServerProcessor> processors = new ArrayList<DataServerProcessor>();
     private HttpServer server = null;
 
 
@@ -114,16 +116,25 @@ public final class DataServerNetworkConnection {
 
     private void setContextHandlers() {
         if (this.server != null) {
-            for (DataServerNetworkConnectionListener listener : this.listeners) {
-                for (DataServerProcessor processor : listener.getDataProcessors()) {
-                    try {
-                        this.server.removeContext(processor.getInfoPath());
-                    } catch (IllegalArgumentException e) {
-                        // we really don't need to catch this exception
-                    }
 
-                    this.server.createContext(processor.getInfoPath(), processor);
+            /* Removing old context handlers */
+            for (DataServerProcessor processor : processors) {
+                try {
+                    this.server.removeContext(processor.getInfoPath());
+                } catch (IllegalArgumentException e) {
+                    // we really don't need to catch this exception
                 }
+            }
+
+            this.processors.clear();
+
+            for (DataServerNetworkConnectionListener listener : this.listeners) {
+                this.processors.addAll(Arrays.asList(listener.getDataProcessors()));
+            }
+
+            /* Setting new context handlers */
+            for (DataServerProcessor processor : processors) {
+                this.server.createContext(processor.getInfoPath(), processor);
             }
         }
     }

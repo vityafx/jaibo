@@ -3,8 +3,8 @@ package aibo;
 import aibo.dataserver.DataServer;
 import aibo.systemextensions.TaskManager;
 import aibo.ircnetwork.IrcNetwork;
-
 import aibo.systemextensions.core.commands.serverlisteners.QuitOnShutdown;
+
 import org.jaibo.api.database.DatabaseProvider;
 import org.jaibo.api.helpers.Configuration;
 import org.jaibo.api.IrcEvent;
