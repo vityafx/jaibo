@@ -39,3 +39,33 @@ jar {
             "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
     )
 }
+
+project.ext.set("buildNumber", 1)
+assert project.buildNumber == 1
+
+
+task generateVersionFile << {
+    project.ext.set("outputFile", file("versioninfo.txt"))
+
+    if (!project.outputFile.isFile()) {
+        project.outputFile.parentFile.mkdirs()
+        project.outputFile.createNewFile()
+    } else {
+        def props = new Properties()
+        new File('versioninfo.txt').withInputStream {
+            stream -> props.load(stream)
+        }
+
+        project.ext.set("buildNumber", Integer.parseInt(props["buildNumber"]) + 1)
+    }
+
+    project.outputFile.write "buildNumber: " + project.buildNumber
+    project.version += "-" + project.buildNumber
+
+    println "Version: " + project.version
+}
+
+task devBuild {
+}
+
+devBuild.dependsOn(build)

@@ -109,15 +109,37 @@ public final class Configuration {
     }
 
     public boolean getBoolean(String key) {
+        boolean flag = false;
+
         if (this.configurationHashMap != null) {
             String value = this.configurationHashMap.get(key.toLowerCase());
 
             if (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true")) {
-                return true;
+                flag = true;
             }
         }
 
-        return false;
+        return flag;
+    }
+
+    public long getSecondsFromNumber(String key) {
+        long seconds = 0;
+
+        if (this.configurationHashMap != null) {
+            String stringValue = this.configurationHashMap.get(key.toLowerCase());
+
+            try {
+                seconds = Long.parseLong(stringValue);
+                seconds *= 1000;
+
+            } catch (NumberFormatException e) {
+                System.err.println(
+                        String.format("Can't parse a number from %s field in %s configuration file",
+                                key, this.configurationFileName));
+            }
+        }
+
+        return seconds;
     }
 
     @Override

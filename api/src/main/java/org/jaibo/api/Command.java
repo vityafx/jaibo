@@ -22,11 +22,11 @@ import java.util.Arrays;
  */
 
 public abstract class Command {
-    private ArrayList<String> names = new ArrayList<String>();
+    private final ArrayList<String> names = new ArrayList<String>();
 
 
     public void addNames(ArrayList<String> names) {
-        this.names = names;
+        this.names.addAll(names);
     }
 
     public void addName(String name) {

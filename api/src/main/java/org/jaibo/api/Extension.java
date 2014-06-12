@@ -53,6 +53,8 @@ public abstract class Extension extends Thread implements ConfigurationListener 
             this.setChannelsFromConfiguration();
         }
 
+        this.setName(String.format("%s(%s) extension thread", this.getExtensionName(), this.getExtensionVersion()));
+
         this.setCommands();
     }
 
@@ -190,7 +192,6 @@ public abstract class Extension extends Thread implements ConfigurationListener 
 
     public boolean isAdminHost(String host) {
         String rootAdminHost = this.getRootAdmin();
-
         return rootAdminHost.equalsIgnoreCase(host)
                 || MainDatabaseManager.isAdminExists(this.getExtensionName(), host);
     }
