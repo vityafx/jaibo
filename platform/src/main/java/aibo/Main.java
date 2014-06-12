@@ -1,7 +1,7 @@
 package aibo;
 
 /**
- * aibo.Main class of aibo java-port
+ * Main class of aibo java-port
  * Copyright (C) 2014  Victor Polevoy (vityatheboss@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify

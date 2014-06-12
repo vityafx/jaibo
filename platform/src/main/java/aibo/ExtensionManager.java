@@ -63,7 +63,7 @@ public final class ExtensionManager {
                     this.addExtension(extension);
                 }
             } catch (ExtensionManagerError e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
             }
         } else {
             throw new ExtensionManagerError(

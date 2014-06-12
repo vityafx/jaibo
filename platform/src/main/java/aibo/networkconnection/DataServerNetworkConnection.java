@@ -85,7 +85,7 @@ public final class DataServerNetworkConnection {
                 System.out.println(String.format("Data server connection opened, listening %s:%s", addressString, port));
             }
         } catch (IOException e) {
-            System.out.println("Can't launch data server: " + e.getMessage());
+            System.err.println("Can't launch data server: " + e.getMessage());
         }
     }
 

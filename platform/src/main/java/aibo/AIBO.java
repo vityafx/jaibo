@@ -12,10 +12,7 @@ import org.jaibo.api.IrcMessage;
 import org.jaibo.api.IrcNetworkListener;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 
 /**
@@ -37,7 +34,9 @@ import java.util.TimerTask;
  */
 
 public final class AIBO implements IrcNetworkListener {
-    public static Configuration Configuration = new Configuration("settings.ini");
+    public final static Configuration Configuration = new Configuration("settings.ini");
+
+    private static ResourceBundle Strings;
 
     private static GregorianCalendar startDateTime;
 
@@ -63,6 +62,10 @@ public final class AIBO implements IrcNetworkListener {
         this.setUpDataServer();
 
         this.printAPIVersion();
+
+        this.printJavaVersion();
+
+        this.setUpLocalization();
     }
 
     public AIBO(String... extensionNames) {
@@ -122,8 +125,25 @@ public final class AIBO implements IrcNetworkListener {
                 Configuration.get("aibo.database.name"));
     }
 
+    private void setUpLocalization() {
+        String language = Configuration.get("aibo.locale.language");
+        String country = Configuration.get("aibo.locale.country");
+        Locale currentLocale;
+
+        currentLocale = new Locale(language, country);
+        Strings = ResourceBundle.getBundle("Strings",currentLocale);
+    }
+
+    public static ResourceBundle getStrings() {
+        return Strings;
+    }
+
     private void printAPIVersion() {
         System.out.println(String.format("Running on API version: %.1f", org.jaibo.api.APIInfo.getVersion()));
+    }
+
+    private void printJavaVersion() {
+        System.out.println(String.format("Running on Java version: %s", System.getProperty("java.version")));
     }
 
     public static void Shutdown() {
@@ -179,7 +199,7 @@ public final class AIBO implements IrcNetworkListener {
                         System.exit(0);
                     }
                 } catch (Exception e) {
-                    System.out.println("Can't restart the bot: %s" + e.getMessage());
+                    System.err.println("Can't restart the bot: %s" + e.getMessage());
                 }
             }
         }, time);
