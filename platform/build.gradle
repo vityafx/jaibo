@@ -47,6 +47,7 @@ task copyTask(type: Copy) {
 
     from (project.rootDir) {
         include '*.sh'
+        include 'settings.md'
     }
     into 'target/libs'
 }
